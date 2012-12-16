@@ -24,7 +24,6 @@ void LSFrender::render(map<string, LSFnode*> &nodes, string &rootNode,
 		}
 	}
 
-
 	// Transforms
 	glPushMatrix();
 	glMultMatrixf(nodes[rootNode]->transformMatrix);

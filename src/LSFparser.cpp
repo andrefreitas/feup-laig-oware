@@ -317,7 +317,7 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 			} else if (strcmp(transVal, "scale") == 0) {
 				existingValidTransforms++;
 
-				queryResult = transform->QueryFloatAttribute("x", &x);
+				queryResult =  transform->QueryFloatAttribute("x", &x);
 				queryResult |= transform->QueryFloatAttribute("y", &y);
 				queryResult |= transform->QueryFloatAttribute("z", &z);
 
@@ -528,8 +528,7 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 		char buffer[33];
 		itoa((existingChilds - existingValidChilds), buffer, 30);
 		if (existingChilds != existingValidChilds)
-			exit_("Exists " + (string) buffer + " invalid child(s) at node "
-							+ (string) pnode->id + ".");
+			exit_("Exists " + (string) buffer + " invalid child(s) at node " + (string) pnode->id + ".");
 
 		// -->
 		nodes[(string) pnode->id] = pnode; // Add this node
@@ -712,16 +711,14 @@ void LSFparser::getAppearances(map<string, LSFappearance*> &appearances) {
 
 }
 
-void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
-		bool &local, bool &doublesided, float *sceneAmbient) {
+void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled, bool &local, bool &doublesided, float *sceneAmbient) {
 	int counter = 0;
 	const char *light_id;
-	int lightsId[] = { GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, GL_LIGHT4,
-			GL_LIGHT5, GL_LIGHT6, GL_LIGHT7 };
-	queryResult = lightingsElement->QueryBoolAttribute("local", &local);
+	int lightsId[] = { GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, GL_LIGHT4, GL_LIGHT5, GL_LIGHT6, GL_LIGHT7 };
+
+	queryResult =  lightingsElement->QueryBoolAttribute("local", &local);
 	queryResult |= lightingsElement->QueryBoolAttribute("enabled", &enabled);
-	queryResult |= lightingsElement->QueryBoolAttribute("doublesided",
-			&doublesided);
+	queryResult |= lightingsElement->QueryBoolAttribute("doublesided", &doublesided);
 	if (queryResult != TIXML_SUCCESS)
 		exit_("There is an error in ambient light options.");
 
@@ -733,30 +730,24 @@ void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
 			cout << "local = true" << endl;
 		if (enabled)
 			cout << "enabled = true" << endl;
-
 	}
 
-	TiXmlElement *scene_ambient = lightingsElement->FirstChildElement(
-			"ambient");
+	TiXmlElement *scene_ambient = lightingsElement->FirstChildElement("ambient");
 
 	//ambiente global
 	if (scene_ambient != NULL) {
-		queryResult = scene_ambient->QueryFloatAttribute("r", &sceneAmbient[0]);
-		queryResult |= scene_ambient->QueryFloatAttribute("g",
-				&sceneAmbient[1]);
-		queryResult |= scene_ambient->QueryFloatAttribute("b",
-				&sceneAmbient[2]);
-		queryResult |= scene_ambient->QueryFloatAttribute("a",
-				&sceneAmbient[3]);
+		queryResult =  scene_ambient->QueryFloatAttribute("r", &sceneAmbient[0]);
+		queryResult |= scene_ambient->QueryFloatAttribute("g", &sceneAmbient[1]);
+		queryResult |= scene_ambient->QueryFloatAttribute("b", &sceneAmbient[2]);
+		queryResult |= scene_ambient->QueryFloatAttribute("a", &sceneAmbient[3]);
 		if (queryResult != TIXML_SUCCESS)
 			exit_("There is an error in ambient rgba values.");
 	} else
 		exit_("Tag <ambient> at global ambient is missing or misspelled.");
 
 	if (DEBUGMODE && scene_ambient != NULL)
-		cout << "scene ambient r=" << sceneAmbient[0] << " g="
-				<< sceneAmbient[1] << " b=" << sceneAmbient[2] << " a="
-				<< sceneAmbient[3] << endl;
+		cout << "scene ambient r=" << sceneAmbient[0] << " g=" << sceneAmbient[1] << " b="
+		     << sceneAmbient[2] << " a=" << sceneAmbient[3] << endl;
 
 	TiXmlElement *node_ = lightingsElement->FirstChildElement("lights");
 
@@ -791,15 +782,10 @@ void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
 		if ((node->Attribute("id")) != NULL)
 			pLSFlight->id = light_id = node->Attribute("id");
 		else
-			exit_(
-					"There is an error in id value at light " + (string) lbuffer
-							+ ".");
+			exit_("There is an error in id value at light " + (string) lbuffer + ".");
 
-		if (node->QueryBoolAttribute("enabled", &pLSFlight->enabled)
-				!= TIXML_SUCCESS)
-			exit_(
-					"There is an error in enabled value at light "
-							+ (string) node->Attribute("id") + ".");
+		if (node->QueryBoolAttribute("enabled", &pLSFlight->enabled) != TIXML_SUCCESS)
+			exit_("There is an error in enabled value at light " + (string) node->Attribute("id") + ".");
 
 		TiXmlElement *location, *ambient, *diffuse, *specular, *spot;
 
@@ -807,89 +793,66 @@ void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
 		if (location != NULL)
 			if (strcmp(location->ValueTStr().c_str(), "location") == 0) {
 				existingValidLightElements++;
-				queryResult = location->QueryFloatAttribute("x", &positionV[0]);
-				queryResult |= location->QueryFloatAttribute("y",
-						&positionV[1]);
-				queryResult |= location->QueryFloatAttribute("z",
-						&positionV[2]);
+				queryResult =  location->QueryFloatAttribute("x", &positionV[0]);
+				queryResult |= location->QueryFloatAttribute("y", &positionV[1]);
+				queryResult |= location->QueryFloatAttribute("z", &positionV[2]);
 				positionV[3] = 1;
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in location values at light "
-									+ (string) lbuffer + ".");
+					exit_("There is an error in location values at light " + (string) lbuffer + ".");
 			}
 
 		ambient = node->FirstChildElement("ambient");
 		if (ambient != NULL)
 			if (strcmp(ambient->ValueTStr().c_str(), "ambient") == 0) {
 				existingValidLightElements++;
-				queryResult = ambient->QueryFloatAttribute("r", &ambientV[0]);
+				queryResult =  ambient->QueryFloatAttribute("r", &ambientV[0]);
 				queryResult |= ambient->QueryFloatAttribute("g", &ambientV[1]);
 				queryResult |= ambient->QueryFloatAttribute("b", &ambientV[2]);
 				queryResult |= ambient->QueryFloatAttribute("a", &ambientV[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in ambient values at light "
-									+ (string) lbuffer + ".");
+					exit_("There is an error in ambient values at light " + (string) lbuffer + ".");
 			}
 
 		diffuse = node->FirstChildElement("diffuse");
 		if (diffuse != NULL)
 			if (strcmp(diffuse->ValueTStr().c_str(), "diffuse") == 0) {
 				existingValidLightElements++;
-				queryResult = diffuse->QueryFloatAttribute("r", &diffuseV[0]);
+				queryResult =  diffuse->QueryFloatAttribute("r", &diffuseV[0]);
 				queryResult |= diffuse->QueryFloatAttribute("g", &diffuseV[1]);
 				queryResult |= diffuse->QueryFloatAttribute("b", &diffuseV[2]);
 				queryResult |= diffuse->QueryFloatAttribute("a", &diffuseV[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in diffuse values at light "
-									+ (string) lbuffer + ".");
+					exit_("There is an error in diffuse values at light " + (string) lbuffer + ".");
 			}
 
 		specular = node->FirstChildElement("specular");
 		if (specular != NULL)
 			if (strcmp(specular->ValueTStr().c_str(), "specular") == 0) {
 				existingValidLightElements++;
-				queryResult = specular->QueryFloatAttribute("r", &specularV[0]);
-				queryResult |= specular->QueryFloatAttribute("g",
-						&specularV[1]);
-				queryResult |= specular->QueryFloatAttribute("b",
-						&specularV[2]);
-				queryResult |= specular->QueryFloatAttribute("a",
-						&specularV[3]);
+				queryResult =  specular->QueryFloatAttribute("r", &specularV[0]);
+				queryResult |= specular->QueryFloatAttribute("g", &specularV[1]);
+				queryResult |= specular->QueryFloatAttribute("b", &specularV[2]);
+				queryResult |= specular->QueryFloatAttribute("a", &specularV[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in specular values at light "
-									+ (string) lbuffer + ".");
+					exit_("There is an error in specular values at light " + (string) lbuffer + ".");
 			}
 
 		char lebuffer[33];
 		itoa((4 - existingValidLightElements), lebuffer, 30);
 		if (4 != existingValidLightElements)
-			exit_(
-					"Exists " + (string) lebuffer
-							+ " invalid light element(s) at light "
-							+ (string) lbuffer + ".");
+			exit_("Exists " + (string) lebuffer + " invalid light element(s) at light " + (string) lbuffer + ".");
 
 		spot = node->FirstChildElement("spot");
 		if (spot != NULL) {
 			if (strcmp(spot->ValueTStr().c_str(), "spot") == 0) {
-				queryResult = spot->QueryFloatAttribute("angle",
-						&pLSFlight->angle);
-				queryResult |= spot->QueryFloatAttribute("exponent",
-						&pLSFlight->spotExponent);
-				queryResult |= spot->QueryFloatAttribute("dirx",
-						&directionV[0]);
-				queryResult |= spot->QueryFloatAttribute("diry",
-						&directionV[1]);
-				queryResult |= spot->QueryFloatAttribute("dirz",
-						&directionV[2]);
+				queryResult =  spot->QueryFloatAttribute("angle", &pLSFlight->angle);
+				queryResult |= spot->QueryFloatAttribute("exponent", &pLSFlight->spotExponent);
+				queryResult |= spot->QueryFloatAttribute("dirx", &directionV[0]);
+				queryResult |= spot->QueryFloatAttribute("diry", &directionV[1]);
+				queryResult |= spot->QueryFloatAttribute("dirz", &directionV[2]);
 				directionV[3] = 1;
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in spot values at light "
-									+ (string) lbuffer + ".");
+					exit_("There is an error in spot values at light " + (string) lbuffer + ".");
 			}
 			pLSFlight->isspotLight = true;
 		} else {
@@ -911,8 +874,7 @@ void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
 		plight->setSpecular(specularV);
 
 		if (spot != NULL) {
-			glLightf(lightsId[counter - 1], GL_SPOT_EXPONENT,
-					pLSFlight->spotExponent);
+			glLightf(lightsId[counter - 1], GL_SPOT_EXPONENT, pLSFlight->spotExponent);
 			glLightf(lightsId[counter - 1], GL_SPOT_CUTOFF, pLSFlight->angle);
 			glLightfv(lightsId[counter - 1], GL_SPOT_DIRECTION, directionV);
 		} else {
@@ -924,26 +886,23 @@ void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
 		lights[light_id] = pLSFlight;
 
 		if (DEBUGMODE) {
-			cout << "\n\tLuz: " << light_id << "  enabled="
-					<< pLSFlight->enabled << endl;
+			cout << "\n\tLuz: " << light_id << "  enabled=" << pLSFlight->enabled << endl;
 			if (location != NULL)
-				cout << "location x=" << positionV[0] << " y=" << positionV[1]
-						<< " z=" << positionV[2] << endl;
+				cout << "location x=" << positionV[0] << " y=" << positionV[1] << " z=" << positionV[2] << endl;
 			if (ambient != NULL)
 				cout << "ambient  r=" << ambientV[0] << " g=" << ambientV[1]
-						<< " b=" << ambientV[2] << " a=" << ambientV[3] << endl;
+				     << " b=" << ambientV[2] << " a=" << ambientV[3] << endl;
 			if (diffuse != NULL)
 				cout << "diffuse  r=" << diffuseV[0] << " g=" << diffuseV[1]
-						<< " b=" << diffuseV[2] << " a=" << diffuseV[3] << endl;
+				     << " b=" << diffuseV[2] << " a=" << diffuseV[3] << endl;
 			if (specular != NULL)
 				cout << "specular r=" << specularV[0] << " g=" << specularV[1]
-						<< " b=" << specularV[2] << " a=" << specularV[4]
-						<< endl;
+				     << " b=" << specularV[2] << " a=" << specularV[4] << endl;
 			if (spot != NULL) {
 				cout << "spot angle=" << pLSFlight->angle << " exponent="
-						<< pLSFlight->spotExponent;
+					 << pLSFlight->spotExponent;
 				cout << " dirx=" << directionV[0] << " diry=" << directionV[1]
-						<< " dirz=" << directionV[2] << endl;
+					 << " dirz=" << directionV[2] << endl;
 			}
 			cout << endl;
 		}
@@ -970,20 +929,20 @@ void LSFparser::getAnimations(map<string,LSFanimation*> &animations){
 		animationID=node->Attribute("id");
 		queryResult = node->QueryFloatAttribute("span",&animationSpan);
 		if (queryResult != TIXML_SUCCESS)
-			exit_("There is an error in span value at animation "
-								+ (string) node->Attribute("id") + ".");
+			exit_("There is an error in span value at animation " + (string) node->Attribute("id") + ".");
+
 		cout << "-> ID " << animationID << " Span " << animationSpan << endl;
 
 		// For every control point
 		TiXmlElement *controlpoint=node->FirstChildElement();
 		vector<LSFvertex> cps;
 		while(controlpoint){
-			queryResult = controlpoint->QueryDoubleAttribute("xx",&point.x);
+			queryResult =  controlpoint->QueryDoubleAttribute("xx",&point.x);
 			queryResult |= controlpoint->QueryDoubleAttribute("yy",&point.y);
 			queryResult |= controlpoint->QueryDoubleAttribute("zz",&point.z);
 			if (queryResult != TIXML_SUCCESS)
-				exit_("There is an error in controlpoints values at animation "
-									+ (string) node->Attribute("id") + ".");
+				exit_("There is an error in controlpoints values at animation " + (string) node->Attribute("id") + ".");
+
 			cout << "--> Control Point "; point.print(); cout << endl;
 			cps.push_back(point);
 			// -->
@@ -996,6 +955,4 @@ void LSFparser::getAnimations(map<string,LSFanimation*> &animations){
 		// -->
 		node = node->NextSiblingElement();
 	}
-
-
 }

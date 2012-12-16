@@ -66,7 +66,7 @@ void LSFscene::init()
 	freeCamera->id = "freeMove";
 	cameras["freeMove"] = freeCamera;
 
-
+	//init the primitives
 	LSFappearance *currentAppearance;
 	stack<LSFappearance*> appearancesStack_temp;
 	appearancesStack_temp.push(defaultAppearance);
