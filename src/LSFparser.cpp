@@ -14,28 +14,15 @@ char* itoa(int val,char *str, int base){
 	return &buf[i+1];
 	
 }
-
-	
 #endif
 
 void exit_(string str, int error = 0) {
 	cout << "\n\n\n" << endl;
-	cout
-			<< ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   ERROR   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-			<< endl;
-	cout
-			<< ">>                                                                     <<"
-			<< endl;
-	cout << "   " << str;
-	if (error != 0)
-		cout << " Row " << error;
-	cout << endl;
-	cout
-			<< ">>                                                                     <<"
-			<< endl;
-	cout
-			<< ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-			<< endl;
+	cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   ERROR   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+	cout << ">>                                                                     <<" << endl;
+	cout << "   " << str; if (error != 0) cout << " Row " << error; cout << endl;
+	cout << ">>                                                                     <<" << endl;
+	cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
 	getchar(); // wait feedback
 	exit(-1);
 }
@@ -86,13 +73,12 @@ void LSFparser::getGlobals(struct globalsData *globals) {
 	TiXmlElement *background;
 	if ((background = globalsElement->FirstChildElement("background")) == NULL)
 		exit_("Tag <background> is missing or misspelled.");
-	queryResult = background->QueryFloatAttribute("r", &globals->background[0]);
-	queryResult |= background->QueryFloatAttribute("g",
-			&globals->background[1]);
-	queryResult |= background->QueryFloatAttribute("b",
-			&globals->background[2]);
-	queryResult |= background->QueryFloatAttribute("a",
-			&globals->background[3]);
+
+	queryResult =  background->QueryFloatAttribute("r", &globals->background[0]);
+	queryResult |= background->QueryFloatAttribute("g", &globals->background[1]);
+	queryResult |= background->QueryFloatAttribute("b", &globals->background[2]);
+	queryResult |= background->QueryFloatAttribute("a", &globals->background[3]);
+
 	if (queryResult != TIXML_SUCCESS)
 		exit_("There is an error in the background values.");
 
@@ -100,8 +86,10 @@ void LSFparser::getGlobals(struct globalsData *globals) {
 	TiXmlElement *polygon;
 	if ((polygon = globalsElement->FirstChildElement("polygon")) == NULL)
 		exit_("Tag <polygon> is missing or misspelled.");
+
 	if ((globals->polygon_mode = polygon->Attribute("mode")) == NULL)
 		exit_("polygon mode is missing or misspelled.");
+
 	if ((globals->polygon_shading = polygon->Attribute("shading")) == NULL)
 		exit_("polygon shading is missing or misspelled.");
 
@@ -109,25 +97,23 @@ void LSFparser::getGlobals(struct globalsData *globals) {
 	TiXmlElement *culling;
 	if ((culling = globalsElement->FirstChildElement("culling")) == NULL)
 		exit_("Tag <culling> is missing or misspelled.");
-	if ((globals->culling__frontfaceorder = culling->Attribute("frontfaceorder"))
-			== NULL)
+
+	if ((globals->culling__frontfaceorder = culling->Attribute("frontfaceorder")) == NULL)
 		exit_("culling frontfaceorder is missing or misspelled.");
+
 	if ((globals->culling_cullface = culling->Attribute("cullface")) == NULL)
 		exit_("culling cullface is missing or misspelled.");
-	if ((culling->QueryBoolAttribute("enabled", &globals->culling_enabled))
-			!= TIXML_SUCCESS)
+
+	if ((culling->QueryBoolAttribute("enabled", &globals->culling_enabled)) != TIXML_SUCCESS)
 		exit_("culling enabled is missing or misspelled.");
 
 	if (DEBUGMODE) {
 		cout << "\n--- Globals---\n";
-		cout << "\tbackground: " << globals->background[0] << ' '
-				<< globals->background[1] << ' ' << globals->background[2]
-				<< ' ' << globals->background[3] << endl;
-		cout << "\tpolygon: " << globals->polygon_mode << ' '
-				<< globals->polygon_shading << endl;
+		cout << "\tbackground: " << globals->background[0] << ' ' << globals->background[1] << ' '
+				<< globals->background[2] << ' ' << globals->background[3] << endl;
+		cout << "\tpolygon: " << globals->polygon_mode << ' ' << globals->polygon_shading << endl;
 		cout << "\tculling: " << globals->culling__frontfaceorder << ' '
-				<< globals->culling_cullface << ' ' << globals->culling_enabled
-				<< endl;
+				<< globals->culling_cullface << ' ' << globals->culling_enabled << endl;
 	}
 }
 
@@ -135,6 +121,7 @@ void LSFparser::getCameras(map<string, LSFcamera*> &cameras) {
 	TiXmlElement *node = camerasElement->FirstChildElement();
 	int counter = 0;
 	const char *initial;
+
 	if (camerasElement->Attribute("initial"))
 		initial = camerasElement->Attribute("initial");
 	else
@@ -147,44 +134,46 @@ void LSFparser::getCameras(map<string, LSFcamera*> &cameras) {
 	while (node) {
 		counter++;
 
-		if ((string) node->Value() != "perspective"
-				&& (string) node->Value() != "ortho")
+		if ((string) node->Value() != "perspective" && (string) node->Value() != "ortho")
 			exit_("Tag <" + (string) node->Value() + "> not valid");
 
 		LSFcamera *camera = new LSFcamera();
 		camera->view.assign(node->Value());
 
-		// -->
 		if (strcmp(node->Value(), "ortho") == 0) {
 			if (node->Attribute("id"))
 				camera->id = node->Attribute("id");
+
 			if (camera->id.empty())
 				exit_("camera id attribute is missing or misspelled.");
-			queryResult = node->QueryFloatAttribute("near", &camera->_near);
+
+			queryResult =  node->QueryFloatAttribute("near", &camera->_near);
 			queryResult |= node->QueryFloatAttribute("far", &camera->_far);
 			queryResult |= node->QueryFloatAttribute("left", &camera->left);
 			queryResult |= node->QueryFloatAttribute("right", &camera->right);
 			queryResult |= node->QueryFloatAttribute("top", &camera->top);
 			queryResult |= node->QueryFloatAttribute("bottom", &camera->bottom);
+
 			if (queryResult != TIXML_SUCCESS)
-				exit_(
-						"There is an error in ortho \"" + camera->id
-								+ "\" camera values");
+				exit_("There is an error in ortho \"" + camera->id + "\" camera values");
 
 			if (DEBUGMODE) {
-				float attributes[] =
-						{ camera->_near, camera->_far, camera->left,
-								camera->right, camera->top, camera->bottom };
+				float attributes[] = { camera->_near, camera->_far, camera->left,
+								       camera->right, camera->top, camera->bottom };
 				cout << "\n\tOrtho: " << camera->id << " ";
+
 				for (int unsigned i = 0; i < 6; i++)
 					cout << attributes[i] << " ";
+
 				cout << endl;
 			}
 		} else {
 			if (node->Attribute("id"))
 				camera->id = node->Attribute("id");
+
 			if (camera->id.empty())
 				exit_("camera id attribut is missing or misspelled.");
+
 			queryResult = node->QueryFloatAttribute("near", &camera->_near);
 			queryResult |= node->QueryFloatAttribute("far", &camera->_far);
 			queryResult |= node->QueryFloatAttribute("angle", &camera->angle);
@@ -193,6 +182,7 @@ void LSFparser::getCameras(map<string, LSFcamera*> &cameras) {
 			TiXmlElement *from, *to;
 			if ((from = node->FirstChildElement("from")) == NULL)
 				exit_("Tag <from> is missing or misspelled.");
+
 			queryResult |= from->QueryFloatAttribute("x", &camera->fromX);
 			queryResult |= from->QueryFloatAttribute("y", &camera->fromY);
 			queryResult |= from->QueryFloatAttribute("z", &camera->fromZ);
@@ -200,26 +190,24 @@ void LSFparser::getCameras(map<string, LSFcamera*> &cameras) {
 			// To
 			if ((to = node->FirstChildElement("to")) == NULL)
 				exit_("Tag <to> is missing or misspelled.");
+
 			queryResult |= to->QueryFloatAttribute("x", &camera->toX);
 			queryResult |= to->QueryFloatAttribute("y", &camera->toY);
 			queryResult |= to->QueryFloatAttribute("z", &camera->toZ);
 
 			if (queryResult != TIXML_SUCCESS)
-				exit_(
-						"There is an error in perspective \"" + camera->id
-								+ "\" camera values");
+				exit_("There is an error in perspective \"" + camera->id + "\" camera values");
 
 			if (DEBUGMODE) {
-				float attributes[] = { camera->_near, camera->_far,
-						camera->angle };
+				float attributes[] = { camera->_near, camera->_far, camera->angle };
 				cout << "\n\tPerspective: " << camera->id << " ";
+
 				for (int unsigned i = 0; i < 3; i++)
 					cout << attributes[i] << " ";
+
 				cout << endl;
-				cout << "\t\t\tFrom: " << camera->fromX << " " << camera->fromY
-						<< " " << camera->fromZ << endl;
-				cout << "\t\t\tTo: " << camera->toX << " " << camera->toY << " "
-						<< camera->toZ << endl;
+				cout << "\t\t\tFrom: " << camera->fromX << " " << camera->fromY << " " << camera->fromZ << endl;
+				cout << "\t\t\tTo: " << camera->toX << " " << camera->toY << " " << camera->toZ << endl;
 			}
 		}
 
@@ -244,23 +232,17 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 
 	if (DEBUGMODE)
 		cout << "\n--- Graph: " << rootid << " ---" << endl;
+
 	TiXmlElement *node = graphElement->FirstChildElement();
 
 	while (node) {
 		LSFnode *pnode = new LSFnode();
 		pnode->id = new char[100];
 
-
-		// Display Lists
-		if (node->Attribute("displaylist") != 0)
-			node->QueryBoolAttribute("displaylist", &(pnode->isDisplayList));
-
 		if (node->Attribute("id"))
 			strcpy(pnode->id, node->Attribute("id")); // save in the node
 		else
-			exit_(
-					"graph " + (string) node->Value()
-							+ " id is missing or misspelled.");
+			exit_("graph " + (string) node->Value() + " id is missing or misspelled.");
 
 		if (DEBUGMODE)
 			cout << "\tNode: " << node->Attribute("id") << endl;
@@ -272,13 +254,13 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 		// (1) Transforms
 		TiXmlElement *transforms;
 		if ((transforms = node->FirstChildElement("transforms")) == NULL)
-			exit_(
-					"Tag <transforms> at node " + (string) pnode->id
-							+ " is missing or misspelled.");
+			exit_("Tag <transforms> at node " + (string) pnode->id + " is missing or misspelled.");
 
 		TiXmlElement *transform = transforms->FirstChildElement();
+
 		if (DEBUGMODE)
 			cout << "\tTransforms:" << endl;
+
 		// Compute transforms
 		glPushMatrix();
 		glMatrixMode(GL_MODELVIEW);
@@ -287,34 +269,32 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 		// --->
 		int existingTransforms = 0;
 		int existingValidTransforms = 0;
+
 		while (transform) {
 			existingTransforms++;
 			float x, y, z, angle;
 			char axis;
 			const char* transVal = transform->Value();
+
 			if (strcmp(transVal, "translate") == 0) {
 				existingValidTransforms++;
-				queryResult = transform->QueryFloatAttribute("x", &x);
+				queryResult =  transform->QueryFloatAttribute("x", &x);
 				queryResult |= transform->QueryFloatAttribute("y", &y);
 				queryResult |= transform->QueryFloatAttribute("z", &z);
 
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in translate values at node "
-									+ (string) pnode->id + ".");
+					exit_("There is an error in translate values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
-					cout << "\t\tTranslate: " << x << " " << y << " " << z
-							<< endl;
+					cout << "\t\tTranslate: " << x << " " << y << " " << z << endl;
+
 				glTranslatef(x, y, z);
 
 			} else if (strcmp(transVal, "rotate") == 0) {
 				existingValidTransforms++;
-				if (transform->QueryFloatAttribute("angle", &angle)
-						!= TIXML_SUCCESS)
-					exit_(
-							"There is an error in rotate values at node "
-									+ (string) pnode->id + ".");
+				if (transform->QueryFloatAttribute("angle", &angle) != TIXML_SUCCESS)
+					exit_("There is an error in rotate values at node " + (string) pnode->id + ".");
+
 				axis = *transform->Attribute("axis");
 
 				if (DEBUGMODE)
@@ -330,25 +310,24 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 				else if (axis == 'z')
 					z = 1;
 				else
-					exit_(
-							"There is an error in rotate values at node "
-									+ (string) pnode->id + ".");
+					exit_("There is an error in rotate values at node " + (string) pnode->id + ".");
+
 				glRotatef(angle, x, y, z);
 
 			} else if (strcmp(transVal, "scale") == 0) {
 				existingValidTransforms++;
+
 				queryResult = transform->QueryFloatAttribute("x", &x);
 				queryResult |= transform->QueryFloatAttribute("y", &y);
 				queryResult |= transform->QueryFloatAttribute("z", &z);
+
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in scale values at node "
-									+ (string) pnode->id + ".");
+					exit_("There is an error in scale values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
 					cout << "\t\tScale: " << x << " " << y << " " << z << endl;
-				glScalef(x, y, z);
 
+				glScalef(x, y, z);
 			}
 
 			// -->
@@ -357,11 +336,9 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 
 		char tbuffer[33];
 		itoa((existingTransforms - existingValidTransforms), tbuffer, 30);
+
 		if (existingTransforms != existingValidTransforms)
-			exit_(
-					"Exists " + (string) tbuffer
-							+ " invalid transform(s) at node "
-							+ (string) pnode->id + ".");
+			exit_("Exists " + (string) tbuffer + " invalid transform(s) at node " + (string) pnode->id + ".");
 
 		glGetFloatv(GL_MODELVIEW_MATRIX, pnode->transformMatrix);
 		glPopMatrix();
@@ -370,16 +347,12 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 
 		TiXmlElement *appearanceref;
 		if ((appearanceref = node->FirstChildElement("appearanceref")) == NULL)
-			exit_(
-					"Tag <appearanceref> at node " + (string) pnode->id
-							+ " is missing or misspelled.");
+			exit_("Tag <appearanceref> at node " + (string) pnode->id + " is missing or misspelled.");
 
 		if (appearanceref->Attribute("id"))
 			pnode->appearance = (string) appearanceref->Attribute("id");
 		else
-			exit_(
-					"appearanceref id at node " + (string) pnode->id
-							+ " is missing or misspelled.");
+			exit_("appearanceref id at node " + (string) pnode->id + " is missing or misspelled.");
 
 		if (DEBUGMODE)
 			cout << "\tAppearance: " << pnode->appearance << endl;
@@ -387,10 +360,10 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 		// (3) Children
 		if (DEBUGMODE)
 			cout << "\tChildren: " << endl;
+
 		TiXmlElement *children;
 		if ((children = node->FirstChildElement("children")) == NULL)
-			exit_("Tag <children> at node " + (string) pnode->id
-							+ " is missing or misspelled.");
+			exit_("Tag <children> at node " + (string) pnode->id + " is missing or misspelled.");
 
 		TiXmlElement *child = children->FirstChildElement();
 		if (child == NULL)
@@ -398,6 +371,7 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 
 		int existingChilds = 0;
 		int existingValidChilds = 0;
+
 		while (child) {
 			existingChilds++;
 			const char* childVal = child->Value();
@@ -407,161 +381,135 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 
 			if (strcmp(childVal, "rectangle") == 0) {
 				existingValidChilds++;
-				LSFprimitive prim(rectangle);
-				queryResult = child->QueryFloatAttribute("x1",
-						&prim.attr["x1"]);
-				queryResult |= child->QueryFloatAttribute("x2",
-						&prim.attr["x2"]);
-				queryResult |= child->QueryFloatAttribute("y1",
-						&prim.attr["y1"]);
-				queryResult |= child->QueryFloatAttribute("y2",
-						&prim.attr["y2"]);
+				float x1, x2, y1, y2;
+
+				queryResult =  child->QueryFloatAttribute("x1", &x1);
+				queryResult |= child->QueryFloatAttribute("x2", &x2);
+				queryResult |= child->QueryFloatAttribute("y1", &y1);
+				queryResult |= child->QueryFloatAttribute("y2", &y2);
+
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in rectangle values at node "
-									+ (string) pnode->id + ".");
+					exit_("There is an error in rectangle values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
-					cout << "\t\trectangle: " << prim.attr["x1"] << " "
-							<< prim.attr["y1"] << " " << prim.attr["x2"] << " "
-							<< prim.attr["y2"] << endl;
-				pnode->childPrimitives.push_back(prim);
+					cout << "\t\trectangle: " << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
+
+				pnode->childPrimitives.push_back(new LSFRectangle(x1, x2, y1, y2));
+
+			} else if(strcmp(childVal, "box") == 0){
+				existingValidChilds++;
+				float x1, x2, y1, y2, z1, z2;
+
+				queryResult =  child->QueryFloatAttribute("x1", &x1);
+				queryResult |= child->QueryFloatAttribute("x2", &x2);
+				queryResult |= child->QueryFloatAttribute("y1", &y1);
+				queryResult |= child->QueryFloatAttribute("y2", &y2);
+				queryResult |= child->QueryFloatAttribute("z1", &z1);
+				queryResult |= child->QueryFloatAttribute("z2", &z2);
+
+				if (queryResult != TIXML_SUCCESS)
+					exit_("There is an error in box values at node " + (string) pnode->id + ".");
+
+				if (DEBUGMODE)
+					cout << "\t\tbox: " << x1 << " " << y1 << " " << z1 << " " << x2 << " " << y2 << " " << z2<< endl;
+
+				pnode->childPrimitives.push_back(new LSFBox(x1, x2, y1, y2, z1, z2));
 
 			} else if (strcmp(childVal, "triangle") == 0) {
 				existingValidChilds++;
-				LSFprimitive prim(triangle);
-				queryResult = child->QueryFloatAttribute("x1",
-						&prim.attr["x1"]);
-				queryResult |= child->QueryFloatAttribute("x2",
-						&prim.attr["x2"]);
-				queryResult |= child->QueryFloatAttribute("x3",
-						&prim.attr["x3"]);
-				queryResult |= child->QueryFloatAttribute("y1",
-						&prim.attr["y1"]);
-				queryResult |= child->QueryFloatAttribute("y2",
-						&prim.attr["y2"]);
-				queryResult |= child->QueryFloatAttribute("y3",
-						&prim.attr["y3"]);
-				queryResult |= child->QueryFloatAttribute("z1",
-						&prim.attr["z1"]);
-				queryResult |= child->QueryFloatAttribute("z2",
-						&prim.attr["z2"]);
-				queryResult |= child->QueryFloatAttribute("z3",
-						&prim.attr["z3"]);
+				float x1, x2, x3, y1, y2, y3, z1, z2, z3;
+
+				queryResult =  child->QueryFloatAttribute("x1", &x1);
+				queryResult |= child->QueryFloatAttribute("x2", &x2);
+				queryResult |= child->QueryFloatAttribute("x3", &x3);
+				queryResult |= child->QueryFloatAttribute("y1", &y1);
+				queryResult |= child->QueryFloatAttribute("y2", &y2);
+				queryResult |= child->QueryFloatAttribute("y3", &y3);
+				queryResult |= child->QueryFloatAttribute("z1", &z1);
+				queryResult |= child->QueryFloatAttribute("z2", &z2);
+				queryResult |= child->QueryFloatAttribute("z3", &z3);
+
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in triangle values at node "
-									+ (string) pnode->id + ".");
+					exit_("There is an error in triangle values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
-					cout << "\t\ttriangle " << prim.attr["x1"] << " "
-							<< prim.attr["y1"] << " " << prim.attr["z1"] << ""
-							<< prim.attr["x2"] << " " << prim.attr["y2"] << " "
-							<< prim.attr["z2"] << "" << prim.attr["x3"] << " "
-							<< prim.attr["y3"] << " " << prim.attr["z3"]
-							<< endl;
+					cout << "\t\ttriangle " << x1 << " " << y1 << " " << z1 << " "
+							<< x2 << " " << y2 << " " << z2 << " " << x3 << " "
+							<< y3 << " " << z3 << endl;
 
 				// Compute the normal
-				LSFvertex v1(prim.attr["x1"], prim.attr["y1"], prim.attr["z1"]);
-				LSFvertex v2(prim.attr["x2"], prim.attr["y2"], prim.attr["z2"]);
-				LSFvertex v3(prim.attr["x3"], prim.attr["y3"], prim.attr["z3"]);
+				LSFvertex v1(x1, y1, z1);
+				LSFvertex v2(x2, y2, z2);
+				LSFvertex v3(x3, y3, z3);
 				vector<LSFvertex> vertexs;
 				vertexs.push_back(v3); // Need to be in this order
 				vertexs.push_back(v2);
 				vertexs.push_back(v1);
-
-				prim.normal = computeNormalNewel(vertexs);
+				LSFvertex normal = computeNormalNewel(vertexs);
 
 				// UV coords
 				vector<LSFvertex> uvCoords;
-				uvCoords.push_back(
-						LSFvertex(prim.attr["x1"], prim.attr["y1"],
-								prim.attr["z1"]));
-				uvCoords.push_back(
-						LSFvertex(prim.attr["x2"], prim.attr["y2"],
-								prim.attr["z2"]));
-				uvCoords.push_back(
-						LSFvertex(prim.attr["x3"], prim.attr["y3"],
-								prim.attr["z3"]));
+				uvCoords.push_back(LSFvertex(x1, y1, z1));
+				uvCoords.push_back(LSFvertex(x2, y2, z2));
+				uvCoords.push_back(LSFvertex(x3, y3, z3));
 				uvCoords = computeTriangleUV(uvCoords);
-				prim.uvCoords = uvCoords;
-				// -->
-				pnode->childPrimitives.push_back(prim);
+
+				pnode->childPrimitives.push_back(new LSFTriangle(x1, x2, x3, y1, y2, y3, z1, z2, z3, normal, uvCoords));
 
 			} else if (strcmp(childVal, "cylinder") == 0) {
 				existingValidChilds++;
-				LSFprimitive prim(cylinder);
+				float base, top, height;
 				int slices, stacks;
-				queryResult = child->QueryFloatAttribute("base",
-						&prim.attr["base"]);
-				queryResult |= child->QueryFloatAttribute("top",
-						&prim.attr["top"]);
-				queryResult |= child->QueryFloatAttribute("height",
-						&prim.attr["height"]);
+
+				queryResult =  child->QueryFloatAttribute("base", &base);
+				queryResult |= child->QueryFloatAttribute("top", &top);
+				queryResult |= child->QueryFloatAttribute("height", &height);
 				queryResult |= child->QueryIntAttribute("slices", &slices);
 				queryResult |= child->QueryIntAttribute("stacks", &stacks);
-				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in cylinder values at node "
-									+ (string) pnode->id + ".");
 
-				prim.attr["slices"] = slices;
-				prim.attr["stacks"] = stacks;
+				if (queryResult != TIXML_SUCCESS)
+					exit_("There is an error in cylinder values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
-					cout << "\t\tcylinder " << prim.attr["base"] << " "
-							<< prim.attr["top"] << " " << prim.attr["height"]
-							<< " " << prim.attr["slices"] << " "
-							<< prim.attr["stacks"] << endl;
+					cout << "\t\tcylinder " << base << " " << top << " " << height
+							<< " " << slices << " " << stacks << endl;
 
-				pnode->childPrimitives.push_back(prim);
+				pnode->childPrimitives.push_back(new LSFCylinder(base, top, height, slices, stacks));
 
 			} else if (strcmp(childVal, "sphere") == 0) {
 				existingValidChilds++;
-				LSFprimitive prim(sphere);
+				float radius;
 				int slices, stacks;
-				queryResult = child->QueryFloatAttribute("radius",
-						&prim.attr["radius"]);
+
+				queryResult =  child->QueryFloatAttribute("radius", &radius);
 				queryResult |= child->QueryIntAttribute("slices", &slices);
 				queryResult |= child->QueryIntAttribute("stacks", &stacks);
-				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in sphere values at node "
-									+ (string) pnode->id + ".");
 
-				prim.attr["slices"] = slices;
-				prim.attr["stacks"] = stacks;
+				if (queryResult != TIXML_SUCCESS)
+					exit_("There is an error in sphere values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
-					cout << "\t\tsphere " << prim.attr["radius"] << " "
-							<< prim.attr["slices"] << " " << prim.attr["stacks"]
-							<< endl;
+					cout << "\t\tsphere " << radius << " " << slices << " " << stacks << endl;
 
-				pnode->childPrimitives.push_back(prim);
+				pnode->childPrimitives.push_back(new LSFSphere(radius, slices, stacks));
 
 			} else if (strcmp(childVal, "torus") == 0) {
 				existingValidChilds++;
-				LSFprimitive prim(torus);
+				float inner, outer;
 				int slices, loops;
-				queryResult = child->QueryFloatAttribute("inner",
-						&prim.attr["inner"]);
-				queryResult |= child->QueryFloatAttribute("outer",
-						&prim.attr["outer"]);
+
+				queryResult =  child->QueryFloatAttribute("inner", &inner);
+				queryResult |= child->QueryFloatAttribute("outer", &outer);
 				queryResult |= child->QueryIntAttribute("slices", &slices);
 				queryResult |= child->QueryIntAttribute("loops", &loops);
-				if (queryResult != TIXML_SUCCESS)
-					exit_("There is an error in triangle values at node "
-									+ (string) pnode->id + ".");
 
-				prim.attr["slices"] = slices;
-				prim.attr["loops"] = loops;
+				if (queryResult != TIXML_SUCCESS)
+					exit_("There is an error in triangle values at node " + (string) pnode->id + ".");
 
 				if (DEBUGMODE)
-					cout << "\t\ttorus " << prim.attr["inner"] << " "
-							<< prim.attr["outer"] << " " << prim.attr["slices"]
-							<< " " << prim.attr["loops"] << endl;
+					cout << "\t\ttorus " << inner << " " << outer << " " << slices << " " << loops << endl;
 
-				pnode->childPrimitives.push_back(prim);
+				pnode->childPrimitives.push_back(new LSFTorus(inner, outer, slices, loops));
 
 			} else if (strcmp(childVal, "noderef") == 0) {
 				existingValidChilds++;
@@ -571,111 +519,6 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 
 				if (DEBUGMODE)
 					cout << "\t\tnoderef " << st << endl;
-
-			}
-			else if (strcmp(childVal, "plane") == 0) {
-				existingValidChilds++;
-				LSFprimitive prim(plane);
-				int parts;
-
-				queryResult = child->QueryIntAttribute("parts", &parts);
-				if (queryResult != TIXML_SUCCESS)
-					exit_("There is an error in plane parts value at node "
-									+ (string) pnode->id + ".");
-
-				prim.attr["parts"]=parts;
-				cout << "Plane with parts: " << parts << endl;
-				pnode->childPrimitives.push_back(prim);
-
-			}
-			else if (strcmp(childVal, "patch") == 0) {
-				existingValidChilds++;
-				LSFprimitive prim(patch);
-				int order, partsU, partsV;
-				string compute;
-
-				queryResult = child->QueryIntAttribute("order", &order);
-				queryResult |= child->QueryIntAttribute("partsU", &partsU);
-				queryResult |= child->QueryIntAttribute("partsV", &partsV);
-				if (queryResult != TIXML_SUCCESS)
-					exit_("There is an error in patch values at node "
-									+ (string) pnode->id + ".");
-
-				compute = child->Attribute("compute");
-				if(compute != "fill" && compute != "line" && compute != "point")
-					exit_("There is an error in patch compute value at node "
-														+ (string) pnode->id + ".");
-
-				prim.attr["order"] = order;
-				prim.attr["partsU"] = partsU;
-				prim.attr["partsV"] = partsV;
-
-				if(compute == "fill") prim.compute = GL_FILL;
-				else if(compute == "line") prim.compute = GL_LINE;
-				else if(compute == "point") prim.compute = GL_POINT;
-
-				cout << "Patch with order: " << order << ", partsU: " << partsU;
-				cout << ", partsV: " << partsV << ", compute: " << compute << endl;
-
-				TiXmlElement *controlPoints;
-				if ((controlPoints = child->FirstChildElement("controlpoint")) == NULL)
-					exit_("Tag <controlpoint> at node " + (string) pnode->id
-									+ " is missing or misspelled.");
-
-				int numControlPoints = ((order+1)*(order+1));
-				GLfloat *cp;
-				cp = (GLfloat*)malloc (numControlPoints*sizeof(GLfloat[3]));
-				int existingControlpoints = 0;
-				int i=0;
-				while (controlPoints) {
-					existingControlpoints++;
-					queryResult = controlPoints->QueryFloatAttribute("x", &cp[i++]);
-					queryResult |= controlPoints->QueryFloatAttribute("y", &cp[i++]);
-					queryResult |= controlPoints->QueryFloatAttribute("z", &cp[i++]);
-					if (queryResult != TIXML_SUCCESS)
-						exit_("There is an error in patch controlpoints values at node "
-								+ (string) pnode->id + ".");
-
-					controlPoints = controlPoints->NextSiblingElement();
-				}
-
-				prim.ctrlpoints = cp;
-
-				int diff = numControlPoints - existingControlpoints;
-				cout << diff << endl;
-				char buff[33];
-				itoa(diff, buff, 30);
-				if (diff != 0)
-					exit_("Exists " + (string)buff + " invalid or missing controlpoint(s) at node "
-									+ (string)pnode->id + ".");
-
-				pnode->childPrimitives.push_back(prim);
-			}
-			else if (strcmp(childVal, "vehicle") == 0){
-				existingValidChilds++;
-				LSFprimitive prim(vehicle);
-
-				pnode->childPrimitives.push_back(prim);
-			}
-			else if(strcmp(childVal,"terrain")==0){
-				existingValidChilds++;
-
-				char *heightmap,*texturemap, *fragmentshader, *vertexshader;
-				heightmap=new char[100]; strcpy(heightmap,"../textures/");
-				texturemap=new char[100]; strcpy(texturemap,"../textures/");
-				fragmentshader=new char[100]; strcpy(fragmentshader,"../shaders/");
-				vertexshader=new char[100]; strcpy(vertexshader,"../shaders/");
-
-				strcat(heightmap,child->Attribute("heightmap"));
-				strcat(texturemap,child->Attribute("texturemap"));
-				strcat(fragmentshader,child->Attribute("fragmentshader"));
-				strcat(vertexshader,child->Attribute("vertexshader"));
-
-				LSFprimitive prim(terrain);
-				prim.terrain=new Terrain(heightmap,texturemap,fragmentshader,vertexshader);
-
-				pnode->childPrimitives.push_back(prim);
-
 			}
 
 			// -->
@@ -723,112 +566,78 @@ void LSFparser::getAppearances(map<string, LSFappearance*> &appearances) {
 
 		int existingValidAppearanceElements = 0;
 
-		TiXmlElement *emissive, *ambient, *diffuse, *specular, *shininess,
-				*texture;
+		TiXmlElement *emissive, *ambient, *diffuse, *specular, *shininess, *texture;
 
 		emissive = node->FirstChildElement("emissive");
 		if (emissive != NULL)
 			if (strcmp(emissive->ValueTStr().c_str(), "emissive") == 0) {
 				existingValidAppearanceElements++;
-				queryResult = emissive->QueryFloatAttribute("r",
-						&emissive_vec[0]);
-				queryResult |= emissive->QueryFloatAttribute("g",
-						&emissive_vec[1]);
-				queryResult |= emissive->QueryFloatAttribute("b",
-						&emissive_vec[2]);
-				queryResult |= emissive->QueryFloatAttribute("a",
-						&emissive_vec[3]);
+				queryResult =  emissive->QueryFloatAttribute("r", &emissive_vec[0]);
+				queryResult |= emissive->QueryFloatAttribute("g", &emissive_vec[1]);
+				queryResult |= emissive->QueryFloatAttribute("b", &emissive_vec[2]);
+				queryResult |= emissive->QueryFloatAttribute("a", &emissive_vec[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in emissive values at appearance "
-									+ (string) node->Attribute("id") + ".");
+					exit_("There is an error in emissive values at appearance " + (string) node->Attribute("id") + ".");
 			}
 
 		ambient = node->FirstChildElement("ambient");
 		if (ambient != NULL)
 			if (strcmp(ambient->ValueTStr().c_str(), "ambient") == 0) {
 				existingValidAppearanceElements++;
-				queryResult = ambient->QueryFloatAttribute("r",
-						&ambient_vec[0]);
-				queryResult |= ambient->QueryFloatAttribute("g",
-						&ambient_vec[1]);
-				queryResult |= ambient->QueryFloatAttribute("b",
-						&ambient_vec[2]);
-				queryResult |= ambient->QueryFloatAttribute("a",
-						&ambient_vec[3]);
+				queryResult =  ambient->QueryFloatAttribute("r", &ambient_vec[0]);
+				queryResult |= ambient->QueryFloatAttribute("g", &ambient_vec[1]);
+				queryResult |= ambient->QueryFloatAttribute("b", &ambient_vec[2]);
+				queryResult |= ambient->QueryFloatAttribute("a", &ambient_vec[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in ambient values at appearance "
-									+ (string) node->Attribute("id") + ".");
+					exit_("There is an error in ambient values at appearance " + (string) node->Attribute("id") + ".");
 			}
 
 		diffuse = node->FirstChildElement("diffuse");
 		if (diffuse != NULL)
 			if (strcmp(diffuse->ValueTStr().c_str(), "diffuse") == 0) {
 				existingValidAppearanceElements++;
-				queryResult = diffuse->QueryFloatAttribute("r",
-						&diffuse_vec[0]);
-				queryResult |= diffuse->QueryFloatAttribute("g",
-						&diffuse_vec[1]);
-				queryResult |= diffuse->QueryFloatAttribute("b",
-						&diffuse_vec[2]);
-				queryResult |= diffuse->QueryFloatAttribute("a",
-						&diffuse_vec[3]);
+				queryResult =  diffuse->QueryFloatAttribute("r", &diffuse_vec[0]);
+				queryResult |= diffuse->QueryFloatAttribute("g", &diffuse_vec[1]);
+				queryResult |= diffuse->QueryFloatAttribute("b", &diffuse_vec[2]);
+				queryResult |= diffuse->QueryFloatAttribute("a", &diffuse_vec[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in diffuse values at appearance "
-									+ (string) node->Attribute("id") + ".");
+					exit_("There is an error in diffuse values at appearance " + (string) node->Attribute("id") + ".");
 			}
 
 		specular = node->FirstChildElement("specular");
 		if (specular != NULL)
 			if (strcmp(specular->ValueTStr().c_str(), "specular") == 0) {
 				existingValidAppearanceElements++;
-				queryResult = specular->QueryFloatAttribute("r",
-						&specular_vec[0]);
-				queryResult |= specular->QueryFloatAttribute("g",
-						&specular_vec[1]);
-				queryResult |= specular->QueryFloatAttribute("b",
-						&specular_vec[2]);
-				queryResult |= specular->QueryFloatAttribute("a",
-						&specular_vec[3]);
+				queryResult =  specular->QueryFloatAttribute("r", &specular_vec[0]);
+				queryResult |= specular->QueryFloatAttribute("g", &specular_vec[1]);
+				queryResult |= specular->QueryFloatAttribute("b", &specular_vec[2]);
+				queryResult |= specular->QueryFloatAttribute("a", &specular_vec[3]);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in specular values at appearance "
-									+ (string) node->Attribute("id") + ".");
+					exit_("There is an error in specular values at appearance " + (string) node->Attribute("id") + ".");
 			}
 
 		shininess = node->FirstChildElement("shininess");
 		if (shininess != NULL)
 			if (strcmp(shininess->ValueTStr().c_str(), "shininess") == 0) {
 				existingValidAppearanceElements++;
-				if (shininess->QueryFloatAttribute("value", &shininess_value)
-						!= TIXML_SUCCESS)
-					exit_(
-							"There is an error in shininess value at appearance "
-									+ (string) node->Attribute("id") + ".");
+				if (shininess->QueryFloatAttribute("value", &shininess_value) != TIXML_SUCCESS)
+					exit_("There is an error in shininess value at appearance " + (string) node->Attribute("id") + ".");
 			}
 
 		char abuffer[33];
 		itoa((5 - existingValidAppearanceElements), abuffer, 30);
 		if (5 != existingValidAppearanceElements)
-			exit_(
-					"Exists " + (string) abuffer
-							+ " invalid appearance element(s) at node "
+			exit_("Exists " + (string) abuffer + " invalid appearance element(s) at node "
 							+ (string) node->Attribute("id") + ".");
 
 		texture = node->FirstChildElement("texture");
 		if (texture != NULL)
 			if (strcmp(texture->ValueTStr().c_str(), "texture") == 0) {
 				existingValidAppearanceElements++;
-				queryResult = texture->QueryFloatAttribute("length_s",
-						&texture_length_s);
-				queryResult |= texture->QueryFloatAttribute("length_t",
-						&texture_length_t);
+				queryResult =  texture->QueryFloatAttribute("length_s", &texture_length_s);
+				queryResult |= texture->QueryFloatAttribute("length_t", &texture_length_t);
 				if (queryResult != TIXML_SUCCESS)
-					exit_(
-							"There is an error in texture values at appearance "
-									+ (string) node->Attribute("id") + ".");
+					exit_("There is an error in texture values at appearance " + (string) node->Attribute("id") + ".");
 			}
 
 		if (DEBUGMODE) {
@@ -869,8 +678,7 @@ void LSFparser::getAppearances(map<string, LSFappearance*> &appearances) {
 		// Add to the map
 		CGFappearance* pappearance;
 		LSFappearance *pLSFappearance = new LSFappearance();
-		pappearance = new CGFappearance(ambient_vec, diffuse_vec, specular_vec,
-				shininess_value);
+		pappearance = new CGFappearance(ambient_vec, diffuse_vec, specular_vec, shininess_value);
 		if (texture != NULL) {
 			string t = "../textures/";
 			t.append(texture->Attribute("file"));
@@ -1143,64 +951,7 @@ void LSFparser::getLights(map<string, LSFlight*>&lights, bool &enabled,
 		node = node->NextSiblingElement();
 	}
 }
-void LSFparser::buildDisplayLists(map<string,LSFnode*> &nodes,string &rootNode,map<string,LSFappearance*> appearances,stack<LSFappearance*> &appearancesStack, bool enabledDisplayList){
 
-		// WARNING: first create childs display lists
-		// WARNING2: push matrix and parent matrix is necessary
-		glPushMatrix();
-		glMultMatrixf(nodes[rootNode]->transformMatrix);
-
-		for (int unsigned i = 0; i < nodes[rootNode]->childNoderefs.size(); i++){
-			buildDisplayLists(nodes, nodes[rootNode]->childNoderefs[i], appearances,appearancesStack,1);
-		}
-		glPopMatrix();
-
-		// If is display list
-		if(nodes[rootNode]->isDisplayList && enabledDisplayList){
-			nodes[rootNode]->displayList=glGenLists(1);
-			glNewList(nodes[rootNode]->displayList, GL_COMPILE);
-			cout << "Criou a displaylist de: " << rootNode << endl;
-		}
-
-		// Transforms
-		glPushMatrix();
-		glMultMatrixf(nodes[rootNode]->transformMatrix);
-
-		// Appearances
-		LSFappearance *currentAppearance;
-		if (nodes[rootNode]->appearance == "inherit")
-			currentAppearance = appearancesStack.top();
-		else
-			currentAppearance = appearances[nodes[rootNode]->appearance];
-		appearancesStack.push(currentAppearance);
-		glMaterialfv(GL_EMISSION, GL_FRONT_AND_BACK, currentAppearance->emissive);
-		currentAppearance->appearance->apply();
-
-		// Process the primitives
-		for (int unsigned i = 0; i < nodes[rootNode]->childPrimitives.size(); i++) {
-			LSFprimitive primitive(nodes[rootNode]->childPrimitives[i]);
-			primitive.appearance = currentAppearance;
-			primitive.draw();
-		}
-
-		// Process the childs nodes
-		for (int unsigned i = 0; i < nodes[rootNode]->childNoderefs.size(); i++){
-			LSFnode *childNode=nodes[nodes[rootNode]->childNoderefs[i]];
-			if(childNode->isDisplayList){
-				glCallList(childNode->displayList);
-			}
-			else
-				buildDisplayLists(nodes, nodes[rootNode]->childNoderefs[i], appearances,appearancesStack,0);
-		}
-
-		appearancesStack.pop();
-		glPopMatrix();
-
-		// If is display list
-		if(nodes[rootNode]->isDisplayList & enabledDisplayList){
-			glEndList();
-		}
-}
 void LSFparser::getAnimations(map<string,LSFanimation*> &animations){
 	if(animationElement==0) {
 		cout << "Nada de Animacoes" << endl;

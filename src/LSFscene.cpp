@@ -37,8 +37,8 @@ void LSFscene::init()
 	sceneParser = new LSFparser(inputScene);
 
 	// Set the default appearance
-	defaultAppearance=new LSFappearance();
-	defaultAppearance->appearance=new CGFappearance();
+	defaultAppearance = new LSFappearance();
+	defaultAppearance->appearance = new CGFappearance();
 	float color[4]={0.6,0.6,0.6,0.6};
 	defaultAppearance->appearance->setAmbient(color);
 	defaultAppearance->appearance->setDiffuse(color);
@@ -58,10 +58,7 @@ void LSFscene::init()
 	if(lights_local) glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
 	// Get the nodes
-	sceneParser->getNodes(nodes,rootNode);
-	stack<LSFappearance*> appearancesStack;
-	appearancesStack.push(defaultAppearance);
-	sceneParser->buildDisplayLists(nodes,rootNode,appearances,appearancesStack,1);
+	sceneParser->getNodes(nodes, rootNode);
 	// Get the cameras info
 	sceneParser->getCameras(cameras);
 	sceneParser->getAnimations(animations);
@@ -69,10 +66,25 @@ void LSFscene::init()
 	freeCamera->id = "freeMove";
 	cameras["freeMove"] = freeCamera;
 
+
+	LSFappearance *currentAppearance;
+	stack<LSFappearance*> appearancesStack_temp;
+	appearancesStack_temp.push(defaultAppearance);
+	for(map<string,LSFnode*>::iterator it = nodes.begin(); it != nodes.end(); it++){
+		for(unsigned int i = 0; i < it->second->childPrimitives.size(); i++){
+			if (it->second->appearance == "inherit")
+				currentAppearance = appearancesStack_temp.top();
+			else
+				currentAppearance = appearances[it->second->appearance];
+
+			appearancesStack_temp.push(currentAppearance);
+			it->second->childPrimitives[i]->init(currentAppearance);
+		}
+	}
+
 	initCameras();
 
 	setUpdatePeriod(10);
-
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){

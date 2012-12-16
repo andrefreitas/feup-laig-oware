@@ -16,15 +16,12 @@ class LSFnode{
 	public:
 	LSFnode(){
 		animationRef="none";
-		isDisplayList=0;
 	}
 	char *id;
 	float transformMatrix[16]; // When the node is parsed, the transformations are put in a stack
 	string appearance; // Reference to the map of appearances
-	vector<LSFprimitive> childPrimitives; // All the basic primitives
+	vector<LSFprimitive *> childPrimitives; // All the basic primitives
 	vector<string> childNoderefs; // All the child nodes
-	bool isDisplayList;
-	int displayList;
 	string animationRef;
 };
 
