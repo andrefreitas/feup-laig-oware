@@ -33,3 +33,6 @@ test:
 
 animation:
 	$(CCC) $(INCLUDES) -o animation src/LSFanimation.cpp src/testAnimation.cpp src/LSFvertex.cpp src/LSFprimitive.cpp $(LIBS)
+
+socket:
+	$(CCC) $(INCLUDES) -o socket src/Socket.cpp $(LIBS)
