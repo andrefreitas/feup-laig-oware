@@ -113,12 +113,78 @@ int Socket::reads(string &msg){
 #endif
 /*
 int main(){
+	string msg;
+	string num;
+	string turn;
+	int hole = 1;
 	Socket s1("127.0.0.1",6300); 
 	cout << s1.opens() << endl;
 
-	s1.writes("[beginGame,[bot2,0],[bot1,0],2,newBoard].\n");
-	string msg;
-	while(s1.reads(msg)) cout << msg;
+	turn = 2 + 48;
+	string str = "playerTurn ";
+	str.append(turn);
+
+
+	s1.writes("[beginGame,[bot2,0],[human,0],1,newBoard].\n");
+	s1.reads(msg);
+	strncmp(msg.c_str(), "ack.", strlen("ack.")-1) == 0;
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	msg = "[playerChooses, "; num = hole+48; msg.append(num); msg.append("].\n");
+	s1.writes(msg); hole++;
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	msg = "[playerChooses, "; num = hole+48; msg.append(num); msg.append("].\n");
+	s1.writes(msg); hole++;
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	msg = "[playerChooses, "; num = hole+48; msg.append(num); msg.append("].\n");
+	s1.writes(msg); hole++;
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	msg = "[playerChooses, "; num = hole+48; msg.append(num); msg.append("].\n");
+	s1.writes(msg); hole++;
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	msg = "[playerChooses, "; num = hole+48; msg.append(num); msg.append("].\n");
+	s1.writes(msg); hole++;
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	msg = "[playerChooses, "; num = hole+48; msg.append(num); msg.append("].\n");
+	s1.writes(msg);
+	while(s1.reads(msg)){
+		if(strncmp(msg.c_str(), str.c_str(), strlen(str.c_str())-1) == 0){
+			break;
+		}
+	}
+	s1.reads(msg); cout << msg;
+	s1.writes("[endGame].\n");
+//	s1.reads(msg); cout << msg;
+//	s1.reads(msg); cout << msg;
 	
 	return 0;
 }
