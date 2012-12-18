@@ -9,6 +9,7 @@
 #include "glm.h"
 #include <string>
 #include <string.h>
+
 using namespace std;
 /*
 	ObjModel - A class for loading .obj models and redering it. It doesn't load materials
@@ -16,6 +17,7 @@ using namespace std;
 class ObjModel{
 protected:
 	GLMmodel *model;
+
 public:
 	ObjModel(string filename);
 	void draw();

@@ -48,24 +48,28 @@ void LSFscene::init()
 	freeCamera->id = "freeMove";
 	cameras["freeMove"] = freeCamera;
 
-	//init the primitives
-	LSFappearance *currentAppearance;
 	stack<LSFappearance*> appearancesStack_temp;
 	appearancesStack_temp.push(defaultAppearance);
-	for(map<string,LSFnode*>::iterator it = nodes.begin(); it != nodes.end(); it++){
-		for(unsigned int i = 0; i < it->second->childPrimitives.size(); i++){
-			if (it->second->appearance == "inherit")
-				currentAppearance = appearancesStack_temp.top();
-			else
-				currentAppearance = appearances[it->second->appearance];
-
-			appearancesStack_temp.push(currentAppearance);
-			it->second->childPrimitives[i]->init(currentAppearance);
-		}
-	}
-
+	initPrimitives(nodes, rootNode, appearances, appearancesStack_temp);
 	initCameras();
 	setUpdatePeriod(10);
+}
+
+void LSFscene::initPrimitives(map<string,LSFnode*> &nodes,string &rootNode,map<string,LSFappearance*> appearances,
+		                      stack<LSFappearance*> &appearancesStack){
+	LSFappearance *currentAppearance;
+	if (nodes[rootNode]->appearance == "inherit")
+		currentAppearance = appearancesStack.top();
+	else
+		currentAppearance = appearances[nodes[rootNode]->appearance];
+
+	appearancesStack.push(currentAppearance);
+
+	for(unsigned int i = 0; i < nodes[rootNode]->childPrimitives.size(); i++)
+		nodes[rootNode]->childPrimitives[i]->init(currentAppearance);
+
+	for(unsigned int i = 0; i < nodes[rootNode]->childNoderefs.size(); i++)
+		initPrimitives(nodes, nodes[rootNode]->childNoderefs[i], appearances, appearancesStack);
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){

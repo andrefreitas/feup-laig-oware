@@ -50,6 +50,8 @@ public:
 	// --
 	void init();
 	void display();
+	void initPrimitives(map<string,LSFnode*> &nodes,string &rootNode,map<string,LSFappearance*> appearances,
+            stack<LSFappearance*> &appearancesStack);
 	virtual void initCameras();
 	void activateCamera(string id);
 	// -----
