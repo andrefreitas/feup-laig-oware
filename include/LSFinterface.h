@@ -8,7 +8,6 @@
 #define LSFINTERFACE_H_
 
 #include <iostream>
-
 #include "CGFinterface.h"
 #include "LSFscene.h"
 
@@ -19,13 +18,13 @@ class LSFinterface: public CGFinterface{
 	private:
 		LSFscene *scene;
 		struct globalsData *globals;
-		map<string,LSFlight*> *lights;
-		map<string, LSFcamera*> *cameras;
 		int initialCamera;
 		int camerasGroup;
 		int polygonalMode;
 		GLenum face;
 		GLenum mode;
+		map<string,LSFlight*> *lights;
+		map<string, LSFcamera*> *cameras;
 
 	public:
 		LSFinterface(LSFscene *scene);
@@ -34,6 +33,5 @@ class LSFinterface: public CGFinterface{
 		virtual void processGUI(GLUI_Control *ctrl);
 
 };
-
 
 #endif /* LSFINTERFACE_H_ */
