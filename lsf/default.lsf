@@ -53,6 +53,16 @@
 			<texture file="wweMagazine.jpg" length_s="10" length_t="10" />
 		</appearance>
 
+
+		<appearance id="bush">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="bush.png" length_s="10" length_t="10" />
+		</appearance>
+
 		<appearance id="sand">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="1" g="1" b="1" a="1" />
@@ -61,6 +71,16 @@
 			<shininess value="0.3" />
 			<texture file="sand.jpg" length_s="1" length_t="1" />
 		</appearance>
+
+		<appearance id="desertstone">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="desertstone.jpg" length_s="1" length_t="1" />
+		</appearance>
+
 
 
 		<appearance id="bluesky">
@@ -123,8 +143,36 @@
 			<children>
 	
 				<model src="sandDunes.obj" />
+				<noderef id="Rocks" />
+				<noderef id="PalmTree" />
 			</children>
 		</node>
+
+
+		<node id="Rocks" displaylist="0">
+			<transforms>
+				<translate x="0" y="1.6" z="0" />
+			</transforms>
+			<appearanceref id="desertstone" />
+				 
+			<children>
+	
+				<model src="rocks.obj" />
+			</children>
+		</node>
+
+		<node id="PalmTree" displaylist="0">
+			<transforms>
+				<translate x="0" y="2" z="3" />
+			</transforms>
+			<appearanceref id="bush" />
+				 
+			<children>
+	
+				<model src="palmtree.obj" />
+			</children>
+		</node>
+
 
 
 		  <node id="SkyBox">
