@@ -520,6 +520,15 @@ void LSFparser::getNodes(map<string, LSFnode*> &nodes, string &rootNode) {
 				if (DEBUGMODE)
 					cout << "\t\tnoderef " << st << endl;
 			}
+			else if (strcmp(childVal, "model") == 0) {
+				existingValidChilds++;
+				const char *filename=child->Attribute("src");
+				char *buf =new char[256];
+				strcpy(buf,"../models/");
+				strcat(buf,filename);
+				cout << "Path: " << buf << endl;
+				pnode->childPrimitives.push_back(new LSFModel(buf));
+			}
 
 			// -->
 			child = child->NextSiblingElement();

@@ -20,23 +20,11 @@ LSFscene::~LSFscene(){
 
 void LSFscene::init()
 {
-	// By default is false
+	// Default params
 	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
 	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
-
-	// Enables textures
 	glEnable ( GL_TEXTURE_2D );
-
-	// Sets up some lighting parameters
-	 // Define ambient light
-
-	// Defines a default normal
 	glNormal3f(0,0,1);
-
-	// Initializate the parser
-	sceneParser = new LSFparser(inputScene);
-
-	// Set the default appearance
 	defaultAppearance = new LSFappearance();
 	defaultAppearance->appearance = new CGFappearance();
 	float color[4]={0.6,0.6,0.6,0.6};
@@ -45,21 +33,15 @@ void LSFscene::init()
 	defaultAppearance->appearance->setSpecular(color);
 	defaultAppearance->appearance->setShininess(0.5);
 
-
-	// Get Global configurations
+	// Parse configurations and other data
+	sceneParser = new LSFparser(inputScene);
 	setGlobals();
-	// Get the Appearances
 	sceneParser->getAppearances(appearances);
-	// Get the lights
 	sceneParser->getLights(lights,lights_enabled, lights_local, lights_doublesided,ambient);
-	// Lights config
 	if(lights_enabled) glEnable(GL_LIGHTING);
 	if(lights_doublesided) glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	if(lights_local) glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-
-	// Get the nodes
 	sceneParser->getNodes(nodes, rootNode);
-	// Get the cameras info
 	sceneParser->getCameras(cameras);
 	sceneParser->getAnimations(animations);
 	LSFcamera *freeCamera = new LSFcamera;
@@ -83,7 +65,6 @@ void LSFscene::init()
 	}
 
 	initCameras();
-
 	setUpdatePeriod(10);
 }
 
@@ -136,22 +117,13 @@ void LSFscene::activateCamera(string id)
 void LSFscene::display()
 {
 
-	// ---- BEGIN Background, camera and axis setup
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-	// Clear image and depth buffer everytime we update the scene
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-	// Initialize Model-View matrix as identity (no transformation
-
-	//polygonal mode
 	glPolygonMode(face, mode);
-
-	// Apply transformations corresponding to the camera position relative to the origin
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//cameras aplyView
+	// ---- BEGIN cameras section
 	if(activeCamera == "freeMove")
 	{
 		CGFscene::activeCamera->updateProjectionMatrix(CGFapplication::width, CGFapplication::height);
@@ -162,8 +134,7 @@ void LSFscene::display()
 		cameras[activeCamera]->updateProjectionMatrix(CGFapplication::width, CGFapplication::height);
 		cameras[activeCamera]->applyView();
 	}
-
-
+	// ---- END cameras section
 
 	// ---- BEGIN lights section
 	map<string,LSFlight*>::iterator it;
@@ -176,24 +147,20 @@ void LSFscene::display()
 			(*it).second->light->disable();
 		}
 	}
-
 	// ---- END lights section
 
-	// Draw axis
-	axis.draw();
-
-	// ---- END Background, camera and axis setup
-	stack<LSFappearance*> appearancesStack;
-	appearancesStack.push(defaultAppearance);
-	LSFrender::render(nodes,rootNode,appearances,appearancesStack,animations,LSFscene::timeSeconds);
 
 
 	// ---- BEGIN Primitive drawing section
+
+	axis.draw();
+
+	stack<LSFappearance*> appearancesStack;
+	appearancesStack.push(defaultAppearance);
+	LSFrender::render(nodes,rootNode,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
+
 	// ---- END Primitive drawing section
 
-	// We have been drawing in a memory area that is not visible - the back buffer, 
-	// while the graphics card is showing the contents of another buffer - the front buffer
-	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
 	glutSwapBuffers();
 }
 

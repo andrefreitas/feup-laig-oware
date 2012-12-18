@@ -3,7 +3,7 @@ SRC = $(wildcard src/*.cpp)
 OBJ = $(patsubst src%, ../buildtemp%.o, $(SRC))
 OUT = bin/LSFscene
 # include directories
-INCLUDES = -I. -I./include/  -I./include/CGF -I/usr/local/include -I./include/TinyXML
+INCLUDES = -I. -I./include/  -I./include/CGF -I/usr/local/include -I./include/TinyXML -I./include/GLmath
 # C++ compiler flags (-g -O2 -Wall)
 CCFLAGS = -g
 # compiler

@@ -21,7 +21,7 @@
 #include "LSFnode.h"
 #include "LSFparser.h"
 #include "LSFrender.h"
-
+#include "ObjModel.h"
 /**
  * LSFscene defines the scene parsed from the LSF file.
  */
@@ -40,7 +40,6 @@ class LSFscene : public CGFscene
 	bool lights_enabled, lights_local, lights_doublesided;
 	float ambient[4];
 	string activeCamera;
-
 	GLenum face;
 	GLenum mode;
 	static double timeSeconds;
@@ -63,5 +62,4 @@ public:
 	map<string, LSFcamera*> * getCameras();
 	void update(long millis);
 };
-
 #endif

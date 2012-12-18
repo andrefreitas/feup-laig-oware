@@ -180,3 +180,14 @@ void LSFTorus::init(LSFappearance *app){
 void LSFTorus::draw(){
 	glutSolidTorus(inner, outer, slices, loops);
 }
+
+void LSFModel::init(LSFappearance *app){
+
+}
+LSFModel::LSFModel(char* filename){
+	model=new ObjModel(filename);
+}
+
+void LSFModel::draw(){
+	model->draw();
+}
