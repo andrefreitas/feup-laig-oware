@@ -88,6 +88,7 @@
 				 
 			<children>
 				<rectangle x1="-5" y1="0" x2="5" y2="10" />
+				<model src="sandScenario.obj" />
 			</children>
 		</node>
 		

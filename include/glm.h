@@ -1,7 +1,7 @@
 /*    
       glm.h
-      Nate Robins, 1997, 2000
-      nate@pobox.com, http://www.pobox.com/~nate
+      Nate Robins, 1997
+      ndr@pobox.com, http://www.pobox.com/~ndr/
  
       Wavefront OBJ model file format reader/writer/manipulator.
 
@@ -16,79 +16,94 @@
 
 
 #ifndef M_PI
-#define M_PI 3.14159265f
+#define M_PI 3.14159265
 #endif
 
-#define GLM_NONE     (0)            /* render with only vertices */
-#define GLM_FLAT     (1 << 0)       /* render with facet normals */
-#define GLM_SMOOTH   (1 << 1)       /* render with vertex normals */
-#define GLM_TEXTURE  (1 << 2)       /* render with texture coords */
-#define GLM_COLOR    (1 << 3)       /* render with colors */
-#define GLM_MATERIAL (1 << 4)       /* render with materials */
+#define GLM_NONE     (0)		/* render with only vertices */
+#define GLM_FLAT     (1 << 0)		/* render with facet normals */
+#define GLM_SMOOTH   (1 << 1)		/* render with vertex normals */
+#define GLM_TEXTURE  (1 << 2)		/* render with texture coords */
+#define GLM_COLOR    (1 << 3)		/* render with colors */
+#define GLM_MATERIAL (1 << 4)		/* render with materials */
 
 
 /* GLMmaterial: Structure that defines a material in a model. 
  */
 typedef struct _GLMmaterial
 {
-  char* name;                   /* name of material */
-  GLfloat diffuse[4];           /* diffuse component */
-  GLfloat ambient[4];           /* ambient component */
-  GLfloat specular[4];          /* specular component */
-  GLfloat emmissive[4];         /* emmissive component */
-  GLfloat shininess;            /* specular exponent */
+  char* name;				/* name of material */
+  GLfloat diffuse[4];			/* diffuse component */
+  GLfloat ambient[4];			/* ambient component */
+  GLfloat specular[4];			/* specular component */
+  GLfloat emmissive[4];			/* emmissive component */
+  GLfloat shininess;			/* specular exponent */
 } GLMmaterial;
 
 /* GLMtriangle: Structure that defines a triangle in a model.
  */
 typedef struct _GLMtriangle {
-  GLuint vindices[3];           /* array of triangle vertex indices */
-  GLuint nindices[3];           /* array of triangle normal indices */
-  GLuint tindices[3];           /* array of triangle texcoord indices*/
-  GLuint findex;                /* index of triangle facet normal */
+  GLuint vindices[3];			/* array of triangle vertex indices */
+  GLuint nindices[3];			/* array of triangle normal indices */
+  GLuint tindices[3];			/* array of triangle texcoord indices*/
+  GLuint findex;			/* index of triangle facet normal */
 } GLMtriangle;
 
 /* GLMgroup: Structure that defines a group in a model.
  */
 typedef struct _GLMgroup {
-  char*             name;           /* name of this group */
-  GLuint            numtriangles;   /* number of triangles in this group */
-  GLuint*           triangles;      /* array of triangle indices */
-  GLuint            material;       /* index to material for group */
-  struct _GLMgroup* next;           /* pointer to next group in model */
+  char*             name;		/* name of this group */
+  GLuint            numtriangles;	/* number of triangles in this group */
+  GLuint*           triangles;		/* array of triangle indices */
+  GLuint            material;           /* index to material for group */
+  struct _GLMgroup* next;		/* pointer to next group in model */
 } GLMgroup;
 
 /* GLMmodel: Structure that defines a model.
  */
 typedef struct _GLMmodel {
-  char*    pathname;            /* path to this model */
-  char*    mtllibname;          /* name of the material library */
+  char*    pathname;			/* path to this model */
+  char*    mtllibname;			/* name of the material library */
 
-  GLuint   numvertices;         /* number of vertices in model */
-  GLfloat* vertices;            /* array of vertices  */
+  GLfloat translacao[3];        /* coordenadas de translacao do objecto  */
+  GLfloat escala[3];            /* coordenadas de escala do objecto  */
+  GLfloat rotacao[4];           /* coordenadas de rotacao do objecto  */
 
-  GLuint   numnormals;          /* number of normals in model */
-  GLfloat* normals;             /* array of normals */
+  GLuint   numvertices;			/* number of vertices in model */
+  GLfloat* vertices;			/* array of vertices  */
 
-  GLuint   numtexcoords;        /* number of texcoords in model */
-  GLfloat* texcoords;           /* array of texture coordinates */
+  GLuint   numnormals;			/* number of normals in model */
+  GLfloat* normals;			/* array of normals */
 
-  GLuint   numfacetnorms;       /* number of facetnorms in model */
-  GLfloat* facetnorms;          /* array of facetnorms */
+  GLuint   numtexcoords;		/* number of texcoords in model */
+  GLfloat* texcoords;			/* array of texture coordinates */
 
-  GLuint       numtriangles;    /* number of triangles in model */
-  GLMtriangle* triangles;       /* array of triangles */
+  GLuint   numfacetnorms;		/* number of facetnorms in model */
+  GLfloat* facetnorms;			/* array of facetnorms */
 
-  GLuint       nummaterials;    /* number of materials in model */
-  GLMmaterial* materials;       /* array of materials */
+  GLuint       numtriangles;		/* number of triangles in model */
+  GLMtriangle* triangles;		/* array of triangles */
 
-  GLuint       numgroups;       /* number of groups in model */
-  GLMgroup*    groups;          /* linked list of groups */
+  GLuint       nummaterials;		/* number of materials in model */
+  GLMmaterial* materials;		/* array of materials */
 
-  GLfloat position[3];          /* position of the model */
+  GLuint       numgroups;		/* number of groups in model */
+  GLMgroup*    groups;			/* linked list of groups */
+
+  GLfloat position[3];			/* position of the model */
 
 } GLMmodel;
 
+// funcoes adicionadas
+GLvoid 
+relScale(GLMmodel* model, GLfloat scalex, GLfloat scaley, GLfloat scalez);
+
+GLvoid 
+relTrans(GLMmodel* model, GLfloat transx, GLfloat transy, GLfloat transz);
+
+GLvoid 
+relRotat(GLMmodel* model, GLfloat angle, GLfloat rotatex, GLfloat rotatey, GLfloat rotatez);
+
+//fim
 
 /* glmUnitize: "unitize" a model by translating it to the origin and
  * scaling it to fit in a unit cube around the origin.  Returns the
@@ -137,7 +152,7 @@ glmFacetNormals(GLMmodel* model);
 /* glmVertexNormals: Generates smooth vertex normals for a model.
  * First builds a list of all the triangles each vertex is in.  Then
  * loops through each vertex in the the list averaging all the facet
- * normals of the triangles each vertex is in.  Finally, sets the
+ * normals of the triangles each vertex is in.  Finally, vectors the
  * normal index in the triangle for the vertex to the generated smooth
  * normal.  If the dot product of a facet normal and the facet normal
  * associated with the first triangle in the list of triangles the
@@ -245,34 +260,3 @@ glmList(GLMmodel* model, GLuint mode);
  */
 GLvoid
 glmWeld(GLMmodel* model, GLfloat epsilon);
-
-/* glmReadPPM: read a PPM raw (type P6) file.  The PPM file has a header
- * that should look something like:
- *
- *    P6
- *    # comment
- *    width height max_value
- *    rgbrgbrgb...
- *
- * where "P6" is the magic cookie which identifies the file type and
- * should be the only characters on the first line followed by a
- * carriage return.  Any line starting with a # mark will be treated
- * as a comment and discarded.   After the magic cookie, three integer
- * values are expected: width, height of the image and the maximum
- * value for a pixel (max_value must be < 256 for PPM raw files).  The
- * data section consists of width*height rgb triplets (one byte each)
- * in binary format (i.e., such as that written with fwrite() or
- * equivalent).
- *
- * The rgb data is returned as an array of unsigned chars (packed
- * rgb).  The malloc()'d memory should be free()'d by the caller.  If
- * an error occurs, an error message is sent to stderr and NULL is
- * returned.
- *
- * filename   - name of the .ppm file.
- * width      - will contain the width of the image on return.
- * height     - will contain the height of the image on return.
- *
- */
-GLubyte* 
-glmReadPPM(char* filename, int* width, int* height);

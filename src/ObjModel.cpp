@@ -12,7 +12,6 @@ void ObjModel::draw(){
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
-	
 	glmFacetNormals(model); 
 	glmVertexNormals(model, 90.0);
 
