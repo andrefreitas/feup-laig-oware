@@ -9,7 +9,7 @@ CCFLAGS = -g
 # compiler
 CCC = g++
 # library paths
-LIBS = -Llib -L/usr/local/lib -L/usr/lib -lCGF32 -lTinyXML32 -lglew32 -lglui32 -lfreeglut -lglu32 -lopengl32
+LIBS = -Llib -L/usr/local/lib -L/usr/lib -lCGF32 -lTinyXML32 -lglew32 -lglui32 -lfreeglut -lglu32 -lopengl32 -lwsock32
 # compile flags
 LDFLAGS = -g
 

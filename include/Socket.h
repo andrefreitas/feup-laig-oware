@@ -7,18 +7,29 @@
  *****************************************************************************/
 #include <string>
 #include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+#include <strings.h>
+#include <string.h>
+
+#ifdef __LINUX__
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <iostream>
 #include <arpa/inet.h>
 #include <signal.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <strings.h>
-#include <string.h>
+
+#else
+
+#include <winsock2.h>
+#include <ctype.h>
+
+#endif
+
 using namespace std;
 
 /*

@@ -5,6 +5,8 @@ Socket::Socket(string hostname, int port){
 	this->port=port;
 }
 
+#ifdef __LINUX__
+
 int Socket::opens(){
 	int sockfd, len;
 	struct sockaddr_in server_addr;
@@ -44,6 +46,71 @@ int Socket::reads(string &msg){
  	close(socketfd);
  }
 
+#else
+
+int Socket::opens(){// Initialize Winsock.
+	SOCKET m_socket;
+    WSADATA wsaData;
+
+    int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+
+    if (iResult != NO_ERROR)
+		printf("Client: Error at WSAStartup().\n");
+    else
+        printf("Client: WSAStartup() is OK.\n");
+
+	// Create a socket.
+    m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (m_socket == INVALID_SOCKET) {
+        printf("Client: socket() - Error at socket(): %d\n", WSAGetLastError());
+        WSACleanup();
+        return false;
+    }
+	else
+       printf("Client: socket() is OK.\n");
+
+    // Connect to a server.
+    sockaddr_in clientService;
+    clientService.sin_family = AF_INET;
+    // Just test using the localhost, you can try other IP address
+    clientService.sin_addr.s_addr = inet_addr(hostname.c_str());
+    clientService.sin_port = htons(port);
+
+    if (connect(m_socket, (SOCKADDR*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
+        printf("Client: connect() - Failed to connect.\n");
+        WSACleanup();
+        return false;
+    }
+    else {
+       printf("Client: connect() is OK.\n");
+       printf("Client: Can start sending and receiving data...\n");
+    }
+
+    socketfd=m_socket;
+
+    // Send and receive data.
+	printf("Connected\n");
+
+	return 0;
+}
+
+int Socket::writes(string msg){
+	const char *buf = msg.c_str();
+	return send(socketfd, buf, strlen(buf)+1, 0);
+}
+
+int Socket::reads(string &msg){
+	char *buf = new char[256];
+	int len=recv(socketfd, buf, 256, 0);
+	msg=buf;
+	return len;
+}
+
+ void Socket::closes(){
+	closesocket(socketfd);
+ }
+
+#endif
 /*
 int main(){
 	Socket s1("127.0.0.1",6300); 
