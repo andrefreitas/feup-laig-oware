@@ -14,7 +14,7 @@
 #include "LSFobjects.h"
 #include "LSFvertex.h"
 #include "LSFshader.h"
-
+#include "ObjModel.h"
 class LSFprimitive{
 public:
 	virtual void init(LSFappearance *app) = 0;
@@ -32,6 +32,16 @@ public:
 	void init(LSFappearance *app);
 	void draw();
 };
+
+class LSFModel: public LSFprimitive{
+protected:
+	ObjModel *model;
+public:
+	LSFModel(char* filename);
+	void init(LSFappearance *app);
+	void draw();
+};
+
 
 class LSFBox: public LSFprimitive{
 public:
