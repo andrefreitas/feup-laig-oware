@@ -83,7 +83,6 @@ void LSFscene::init()
 	}
 
 	initCameras();
-
 	setUpdatePeriod(10);
 }
 
@@ -185,9 +184,7 @@ void LSFscene::display()
 	// ---- END Background, camera and axis setup
 	stack<LSFappearance*> appearancesStack;
 	appearancesStack.push(defaultAppearance);
-	LSFrender::render(nodes,rootNode,appearances,appearancesStack,animations,LSFscene::timeSeconds);
-
-
+	LSFrender::render(nodes,rootNode,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
 	// ---- BEGIN Primitive drawing section
 	// ---- END Primitive drawing section
 
