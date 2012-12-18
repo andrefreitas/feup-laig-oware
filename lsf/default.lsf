@@ -55,7 +55,7 @@
 
 		<appearance id="sand">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
-			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
@@ -69,7 +69,7 @@
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
-			<texture file="bluesky.jpg" length_s="500" length_t="500" />
+			<texture file="bluesky.jpg" length_s="400" length_t="400" />
 		</appearance>
 
 		<appearance id="vermelho">
@@ -97,18 +97,32 @@
 	</animations>
 
 	<!-- graph information -->
-	<graph rootid="SandScenario">
+	<graph rootid="Scenario">
 
 		
+
+		<node id="Scenario" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="sand" />
+				 
+			<children>
+	
+				<noderef id="SandScenario" />
+				 <noderef id="SkyBox" />
+			</children>
+		</node>
+
 		<node id="SandScenario" displaylist="0">
 			<transforms>
+				<translate x="0" y="0" z="0" />
 			</transforms>
 			<appearanceref id="sand" />
 				 
 			<children>
 	
 				<model src="sandDunes.obj" />
-				 <noderef id="SkyBox" />
 			</children>
 		</node>
 
@@ -119,19 +133,54 @@
                         </transforms>
                         <appearanceref id="bluesky" />
                         <children>
-                                <noderef id="skyfront" />
-             
+                                <noderef id="skyleft" />
+                                <noderef id="skyback" />
+                                <noderef id="skyright" />
+             					<noderef id="skyfront" />
+                        </children>
+                </node>
+
+                <node id="skyleft">
+                        <transforms>
+            					<translate x="-200" y="0" z="200" />
+                                <rotate axis="y" angle="90" />
+                        </transforms>
+                        <appearanceref id="inherit" />
+                        <children>
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
+                        </children>
+                </node>
+
+                 <node id="skyback">
+                        <transforms>
+            					<translate x="200" y="0" z="200" />
+                                <rotate axis="y" angle="180" />
+                        </transforms>
+                        <appearanceref id="inherit" />
+                        <children>
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
+                        </children>
+                </node>
+
+                 <node id="skyright">
+                        <transforms>
+            					<translate x="200" y="0" z="-200" />
+                                <rotate axis="y" angle="270" />
+                        </transforms>
+                        <appearanceref id="inherit" />
+                        <children>
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
                         </children>
                 </node>
 
                 <node id="skyfront">
                         <transforms>
-            
-                                <rotate axis="y" angle="90" />
+            					<translate x="-200" y="0" z="-200" />
+                                <rotate axis="y" angle="0" />
                         </transforms>
                         <appearanceref id="inherit" />
                         <children>
-                                <rectangle x1="0" y1="0" x2="500" y2="500" />
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
                         </children>
                 </node>
 
