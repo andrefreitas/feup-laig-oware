@@ -5,7 +5,7 @@ Socket::Socket(string hostname, int port){
 	this->port=port;
 }
 
-#ifdef __LINUX__
+#ifdef __linux__
 
 int Socket::opens(){
 	int sockfd, len;

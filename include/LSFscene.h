@@ -40,8 +40,6 @@ class LSFscene : public CGFscene
 	bool lights_enabled, lights_local, lights_doublesided;
 	float ambient[4];
 	string activeCamera;
-	
-	ObjModel* model;
 	GLenum face;
 	GLenum mode;
 	static double timeSeconds;

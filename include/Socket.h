@@ -12,7 +12,7 @@
 #include <strings.h>
 #include <string.h>
 
-#ifdef __LINUX__
+#ifdef __linux__
 
 #include <sys/types.h>
 #include <sys/socket.h>
