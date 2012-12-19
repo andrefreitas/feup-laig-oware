@@ -53,6 +53,9 @@ void LSFscene::init()
 	initPrimitives(nodes, rootNode, appearances, appearancesStack_temp);
 	initCameras();
 	setUpdatePeriod(10);
+
+	// Scenario
+	scenario="JungleScenario";
 }
 
 void LSFscene::initPrimitives(map<string,LSFnode*> &nodes,string &rootNode,map<string,LSFappearance*> appearances,
@@ -159,9 +162,10 @@ void LSFscene::display()
 
 	axis.draw();
 
+	// Scenario
 	stack<LSFappearance*> appearancesStack;
 	appearancesStack.push(defaultAppearance);
-	LSFrender::render(nodes,rootNode,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
+	LSFrender::render(nodes,scenario,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
 
 	// ---- END Primitive drawing section
 

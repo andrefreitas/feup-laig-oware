@@ -174,7 +174,7 @@
 			<children>
 	
 				<noderef id="VillageScenario" />
-				<noderef id="SkyBox" />
+				
 			</children>
 		</node>
 
@@ -191,6 +191,7 @@
 				<noderef id="VillageHouse1" />
 				<noderef id="VillageHouse2" />
 				<noderef id="VillageHouse3" />
+				<noderef id="SkyBox" />
 			</children>
 		</node>
 
@@ -294,6 +295,7 @@
 				<model src="sandDunes.obj" />
 				<noderef id="Banana1" />
 				<noderef id="Banana2" />
+				<noderef id="SkyBox" />
 			</children>
 		</node>
 
@@ -350,6 +352,7 @@
 				<model src="sandDunes.obj" />
 				<noderef id="Rocks" />
 				<noderef id="PalmTree" />
+				<noderef id="SkyBox" />
 			</children>
 		</node>
 
