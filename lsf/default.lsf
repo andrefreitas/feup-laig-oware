@@ -63,6 +63,15 @@
 			<texture file="bush.png" length_s="10" length_t="10" />
 		</appearance>
 
+		<appearance id="grassgreen">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="grassgreen.jpg" length_s="10" length_t="10" />
+		</appearance>
+
 		<appearance id="sand">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="1" g="1" b="1" a="1" />
@@ -130,7 +139,65 @@
 			<children>
 	
 				<noderef id="SandScenario" />
-				 <noderef id="SkyBox" />
+				<noderef id="SkyBox" />
+			</children>
+		</node>
+
+
+
+		<node id="JungleScenario" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="grassgreen" />
+				 
+			<children>
+	
+				<model src="sandDunes.obj" />
+				<noderef id="Banana1" />
+				<noderef id="Banana2" />
+			</children>
+		</node>
+
+
+
+		<node id="Banana1" displaylist="0">
+			<transforms>
+				<translate x="1" y="0" z="-1" />
+			</transforms>
+			<appearanceref id="grassgreen" />
+				 
+			<children>
+	
+				<noderef id="Banana" />
+			</children>
+		</node>
+		
+		<node id="Banana2" displaylist="0">
+			<transforms>
+				<translate x="16" y="0" z="-1" />
+			</transforms>
+			<appearanceref id="grassgreen" />
+				 
+			<children>
+	
+				<noderef id="Banana" />
+			</children>
+		</node>
+
+
+
+
+		<node id="Banana" displaylist="0">
+			<transforms>
+				<translate x="-4" y="2" z="0" />
+				<scale x="7" y="7" z="7" />
+			</transforms>
+			<appearanceref id="bush" />
+				 
+			<children>
+	
+				<model src="banana.obj" />
 			</children>
 		</node>
 
@@ -164,6 +231,7 @@
 		<node id="PalmTree" displaylist="0">
 			<transforms>
 				<translate x="0" y="2" z="3" />
+				<scale x="7" y="7" z="7" />
 			</transforms>
 			<appearanceref id="bush" />
 				 
