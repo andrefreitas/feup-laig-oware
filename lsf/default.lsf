@@ -90,6 +90,15 @@
 			<texture file="dirt.jpg" length_s="1" length_t="1" />
 		</appearance>
 
+		<appearance id="redbricks">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="redbricks.jpg" length_s="1" length_t="1" />
+		</appearance>
+
 		<appearance id="desertstone">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="1" g="1" b="1" a="1" />
@@ -99,7 +108,24 @@
 			<texture file="desertstone.jpg" length_s="1" length_t="1" />
 		</appearance>
 
+		<appearance id="straw">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="straw.jpg" length_s="1" length_t="1" />
+		</appearance>
 
+
+		<appearance id="olddoor">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="olddoor.png" length_s="1.5" length_t="3" />
+		</appearance>
 
 		<appearance id="bluesky">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
@@ -162,9 +188,47 @@
 			<children>
 	
 				<model src="sandDunes.obj" />
+				<noderef id="VillageHouse1" />
+				<noderef id="VillageHouse2" />
+				<noderef id="VillageHouse3" />
+			</children>
+		</node>
+
+		<node id="VillageHouse1" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
 				<noderef id="VillageHouse" />
 			</children>
 		</node>
+
+		<node id="VillageHouse2" displaylist="0">
+			<transforms>
+				<translate x="18" y="0" z="0" />
+				<rotate axis="y" angle="-80" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouse" />
+			</children>
+		</node>
+
+		<node id="VillageHouse3" displaylist="0">
+			<transforms>
+				<translate x="8" y="0" z="-7" />
+				<rotate axis="y" angle="-40" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouse" />
+			</children>
+		</node>
+
 
 		<node id="VillageHouse" displaylist="0">
 			<transforms>
@@ -175,6 +239,7 @@
 			<children>
 				<noderef id="VillageHouseBody" />
 				<noderef id="VillageHouseTop" />
+				<noderef id="VillageHouseDoor" />
 			</children>
 		</node>
 
@@ -183,7 +248,7 @@
 				<translate x="0" y="0" z="0" />
 				<rotate axis="x" angle="-90" />
 			</transforms>
-			<appearanceref id="inherit" />
+			<appearanceref id="redbricks" />
 				 
 			<children>
 				<cylinder base="3" top="3" height="4" slices="12" stacks="2" />   
@@ -195,13 +260,24 @@
 				<translate x="0" y="3.7" z="0" />
 				<rotate axis="x" angle="-90" />
 			</transforms>
-			<appearanceref id="inherit" />
+			<appearanceref id="straw" />
 				 
 			<children>
 				<cylinder base="5" top="0.05" height="2" slices="12" stacks="2" />   
 			</children>
 		</node>
 
+		<node id="VillageHouseDoor" displaylist="0">
+			<transforms>
+				<translate x="1.6" y="0" z="2.6" />
+				<rotate axis="y" angle="45" />
+			</transforms>
+			<appearanceref id="olddoor" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="3" /> 
+			</children>
+		</node>
 
 	
 
