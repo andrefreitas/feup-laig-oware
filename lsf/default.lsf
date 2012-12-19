@@ -53,15 +53,88 @@
 			<texture file="wweMagazine.jpg" length_s="10" length_t="10" />
 		</appearance>
 
-		<appearance id="sand">
+
+		<appearance id="bush">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="bush.png" length_s="10" length_t="10" />
+		</appearance>
+
+		<appearance id="grassgreen">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="grassgreen.jpg" length_s="10" length_t="10" />
+		</appearance>
+
+		<appearance id="sand">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
 			<texture file="sand.jpg" length_s="1" length_t="1" />
 		</appearance>
 
+		<appearance id="dirt">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="dirt.jpg" length_s="1" length_t="1" />
+		</appearance>
+
+		<appearance id="redbricks">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="redbricks.jpg" length_s="1" length_t="1" />
+		</appearance>
+
+		<appearance id="desertstone">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="desertstone.jpg" length_s="1" length_t="1" />
+		</appearance>
+
+		<appearance id="straw">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="straw.jpg" length_s="1" length_t="1" />
+		</appearance>
+
+
+		<appearance id="olddoor">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="olddoor.png" length_s="1.5" length_t="3" />
+		</appearance>
+
+		<appearance id="wood">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="wood.jpg" length_s="1.5" length_t="3" />
+		</appearance>
 
 		<appearance id="bluesky">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
@@ -69,7 +142,7 @@
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
-			<texture file="bluesky.jpg" length_s="500" length_t="500" />
+			<texture file="bluesky.jpg" length_s="400" length_t="400" />
 		</appearance>
 
 		<appearance id="vermelho">
@@ -97,21 +170,239 @@
 	</animations>
 
 	<!-- graph information -->
-	<graph rootid="SandScenario">
+	<graph rootid="Scenario">
 
 		
+
+		<node id="Scenario" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="sand" />
+				 
+			<children>
+	
+				<noderef id="VillageScenario" />
+				
+			</children>
+		</node>
+
+
+		<node id="VillageScenario" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="dirt" />
+				 
+			<children>
+	
+				<model src="sandDunes.obj" />
+				<noderef id="VillageHouse1" />
+				<noderef id="VillageHouse2" />
+				<noderef id="VillageHouse3" />
+				<noderef id="SkyBox" />
+			</children>
+		</node>
+
+		<node id="VillageHouse1" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouse" />
+			</children>
+		</node>
+
+		<node id="VillageHouse2" displaylist="0">
+			<transforms>
+				<translate x="18" y="0" z="0" />
+				<rotate axis="y" angle="-80" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouse" />
+			</children>
+		</node>
+
+		<node id="VillageHouse3" displaylist="0">
+			<transforms>
+				<translate x="8" y="0" z="-7" />
+				<rotate axis="y" angle="-40" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouse" />
+			</children>
+		</node>
+
+
+		<node id="VillageHouse" displaylist="0">
+			<transforms>
+				<translate x="0" y="1.8" z="0" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouseBody" />
+				<noderef id="VillageHouseTop" />
+				<noderef id="VillageHouseDoor" />
+			</children>
+		</node>
+
+		<node id="VillageHouseBody" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="x" angle="-90" />
+			</transforms>
+			<appearanceref id="redbricks" />
+				 
+			<children>
+				<cylinder base="3" top="3" height="4" slices="12" stacks="2" />   
+			</children>
+		</node>
+
+		<node id="VillageHouseTop" displaylist="0">
+			<transforms>
+				<translate x="0" y="3.7" z="0" />
+				<rotate axis="x" angle="-90" />
+			</transforms>
+			<appearanceref id="straw" />
+				 
+			<children>
+				<cylinder base="5" top="0.05" height="2" slices="12" stacks="2" />   
+			</children>
+		</node>
+
+		<node id="VillageHouseDoor" displaylist="0">
+			<transforms>
+				<translate x="1.6" y="0" z="2.6" />
+				<rotate axis="y" angle="45" />
+			</transforms>
+			<appearanceref id="olddoor" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="3" /> 
+			</children>
+		</node>
+
+	
+
+	
+
+		<node id="JungleScenario" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="grassgreen" />
+				 
+			<children>
+	
+				<model src="sandDunes.obj" />
+				<noderef id="Banana1" />
+				<noderef id="Banana2" />
+				<noderef id="SkyBox" />
+			</children>
+		</node>
+
+
+
+		<node id="Banana1" displaylist="0">
+			<transforms>
+				<translate x="1" y="0" z="-1" />
+			</transforms>
+			<appearanceref id="grassgreen" />
+				 
+			<children>
+	
+				<noderef id="Banana" />
+			</children>
+		</node>
+		
+		<node id="Banana2" displaylist="0">
+			<transforms>
+				<translate x="16" y="0" z="-1" />
+			</transforms>
+			<appearanceref id="grassgreen" />
+				 
+			<children>
+	
+				<noderef id="Banana" />
+			</children>
+		</node>
+
+
+
+
+		<node id="Banana" displaylist="0">
+			<transforms>
+				<translate x="-4" y="2" z="0" />
+				<scale x="7" y="7" z="7" />
+			</transforms>
+			<appearanceref id="bush" />
+				 
+			<children>
+	
+				<model src="banana.obj" />
+			</children>
+		</node>
+
 		<node id="SandScenario" displaylist="0">
 			<transforms>
+				<translate x="0" y="0" z="0" />
 			</transforms>
 			<appearanceref id="sand" />
 				 
 			<children>
 	
 				<model src="sandDunes.obj" />
-				 <noderef id="SkyBox" />
+				<noderef id="Rocks" />
+				<noderef id="PalmTree" />
+				<noderef id="SkyBox" />
 			</children>
 		</node>
 
+
+		<node id="Rocks" displaylist="0">
+			<transforms>
+				<translate x="0" y="1.6" z="0" />
+			</transforms>
+			<appearanceref id="desertstone" />
+				 
+			<children>
+	
+				<model src="rocks.obj" />
+			</children>
+		</node>
+
+		<node id="PalmTree" displaylist="0">
+			<transforms>
+				<translate x="0" y="2" z="3" />
+				<scale x="7" y="7" z="7" />
+			</transforms>
+			<appearanceref id="bush" />
+				 
+			<children>
+	
+				<model src="palmtree.obj" />
+			</children>
+		</node>
+
+
+		<node id="Board" displaylist="0">
+			<transforms>
+				<translate x="10" y="3" z="4" />
+				<scale x="1" y="1" z="1" />
+			</transforms>
+			<appearanceref id="wood" />
+				 
+			<children>
+				<model src="board.obj" />
+			</children>
+		</node>
 
 		  <node id="SkyBox">
                         <transforms>
@@ -119,19 +410,54 @@
                         </transforms>
                         <appearanceref id="bluesky" />
                         <children>
-                                <noderef id="skyfront" />
-             
+                                <noderef id="skyleft" />
+                                <noderef id="skyback" />
+                                <noderef id="skyright" />
+             					<noderef id="skyfront" />
+                        </children>
+                </node>
+
+                <node id="skyleft">
+                        <transforms>
+            					<translate x="-200" y="0" z="200" />
+                                <rotate axis="y" angle="90" />
+                        </transforms>
+                        <appearanceref id="inherit" />
+                        <children>
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
+                        </children>
+                </node>
+
+                 <node id="skyback">
+                        <transforms>
+            					<translate x="200" y="0" z="200" />
+                                <rotate axis="y" angle="180" />
+                        </transforms>
+                        <appearanceref id="inherit" />
+                        <children>
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
+                        </children>
+                </node>
+
+                 <node id="skyright">
+                        <transforms>
+            					<translate x="200" y="0" z="-200" />
+                                <rotate axis="y" angle="270" />
+                        </transforms>
+                        <appearanceref id="inherit" />
+                        <children>
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
                         </children>
                 </node>
 
                 <node id="skyfront">
                         <transforms>
-            
-                                <rotate axis="y" angle="90" />
+            					<translate x="-200" y="0" z="-200" />
+                                <rotate axis="y" angle="0" />
                         </transforms>
                         <appearanceref id="inherit" />
                         <children>
-                                <rectangle x1="0" y1="0" x2="500" y2="500" />
+                                <rectangle x1="0" y1="0" x2="400" y2="400" />
                         </children>
                 </node>
 

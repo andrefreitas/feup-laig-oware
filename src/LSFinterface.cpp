@@ -19,27 +19,19 @@ void LSFinterface::initGUI()
 	cameras = scene->getCameras();
 
 
-	GLUI_Panel *lightsPanel = addPanel((char*)"Lights", 1);
+	GLUI_Panel *lightsPanel = addPanel((char*)"Scenario", 1);
 	addColumn();
 	GLUI_Panel *camerasPanel = addPanel((char*)"Cameras", 1);
 	addColumn();
 	GLUI_Panel *polygonalModePanel = addPanel((char*)"Polygonal Mode", 1);
 	addColumn();
 
-	//para numerar os elementos da interface
-	int i = 0;
-
-	bool divided = false;
-	map<string, LSFlight*>::iterator itL;
-	for(itL = lights->begin(); itL != lights->end(); itL++, i++){
-		addButtonToPanel(lightsPanel,(char*)(*itL).second->id.c_str(),i);
-		(*itL).second->lightNum = i;
-		if(i==3 && !divided){
-			addColumnToPanel(lightsPanel);
-			divided = true;
-		}
-		if(DEBUGMODE) cout << *(&(*itL).second->lightNum) << endl;
-	}
+	// Scenario
+	addButtonToPanel(lightsPanel,"Desert",10);
+	addButtonToPanel(lightsPanel,"Jungle",11);
+	addButtonToPanel(lightsPanel,"Village",12);
+	
+	int i;
 
 	GLUI_RadioGroup* radioGroup = addRadioGroupToPanel(camerasPanel, &camerasGroup, lights->size());
 	map<string, LSFcamera*>::iterator itC;
@@ -73,15 +65,11 @@ void LSFinterface::initGUI()
 void LSFinterface::processGUI(GLUI_Control *ctrl)
 {
 	cout << "ctrl =" << ctrl->user_id << endl;
-	map<string, LSFlight*>::iterator itL;
-	for(itL = lights->begin(); itL != lights->end(); itL++){
-		cout << (*itL).second->lightNum << " - " << ctrl->user_id << endl;
-		if((*itL).second->lightNum == ctrl->user_id){
-			if((*itL).second->enabled)
-				(*itL).second->enabled = false;
-			else
-				(*itL).second->enabled = true;
-		}
+
+	switch(ctrl->user_id){
+		case 10:this->scene->scenario="SandScenario";  break;
+		case 11:this->scene->scenario="JungleScenario"; break;
+		case 12:;this->scene->scenario="VillageScenario"; break;
 	}
 
 	map<string, LSFcamera*>::iterator itC;

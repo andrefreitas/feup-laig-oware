@@ -37,6 +37,7 @@ class LSFscene : public CGFscene
 	map<string,LSFanimation*> animations;
 	LSFappearance* defaultAppearance;
 	string rootNode;
+
 	bool lights_enabled, lights_local, lights_doublesided;
 	float ambient[4];
 	string activeCamera;
@@ -63,5 +64,6 @@ public:
 	map<string, LSFlight*> * getLights();
 	map<string, LSFcamera*> * getCameras();
 	void update(long millis);
+	string scenario;
 };
 #endif

@@ -1,0 +1,25 @@
+# Blender MTL File: 'Banana.blend'
+# Material Count: 2
+newmtl leave
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.334281 0.744535 0.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 1
+map_Kd /home/andre/Área de Trabalho/banana.png
+map_d /home/andre/Área de Trabalho/banana.png
+map_Bump /home/andre/Área de Trabalho/banana.png
+
+
+newmtl trunk
+Ns 1.960784
+Ka 0.000000 0.000000 0.000000
+Kd 0.380998 0.323633 0.272400
+Ks 0.175784 0.037479 0.037479
+Ni 1.000000
+d 1.000000
+illum 2
+
+
