@@ -167,6 +167,12 @@ void LSFscene::display()
 	appearancesStack.push(defaultAppearance);
 	LSFrender::render(nodes,scenario,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
 
+	// Board
+	stack<LSFappearance*> appearancesStack2;
+	appearancesStack2.push(defaultAppearance);
+	string board="Board";
+	LSFrender::render(nodes,board,appearances,appearancesStack2,animations,LSFscene::timeSeconds);
+
 	// ---- END Primitive drawing section
 
 	glutSwapBuffers();
