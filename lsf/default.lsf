@@ -81,6 +81,15 @@
 			<texture file="sand.jpg" length_s="1" length_t="1" />
 		</appearance>
 
+		<appearance id="dirt">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="1" g="1" b="1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<shininess value="0.3" />
+			<texture file="dirt.jpg" length_s="1" length_t="1" />
+		</appearance>
+
 		<appearance id="desertstone">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="1" g="1" b="1" a="1" />
@@ -138,12 +147,65 @@
 				 
 			<children>
 	
-				<noderef id="SandScenario" />
+				<noderef id="VillageScenario" />
 				<noderef id="SkyBox" />
 			</children>
 		</node>
 
 
+		<node id="VillageScenario" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+			</transforms>
+			<appearanceref id="dirt" />
+				 
+			<children>
+	
+				<model src="sandDunes.obj" />
+				<noderef id="VillageHouse" />
+			</children>
+		</node>
+
+		<node id="VillageHouse" displaylist="0">
+			<transforms>
+				<translate x="0" y="1.8" z="0" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<noderef id="VillageHouseBody" />
+				<noderef id="VillageHouseTop" />
+			</children>
+		</node>
+
+		<node id="VillageHouseBody" displaylist="0">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="x" angle="-90" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<cylinder base="3" top="3" height="4" slices="12" stacks="2" />   
+			</children>
+		</node>
+
+		<node id="VillageHouseTop" displaylist="0">
+			<transforms>
+				<translate x="0" y="3.7" z="0" />
+				<rotate axis="x" angle="-90" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+				<cylinder base="5" top="0.05" height="2" slices="12" stacks="2" />   
+			</children>
+		</node>
+
+
+	
+
+	
 
 		<node id="JungleScenario" displaylist="0">
 			<transforms>
