@@ -48,31 +48,11 @@ void LSFscene::init()
 	freeCamera->id = "freeMove";
 	cameras["freeMove"] = freeCamera;
 
-	stack<LSFappearance*> appearancesStack_temp;
-	appearancesStack_temp.push(defaultAppearance);
-	initPrimitives(nodes, rootNode, appearances, appearancesStack_temp);
 	initCameras();
 	setUpdatePeriod(10);
 
 	// Scenario
 	scenario="JungleScenario";
-}
-
-void LSFscene::initPrimitives(map<string,LSFnode*> &nodes,string &rootNode,map<string,LSFappearance*> appearances,
-		                      stack<LSFappearance*> &appearancesStack){
-	LSFappearance *currentAppearance;
-	if (nodes[rootNode]->appearance == "inherit")
-		currentAppearance = appearancesStack.top();
-	else
-		currentAppearance = appearances[nodes[rootNode]->appearance];
-
-	appearancesStack.push(currentAppearance);
-
-	for(unsigned int i = 0; i < nodes[rootNode]->childPrimitives.size(); i++)
-		nodes[rootNode]->childPrimitives[i]->init(currentAppearance);
-
-	for(unsigned int i = 0; i < nodes[rootNode]->childNoderefs.size(); i++)
-		initPrimitives(nodes, nodes[rootNode]->childNoderefs[i], appearances, appearancesStack);
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){

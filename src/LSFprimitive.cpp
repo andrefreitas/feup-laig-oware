@@ -2,6 +2,10 @@
 
 using namespace std;
 
+bool LSFprimitive::isInitialized(){
+	return initialized;
+}
+
 LSFprimitive::~LSFprimitive() {
 	// TODO Auto-generated destructor stub
 }
@@ -11,6 +15,8 @@ LSFRectangle::LSFRectangle(float x1, float x2, float y1, float y2){
 	this->x2 = x2;
 	this->y1 = y1;
 	this->y2 = y2;
+
+	this->initialized = false;
 }
 
 void LSFRectangle::init(LSFappearance *app){
@@ -19,6 +25,8 @@ void LSFRectangle::init(LSFappearance *app){
 
 	u = width/(float)app->length_s;
 	v = height/(float)app->length_t;
+
+	this->initialized = true;
 }
 
 void LSFRectangle::draw(){
@@ -45,6 +53,8 @@ LSFBox::LSFBox(float x1, float x2, float y1, float y2, float z1, float z2){
 	bottom = new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
 	left =   new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
 	right =  new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
+
+	this->initialized = false;
 }
 
 void LSFBox::init(LSFappearance *app){
@@ -54,6 +64,8 @@ void LSFBox::init(LSFappearance *app){
 	bottom->init(app);
 	left->init(app);
 	right->init(app);
+
+	this->initialized = true;
 }
 
 void LSFBox::draw(){
@@ -105,6 +117,8 @@ LSFTriangle::LSFTriangle(float x1, float x2, float x3, float y1, float y2, float
 
 	this->normal = normal;
 	this->uvCoords = uvCoords;
+
+	this->initialized = false;
 }
 
 void LSFTriangle::init(LSFappearance *app){
@@ -118,6 +132,8 @@ void LSFTriangle::init(LSFappearance *app){
 
 	u = width/(float)app->length_s;
 	v = height/(float)app->length_t;
+
+	this->initialized = true;
 }
 
 void LSFTriangle::draw(){
@@ -138,10 +154,14 @@ LSFCylinder::LSFCylinder(float base, float top, float height, int slices, int st
 	this->height = height;
 	this->slices = slices;
 	this->stacks = stacks;
+
+	this->initialized = false;
 }
 
 void LSFCylinder::init(LSFappearance *app){
 	a = gluNewQuadric();
+
+	this->initialized = true;
 }
 
 void LSFCylinder::draw(){
@@ -154,10 +174,14 @@ LSFSphere::LSFSphere(float radius, int slices, int stacks){
 	this->radius = radius;
 	this->slices = slices;
 	this->stacks = stacks;
+
+	this->initialized = false;
 }
 
 void LSFSphere::init(LSFappearance *app){
 	a=gluNewQuadric();
+
+	this->initialized = true;
 }
 
 void LSFSphere::draw(){
@@ -171,21 +195,26 @@ LSFTorus::LSFTorus(float inner, float outer, int slices, int loops){
 	this->outer =  outer;
 	this->slices = slices;
 	this->loops =  loops;
+
+	this->initialized = false;
 }
 
 void LSFTorus::init(LSFappearance *app){
-
+	this->initialized = true;
 }
 
 void LSFTorus::draw(){
 	glutSolidTorus(inner, outer, slices, loops);
 }
 
-void LSFModel::init(LSFappearance *app){
-
-}
 LSFModel::LSFModel(char* filename){
 	model=new ObjModel(filename);
+
+	this->initialized = false;
+}
+
+void LSFModel::init(LSFappearance *app){
+	this->initialized = true;
 }
 
 void LSFModel::draw(){

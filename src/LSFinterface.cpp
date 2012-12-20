@@ -27,9 +27,9 @@ void LSFinterface::initGUI()
 	addColumn();
 
 	// Scenario
-	addButtonToPanel(lightsPanel,"Desert",10);
-	addButtonToPanel(lightsPanel,"Jungle",11);
-	addButtonToPanel(lightsPanel,"Village",12);
+	addButtonToPanel(lightsPanel,(char*)"Desert",10);
+	addButtonToPanel(lightsPanel,(char*)"Jungle",11);
+	addButtonToPanel(lightsPanel,(char*)"Village",12);
 	
 	int i;
 

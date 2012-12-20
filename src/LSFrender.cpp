@@ -51,8 +51,11 @@ void LSFrender::render(map<string, LSFnode*> &nodes, string &rootNode,
 	}
 
 	// Process the primitives
-	for (int unsigned i = 0; i < nodes[rootNode]->childPrimitives.size(); i++)
+	for (int unsigned i = 0; i < nodes[rootNode]->childPrimitives.size(); i++){
+		if(!nodes[rootNode]->childPrimitives[i]->isInitialized())
+			nodes[rootNode]->childPrimitives[i]->init(currentAppearance);
 		nodes[rootNode]->childPrimitives[i]->draw();
+	}
 
 	// End rotation
 	if(haveAnimation){

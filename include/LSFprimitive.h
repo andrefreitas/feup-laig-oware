@@ -15,8 +15,13 @@
 #include "LSFvertex.h"
 #include "LSFshader.h"
 #include "ObjModel.h"
+
 class LSFprimitive{
+protected:
+	bool initialized;
+
 public:
+	bool isInitialized();
 	virtual void init(LSFappearance *app) = 0;
 	virtual void draw() = 0;
 	virtual ~LSFprimitive();
