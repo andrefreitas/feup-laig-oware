@@ -58,17 +58,25 @@ int main(int argc, char* argv[]) {
 //
 //	game->startServer(s1);
 //	game->startGame(s1, player1->getType(), player2->getType());
-//	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[1,2,3,4,5,6],[6,5,4,3,2,1]]", "5", "10");
+//	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[1,2,3,4,5,6],[1,15,1,1,1,1]]", "0", "6");
 //	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
 //
 //	int status = 0;
 //	while(true){
-//		//status after player1 plays
 //		status = game->readStatus(s1);
 //		if(status == 1)
 //			break;
 //
-//		game->updatePlayers();
+//		game->update();
+//
+//		//testes da stack
+//		cout << endl;
+//		cout << "statusStack size = " << game->getStatusStackSize() << endl;
+//		if(game->getStatusStackSize())
+//		cout << "topStack = " << game->topStatus()[0] << " " << game->topStatus()[1] << " "
+//			 << game->topStatus()[2] << " " << game->topStatus()[3] << endl;
+//		cout << endl;
+//		//fim de teste da stack
 //
 //		int n = 0;
 //		while(n++ < 6)
@@ -84,38 +92,41 @@ int main(int argc, char* argv[]) {
 //		cout << "player1 points: " << player1->getScore() << endl;
 //		cout << "player2 points: " << player2->getScore() << endl;
 //
-//		//status after player2 plays
-//		status = game->readStatus(s1);
-//		if(status == 1)
-//			break;
+//		if(game->getPlayerTurn() == "2"){
+//			int hole = 0, option = 1;
+//			if(game->undoIsReadyToUse()){
+//				cout << " 1 - jogar\n"
+//					 << " 2 - undo\n"
+//					 << " 3 - movie\n";
+//				do{
+//					cin >> option;
+//				}while(option < 1 || option > 3);
+//			}
+//			if(option == 3){
+//				for(unsigned int i = 1; i <= game->getMovie().size(); i++)
+//					cout << game->getMovieFrame(i)[0] << " " << game->getMovieFrame(i)[1] << " "
+//					     << game->getMovieFrame(i)[2] << " " << game->getMovieFrame(i)[3]<< endl;
 //
-//		game->updatePlayers();
+//				option = 1;
+//			}
+//			if(option == 1){
+//				do{
+//					cout << "hole?: ";
+//					cin >> hole;
 //
-//		n = 0;
-//		while(n++ < 6)
-//			cout << " " << player1->getHoleSeeds(n);
-//
-//		cout << endl;
-//		n = 0;
-//		while(n++ < 6)
-//			cout << " " << player2->getHoleSeeds(n);
-//
-//		cout << endl;
-//
-//		cout << "player1 points: " << player1->getScore() << endl;
-//		cout << "player2 points: " << player2->getScore() << endl;
-//
-//		int hole = 0;
-//		do{
-//			cout << "hole?: ";
-//			cin >> hole;
-//
-//			if(hole == 0)
-//				break;
+//					if(hole == 0)
+//						break;
+//				}
+//				while(player2->play(s1, hole));
+//				if(hole == 0)
+//					break;
+//				game->setPlayerTurn("1");
+//			}
+//			else if(option == 2)
+//				game->undo(s1);
 //		}
-//		while(player2->play(s1, hole));
-//		if(hole == 0)
-//			break;
+//		else
+//			game->setPlayerTurn("2");
 //	}
 //
 //	if(game->getWinner() == 1){

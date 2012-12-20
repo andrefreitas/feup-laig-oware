@@ -3,9 +3,11 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
-#include "LSFprimitive.h"
 #include "Socket.h"
+
+using namespace std;
 
 class Player{
 private:
