@@ -160,7 +160,7 @@ void LSFscene::display()
 
 	// ---- BEGIN Primitive drawing section
 
-	axis.draw();
+	//axis.draw();
 
 	// Scenario
 	stack<LSFappearance*> appearancesStack;
@@ -172,6 +172,14 @@ void LSFscene::display()
 	appearancesStack2.push(defaultAppearance);
 	string board="Board";
 	LSFrender::render(nodes,board,appearances,appearancesStack2,animations,LSFscene::timeSeconds);
+
+	// Markers
+	glPushMatrix();
+	string markers="Markers";
+	stack<LSFappearance*> appearancesStack3;
+	appearancesStack3.push(defaultAppearance);
+	LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);
+	glPopMatrix();
 
 	// ---- END Primitive drawing section
 

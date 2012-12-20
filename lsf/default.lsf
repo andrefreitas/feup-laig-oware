@@ -312,7 +312,7 @@
 
 		<node id="Banana1" displaylist="0">
 			<transforms>
-				<translate x="1" y="0" z="-1" />
+				<translate x="-2" y="0" z="-1" />
 			</transforms>
 			<appearanceref id="grassgreen" />
 				 
@@ -324,7 +324,7 @@
 		
 		<node id="Banana2" displaylist="0">
 			<transforms>
-				<translate x="16" y="0" z="-1" />
+				<translate x="30" y="0" z="-1" />
 			</transforms>
 			<appearanceref id="grassgreen" />
 				 
@@ -380,8 +380,8 @@
 
 		<node id="PalmTree" displaylist="0">
 			<transforms>
-				<translate x="0" y="2" z="3" />
-				<scale x="7" y="7" z="7" />
+				<translate x="-2" y="2" z="3" />
+				<scale x="5" y="5" z="5" />
 			</transforms>
 			<appearanceref id="bush" />
 				 
@@ -403,6 +403,21 @@
 				<model src="board.obj" />
 			</children>
 		</node>
+
+
+		<node id="Markers" displaylist="0">
+			<transforms>
+				<translate x="0" y="10" z="0" />
+			</transforms>
+			<appearanceref id="inherit" />
+				 
+			<children>
+	
+				<rectangle x1="0" y1="0" x2="20" y2="10" />
+			</children>
+		</node>
+
+
 
 		  <node id="SkyBox">
                         <transforms>
@@ -460,6 +475,8 @@
                                 <rectangle x1="0" y1="0" x2="400" y2="400" />
                         </children>
                 </node>
+
+
 
 	</graph>
 </lsf>
