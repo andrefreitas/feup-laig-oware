@@ -85,8 +85,7 @@ LSFvertex LSFanimation::getDisplacementAt(double elapsedTime){
 
 	// Compute the sum of displacement vectors
 	LSFvertex displacement(0,0,0);
-	for(unsigned int i=0; i<path; i++){
-
+	for(int i = 0; i < path; i++){
 		displacement.x+=pathDisplacement[i].x;
 		displacement.y+=pathDisplacement[i].y;
 		displacement.z+=pathDisplacement[i].z;

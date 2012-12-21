@@ -47,12 +47,12 @@ LSFBox::LSFBox(float x1, float x2, float y1, float y2, float z1, float z2){
 	this->z1 = z1;
 	this->z2 = z2;
 
-	front =  new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
-	back =   new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
-	top =    new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
-	bottom = new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
-	left =   new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
-	right =  new LSFRectangle(-0.5, 0.5, -0.5, 0.5);
+	front =  new LSFRectangle(x1, x2, y1, y2);
+	back =   new LSFRectangle(x1, x2, y1, y2);
+	top =    new LSFRectangle(x1, x2, z1, z2);
+	bottom = new LSFRectangle(x1, x2, z1, z2);
+	left =   new LSFRectangle(z1, z2, y1, y2);
+	right =  new LSFRectangle(z1, z2, y1, y2);
 
 	this->initialized = false;
 }
@@ -69,38 +69,36 @@ void LSFBox::init(LSFappearance *app){
 }
 
 void LSFBox::draw(){
-glPushMatrix();
-	glScaled(abs(x2-x1), abs(y2-y1), abs(z2-z1));
 	glPushMatrix();
-		glTranslated(0, 0, 0.5);
-		front->draw();
+		glPushMatrix();
+			front->draw();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(abs(x2-x1), 0, -abs(z2-z1));
+			glRotated(180, 0, 1, 0);
+			back->draw();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(0, abs(y2-y1), 0);
+			glRotated(-90, 1, 0, 0);
+			top->draw();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(0, 0, -abs(z2-z1));
+			glRotated(90, 1, 0, 0);
+			bottom->draw();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(0, 0, -abs(z2-z1));
+			glRotated(-90, 0, 1, 0);
+			left->draw();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(abs(x2-x1), 0, 0);
+			glRotated(90, 0, 1, 0);
+			right->draw();
+		glPopMatrix();
 	glPopMatrix();
-	glPushMatrix();
-		glRotated(180, 0, 1, 0);
-		glTranslated(0, 0, 0.5);
-		back->draw();
-	glPopMatrix();
-	glPushMatrix();
-		glRotated(-90, 1, 0, 0);
-		glTranslated(0, 0, 0.5);
-		top->draw();
-	glPopMatrix();
-	glPushMatrix();
-		glRotated(90, 1, 0, 0);
-		glTranslated(0, 0, 0.5);
-		bottom->draw();
-	glPopMatrix();
-	glPushMatrix();
-		glRotated(-90, 0, 1, 0);
-		glTranslated(0, 0, 0.5);
-		left->draw();
-	glPopMatrix();
-	glPushMatrix();
-		glRotated(90, 0, 1, 0);
-		glTranslated(0, 0, 0.5);
-		right->draw();
-	glPopMatrix();
-glPopMatrix();
 }
 
 LSFTriangle::LSFTriangle(float x1, float x2, float x3, float y1, float y2, float y3, float z1, float z2, float z3,
