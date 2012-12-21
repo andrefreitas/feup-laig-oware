@@ -161,12 +161,19 @@ void LSFscene::display()
 	appearancesStack.push(defaultAppearance);
 	LSFrender::render(nodes,scenario,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
 
+
+	glPushName(-1);	
+	glLoadName(0);
+
+
 	// Board
 	stack<LSFappearance*> appearancesStack2;
 	appearancesStack2.push(defaultAppearance);
 	string board="Board";
 	LSFrender::render(nodes,board,appearances,appearancesStack2,animations,LSFscene::timeSeconds);
 
+
+    glLoadName(2);
 	// Markers
 	glPushMatrix();
 	string markers="Markers";
@@ -174,6 +181,8 @@ void LSFscene::display()
 	appearancesStack3.push(defaultAppearance);
 	LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);
 	glPopMatrix();
+
+
 
 	//Players seeds and timer
 

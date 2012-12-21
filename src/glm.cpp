@@ -446,7 +446,7 @@ glmFirstPass(GLMmodel* model, FILE* file)
   char      buf[128];
 
   /* make a default group */
-  group = glmAddGroup(model, (char*)"default");
+  group = glmAddGroup(model, "default");
 
   numvertices = numnormals = numtexcoords = numtriangles = 0;
   while(fscanf(file, "%s", buf) != EOF) {
@@ -1392,37 +1392,37 @@ glmWriteOBJ(GLMmodel* model, char* filename, GLuint mode)
   assert(model);
 
   /* do a bit of warning */
-  if ((mode & GLM_FLAT) && !model->facetnorms) {
+  if (mode & GLM_FLAT && !model->facetnorms) {
     printf("glmWriteOBJ() warning: flat normal output requested "
 	   "with no facet normals defined.\n");
     mode &= ~GLM_FLAT;
   }
-  if ((mode & GLM_SMOOTH) && !model->normals) {
+  if (mode & GLM_SMOOTH && !model->normals) {
     printf("glmWriteOBJ() warning: smooth normal output requested "
 	   "with no normals defined.\n");
     mode &= ~GLM_SMOOTH;
   }
-  if ((mode & GLM_TEXTURE) && !model->texcoords) {
+  if (mode & GLM_TEXTURE && !model->texcoords) {
     printf("glmWriteOBJ() warning: texture coordinate output requested "
 	   "with no texture coordinates defined.\n");
     mode &= ~GLM_TEXTURE;
   }
-  if ((mode & GLM_FLAT) && (mode & GLM_SMOOTH)) {
+  if (mode & GLM_FLAT && mode & GLM_SMOOTH) {
     printf("glmWriteOBJ() warning: flat normal output requested "
 	   "and smooth normal output requested (using smooth).\n");
     mode &= ~GLM_FLAT;
   }
-  if ((mode & GLM_COLOR) && !model->materials) {
+  if (mode & GLM_COLOR && !model->materials) {
     printf("glmWriteOBJ() warning: color output requested "
 	   "with no colors (materials) defined.\n");
     mode &= ~GLM_COLOR;
   }
-  if ((mode & GLM_MATERIAL) && !model->materials) {
+  if (mode & GLM_MATERIAL && !model->materials) {
     printf("glmWriteOBJ() warning: material output requested "
 	   "with no materials defined.\n");
     mode &= ~GLM_MATERIAL;
   }
-  if ((mode & GLM_COLOR) && (mode & GLM_MATERIAL)) {
+  if (mode & GLM_COLOR && mode & GLM_MATERIAL) {
     printf("glmWriteOBJ() warning: color and material output requested "
 	   "outputting only materials.\n");
     mode &= ~GLM_COLOR;
@@ -1447,7 +1447,7 @@ glmWriteOBJ(GLMmodel* model, char* filename, GLuint mode)
   fprintf(file, "#  http://www.pobox.com/~ndr\n");
   fprintf(file, "#  \n");
 
-  if ((mode & GLM_MATERIAL) && model->mtllibname) {
+  if (mode & GLM_MATERIAL && model->mtllibname) {
     fprintf(file, "\nmtllib %s\n\n", model->mtllibname);
     glmWriteMTL(model, filename, model->mtllibname);
   }
@@ -1486,7 +1486,7 @@ glmWriteOBJ(GLMmodel* model, char* filename, GLuint mode)
   /* spit out the texture coordinates */
   if (mode & GLM_TEXTURE) {
     fprintf(file, "\n");
-    fprintf(file, "# %d texcoords\n", (int)model->texcoords);
+    fprintf(file, "# %d texcoords\n", model->texcoords);
     for (i = 1; i <= model->numtexcoords; i++) {
       fprintf(file, "vt %f %f\n", 
 	      model->texcoords[2 * i + 0],
@@ -1505,7 +1505,7 @@ glmWriteOBJ(GLMmodel* model, char* filename, GLuint mode)
     if (mode & GLM_MATERIAL)
       fprintf(file, "usemtl %s\n", model->materials[group->material].name);
     for (i = 0; i < group->numtriangles; i++) {
-      if ((mode & GLM_SMOOTH) && (mode & GLM_TEXTURE)) {
+      if (mode & GLM_SMOOTH && mode & GLM_TEXTURE) {
 	fprintf(file, "f %d/%d/%d %d/%d/%d %d/%d/%d\n",
 		T(group->triangles[i]).vindices[0], 
 		T(group->triangles[i]).nindices[0], 
@@ -1516,7 +1516,7 @@ glmWriteOBJ(GLMmodel* model, char* filename, GLuint mode)
 		T(group->triangles[i]).vindices[2],
 		T(group->triangles[i]).nindices[2],
 		T(group->triangles[i]).tindices[2]);
-      } else if ((mode & GLM_FLAT) && (mode & GLM_TEXTURE)) {
+      } else if (mode & GLM_FLAT && mode & GLM_TEXTURE) {
 	fprintf(file, "f %d/%d %d/%d %d/%d\n",
 		T(group->triangles[i]).vindices[0],
 		T(group->triangles[i]).findex,
@@ -1588,37 +1588,37 @@ glmDraw(GLMmodel* model, GLuint mode)
   assert(model->vertices);
 
   /* do a bit of warning */
-  if ((mode & GLM_FLAT) && !model->facetnorms) {
+  if (mode & GLM_FLAT && !model->facetnorms) {
     printf("glmDraw() warning: flat render mode requested "
 	   "with no facet normals defined.\n");
     mode &= ~GLM_FLAT;
   }
-  if ((mode & GLM_SMOOTH) && !model->normals) {
+  if (mode & GLM_SMOOTH && !model->normals) {
     printf("glmDraw() warning: smooth render mode requested "
 	   "with no normals defined.\n");
     mode &= ~GLM_SMOOTH;
   }
-  if ((mode & GLM_TEXTURE) && !model->texcoords) {
+  if (mode & GLM_TEXTURE && !model->texcoords) {
     printf("glmDraw() warning: texture render mode requested "
 	   "with no texture coordinates defined.\n");
     mode &= ~GLM_TEXTURE;
   }
-  if ((mode & GLM_FLAT) && (mode & GLM_SMOOTH)) {
+  if (mode & GLM_FLAT && mode & GLM_SMOOTH) {
     printf("glmDraw() warning: flat render mode requested "
 	   "and smooth render mode requested (using smooth).\n");
     mode &= ~GLM_FLAT;
   }
-  if ((mode & GLM_COLOR) && !model->materials) {
+  if (mode & GLM_COLOR && !model->materials) {
     printf("glmDraw() warning: color render mode requested "
 	   "with no materials defined.\n");
     mode &= ~GLM_COLOR;
   }
-  if ((mode & GLM_MATERIAL) && !model->materials) {
+  if (mode & GLM_MATERIAL && !model->materials) {
     printf("glmDraw() warning: material render mode requested "
 	   "with no materials defined.\n");
     mode &= ~GLM_MATERIAL;
   }
-  if ((mode & GLM_COLOR) && (mode & GLM_MATERIAL)) {
+  if (mode & GLM_COLOR && mode & GLM_MATERIAL) {
     printf("glmDraw() warning: color and material render mode requested "
 	   "using only material mode.\n");
     mode &= ~GLM_COLOR;
