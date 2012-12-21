@@ -127,6 +127,7 @@ void LSFinterface::performPicking(int x, int y)
 	// force scene drawing under this mode
 	// only the names of objects that fall in the 5x5 window will actually be stored in the buffer
 	this->scene->display();
+	this->scene->selectionMode();
 
 	// restore original projection matrix
 	glMatrixMode (GL_PROJECTION);
@@ -167,8 +168,13 @@ void LSFinterface::processHits (GLint hits, GLuint buffer[])
 		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
 		// possibly invoking a method on the scene class and passing "selected" and "nselected"
 		printf("Picked ID's: ");
-		for (int i=0; i<nselected; i++)
+		for (int i=0; i<nselected; i++){
 			printf("%d ",selected[i]);
+			if(selected[i]<12 && selected[i]>=0){
+				this->scene->boardHandler(selected[i]);
+
+			}
+		}
 		printf("\n");
 	}
 	else

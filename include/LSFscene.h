@@ -72,5 +72,8 @@ public:
 	void update(long millis);
 	string numberToText(int number);
 	string scenario;
+	LSFBox *selectionBox;
+	void selectionMode();
+	void boardHandler(int position);
 };
 #endif

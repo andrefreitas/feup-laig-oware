@@ -67,6 +67,8 @@ void LSFscene::init()
 	game->startGame(s1, player1->getType(), player2->getType());
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[1,2,3,4,5,6],[1,15,1,1,1,1]]", "0", "6");
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
+
+	selectionBox=new LSFBox(0,7,0,7,0,7);
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -130,14 +132,13 @@ void LSFscene::display()
 	LSFrender::render(nodes,scenario,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
 
 	// Board
-	glPushName(-1); 
-	glLoadName(0);
+	
 	stack<LSFappearance*> appearancesStack2;
 	appearancesStack2.push(defaultAppearance);
 	string board="Board";
 	LSFrender::render(nodes,board,appearances,appearancesStack2,animations,LSFscene::timeSeconds);
 
-    glLoadName(2);
+
     // Markers
     glPushMatrix();
     string markers="Markers";
@@ -226,6 +227,27 @@ void LSFscene::display()
         glutSwapBuffers();	
 }
 
+void LSFscene::selectionMode(){
+		glPushName(-1); 
+	for (int unsigned i=0; i<6; i++){
+		glLoadName(i);
+		glPushMatrix();
+			glTranslated(43.5-i*8,0,22);
+			selectionBox->draw();
+		glPopMatrix();
+
+	}
+	for (int unsigned i=0; i<6; i++){
+		glLoadName(i+6);
+		glPushMatrix();
+			glTranslated(3.5+i*8,0,30);
+			selectionBox->draw();
+		glPopMatrix();
+
+	}
+	glPopName();
+
+}
 string LSFscene::numberToText(int number){
 	string str;
 	switch(number){
@@ -273,4 +295,9 @@ void LSFscene::setGlobals(){
 
 void LSFscene::update(long millis){
 	LSFscene::timeSeconds=(millis/1000.0);
+}
+
+void LSFscene::boardHandler(int position){
+	// this function is called when a hole from the board is clicked
+	cout << "clicked board\n";
 }
