@@ -19,6 +19,7 @@ private:
 	Player *player2;
 	int winner;
 	int finalPoints;
+	int maxTime;
 	Board *board;
 	//Scenario scenario;
 	string playerTurn;
@@ -28,7 +29,8 @@ private:
 	queue<vector<string> > movie;
 
 public:
-	Oware(Player *player1, Player *player2);
+	Oware(Player *player1, Player *player2, int dificulty);
+	Oware(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty);
 	string getRoules();
 	Player* getPlayer1();
 	Player* getPlayer2();
@@ -68,6 +70,7 @@ public:
 	int getPlayerChoose();
 	int getWinner();
 	int getFinalPoints();
+	int getMaxTime();
 };
 
 

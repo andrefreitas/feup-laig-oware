@@ -54,17 +54,17 @@ void LSFscene::init()
 	// Scenario
 	scenario="JungleScenario";
 
+	timer = new Timer();
+
 	//Players and startGame
-	player1 = new Computer("ABC", "bot2");
-	player2 = new Human("Paulo", "human");
 	s1 = new Socket("127.0.0.1",6300);
 
-	game = new Oware(player1, player2);
+	game = new Oware(new Computer("ABC", "bot2"), new Human("Paulo", "human"), 1);
 
 	cout << game->getRoules() << endl;
 
 	game->startServer(s1);
-	game->startGame(s1, player1->getType(), player2->getType());
+	game->startGame(s1, game->getPlayer1()->getType(), game->getPlayer2()->getType());
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[1,2,3,4,5,6],[1,15,1,1,1,1]]", "0", "6");
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
 }
@@ -229,25 +229,35 @@ void LSFscene::display()
 	stack<LSFappearance*> appearancesStack6;
 	appearancesStack6.push(defaultAppearance);
 	//Timer
-	int timer = 45;
-	if(timer < 10){
-		numbers = numberToText(timer);
+	if(!timer->isStarted())
+		timer->startCountDown(game->getMaxTime());
+
+	int remainingTime = timer->getCountDown();
+	cout << game->getMaxTime() << endl;
+	cout << remainingTime << endl;
+	if(remainingTime < 10){
+		numbers = numberToText(remainingTime);
 		glPushMatrix();
-			glTranslated(32, 4.5, 0);
+			glTranslated(31.5, 4.5, 0);
 			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
 		glPopMatrix();
 	}
 	else{
-		numbers = numberToText(timer/10);
+		numbers = numberToText(remainingTime/10);
 		glPushMatrix();
-			glTranslated(31, 4.5, 0);
+			glTranslated(30.5, 4.5, 0);
 			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
 		glPopMatrix();
-		numbers = numberToText(timer%10);
+		numbers = numberToText(remainingTime%10);
 		glPushMatrix();
-			glTranslated(33, 4.5, 0);
+			glTranslated(32.5, 4.5, 0);
 			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
 		glPopMatrix();
+	}
+
+	if(remainingTime <= 0){
+		game->skipPlayer(s1);
+		timer->stopCountDown();
 	}
 
 	// ---- END Primitive drawing section

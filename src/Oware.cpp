@@ -6,10 +6,47 @@ string itos(int i){
 	return out.str();
 }
 
-Oware::Oware(Player *player1, Player *player2){
+Oware::Oware(Player *player1, Player *player2, int dificulty){
 	board = new Board();
 	this->player1 = player1;
 	this->player2 = player2;
+
+	switch(dificulty){
+	case 1: maxTime = 30; break;
+	case 2: maxTime = 20; break;
+	case 3: maxTime = 10; break;
+	}
+
+	this->player1->setScore(0);
+	this->player2->setScore(0);
+}
+
+Oware::Oware(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty){
+	board = new Board();
+
+	if(player1Type == "computer"){
+		if(dificulty == 1)
+			this->player1 = new Computer(player1Name, "bot1");
+		else
+			this->player1 = new Computer(player1Name, "bot2");
+	}
+	else
+		this->player1 = new Human(player1Name, "human");
+
+	if(player2Type == "computer"){
+		if(dificulty == 1)
+			this->player2 = new Computer(player2Name, "bot1");
+		else
+			this->player2 = new Computer(player2Name, "bot2");
+	}
+	else
+		this->player2 = new Human(player2Name, "human");
+
+	switch(dificulty){
+	case 1: maxTime = 30; break;
+	case 2: maxTime = 20; break;
+	case 3: maxTime = 10; break;
+	}
 
 	this->player1->setScore(0);
 	this->player2->setScore(0);
@@ -317,5 +354,9 @@ int Oware::getWinner(){
 
 int Oware::getFinalPoints(){
 	return finalPoints;
+}
+
+int Oware::getMaxTime(){
+	return maxTime;
 }
 

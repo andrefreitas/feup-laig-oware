@@ -23,6 +23,7 @@
 #include "LSFrender.h"
 #include "ObjModel.h"
 #include "Oware.h"
+#include "Timer.h"
 
 /**
  * LSFscene defines the scene parsed from the LSF file.
@@ -47,10 +48,9 @@ class LSFscene : public CGFscene
 	GLenum mode;
 	static double timeSeconds;
 
-	Player *player1;
-	Player *player2;
 	Socket *s1;
 	Oware *game;
+	Timer *timer;
 
 public:
 	LSFscene();
