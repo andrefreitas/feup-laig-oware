@@ -227,6 +227,32 @@ void Oware::undo(Socket *s1){
 	}
 }
 
+void Oware::skipPlayer(Socket *s1){
+	vector<string> tempStatus;
+	string playerTurn;
+
+	tempStatus = statusStack.top();
+
+	statusStack.pop();
+
+	endGame(s1);
+	if(tempStatus[0] == "1")
+		playerTurn = "2";
+	else
+		playerTurn = "1";
+
+	//movie
+	vector<string> vec;
+	vec.push_back(playerTurn);
+	vec.push_back(tempStatus[1]);
+	vec.push_back(tempStatus[2]);
+	vec.push_back(tempStatus[3]);
+
+	movie.push(vec);
+
+	startGame(s1, player1->getType(), player2->getType(), playerTurn, tempStatus[1], tempStatus[2], tempStatus[3]);
+}
+
 vector<string> Oware::topStatus(){
 	if(!statusStack.empty())
 		return statusStack.top();

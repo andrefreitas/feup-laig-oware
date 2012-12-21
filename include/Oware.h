@@ -52,6 +52,7 @@ public:
 	int getStatusStackSize();
 	bool undoIsReadyToUse();
 	void undo(Socket *s1);
+	void skipPlayer(Socket *s1);
 	vector<string> topStatus();
 	string statusToPlayerTurn(vector<string> status);
 	string satusToBoard(vector<string> status);

@@ -97,10 +97,11 @@ int main(int argc, char* argv[]) {
 //			if(game->undoIsReadyToUse()){
 //				cout << " 1 - jogar\n"
 //					 << " 2 - undo\n"
-//					 << " 3 - movie\n";
+//					 << " 3 - movie\n"
+//					 << " 4 - skipPlayer\n";
 //				do{
 //					cin >> option;
-//				}while(option < 1 || option > 3);
+//				}while(option < 1 || option > 4);
 //			}
 //			if(option == 3){
 //				for(unsigned int i = 1; i <= game->getMovie().size(); i++)
@@ -124,6 +125,8 @@ int main(int argc, char* argv[]) {
 //			}
 //			else if(option == 2)
 //				game->undo(s1);
+//			else if(option == 4)
+//				game->skipPlayer(s1);
 //		}
 //		else
 //			game->setPlayerTurn("2");
