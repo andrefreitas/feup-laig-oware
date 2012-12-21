@@ -25,8 +25,7 @@ void LSFinterface::initGUI()
 
 	GLUI_Panel *lightsPanel = addPanel((char*)"Scenario", 1);
 	addColumn();
-	GLUI_Panel *camerasPanel = addPanel((char*)"Cameras", 1);
-	addColumn();
+
 	GLUI_Panel *polygonalModePanel = addPanel((char*)"Polygonal Mode", 1);
 	addColumn();
 
@@ -36,19 +35,6 @@ void LSFinterface::initGUI()
 	addButtonToPanel(lightsPanel,(char*)"Village",12);
 	
 	int i;
-
-	GLUI_RadioGroup* radioGroup = addRadioGroupToPanel(camerasPanel, &camerasGroup, lights->size());
-	map<string, LSFcamera*>::iterator itC;
-	for(itC = cameras->begin(), i = 0; itC != cameras->end(); itC++, i++){
-		addRadioButtonToGroup(radioGroup, (char*)(*itC).second->id.c_str());
-		(*itC).second->cameraNum = i;
-		if((*itC).second->initial){
-			initialCamera = i;
-			scene->activateCamera((*itC).first);
-		}
-		if(DEBUGMODE) cout << *(&(*itC).second->cameraNum) << endl;
-	}
-	camerasGroup = initialCamera;
 
 	GLUI_RadioGroup* polygonalRadioGroup = addRadioGroupToPanel(polygonalModePanel, &polygonalMode, lights->size()+1);
 	addRadioButtonToGroup(polygonalRadioGroup,(char*) "fill");
@@ -140,7 +126,7 @@ void LSFinterface::performPicking(int x, int y)
 
 	// force scene drawing under this mode
 	// only the names of objects that fall in the 5x5 window will actually be stored in the buffer
-	scene->display();
+	this->scene->display();
 
 	// restore original projection matrix
 	glMatrixMode (GL_PROJECTION);

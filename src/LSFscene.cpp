@@ -117,151 +117,113 @@ void LSFscene::activateCamera(string id)
 
 void LSFscene::display()
 {
-
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glPolygonMode(face, mode);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	CGFscene::activeCamera->applyView();
+	axis.draw();
+	glPolygonMode(face, mode);
 
-	// ---- BEGIN cameras section
-	if(activeCamera == "freeMove")
-	{
-		CGFscene::activeCamera->updateProjectionMatrix(CGFapplication::width, CGFapplication::height);
-		glMatrixMode(GL_MODELVIEW);
-		CGFscene::activeCamera->applyView();
-	}
-	else{
-		cameras[activeCamera]->updateProjectionMatrix(CGFapplication::width, CGFapplication::height);
-		cameras[activeCamera]->applyView();
-	}
-	// ---- END cameras section
-
-	// ---- BEGIN lights section
-	map<string,LSFlight*>::iterator it;
-	for (it=lights.begin();it!=lights.end(); it++){
-		if((*it).second->enabled){
-			(*it).second->light->enable();
-			(*it).second->light->draw();
-		}
-		else{
-			(*it).second->light->disable();
-		}
-	}
-	// ---- END lights section
-
-
-
-	// ---- BEGIN Primitive drawing section
-
-	//axis.draw();
-
-	// Scenario
+	 // Scenario		
 	stack<LSFappearance*> appearancesStack;
 	appearancesStack.push(defaultAppearance);
 	LSFrender::render(nodes,scenario,appearances,appearancesStack,animations,LSFscene::timeSeconds); 
 
-
-	glPushName(-1);	
-	glLoadName(0);
-
-
 	// Board
+	glPushName(-1); 
+	glLoadName(0);
 	stack<LSFappearance*> appearancesStack2;
 	appearancesStack2.push(defaultAppearance);
 	string board="Board";
 	LSFrender::render(nodes,board,appearances,appearancesStack2,animations,LSFscene::timeSeconds);
 
-
     glLoadName(2);
-	// Markers
-	glPushMatrix();
-	string markers="Markers";
-	stack<LSFappearance*> appearancesStack3;
-	appearancesStack3.push(defaultAppearance);
-	LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);
-	glPopMatrix();
+    // Markers
+    glPushMatrix();
+    string markers="Markers";
+    stack<LSFappearance*> appearancesStack3;
+    appearancesStack3.push(defaultAppearance);
+    LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);
+    glPopMatrix();
 
+    //Players seeds and timer
 
+    string numbers;
+    stack<LSFappearance*> appearancesStack4;
+    appearancesStack4.push(defaultAppearance);
+    //Player1 seeds
+    if(game->getPlayer1()->getScore() < 10){
+        numbers = numberToText(game->getPlayer1()->getScore());
+            glPushMatrix();
+                glTranslated(6, 11, 0);
+                    LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+        }
+        else{
+            int score = game->getPlayer1()->getScore();
+            numbers = numberToText(score/10);
+            glPushMatrix();
+                        glTranslated(5, 11, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+                numbers = numberToText(score%10);
+                glPushMatrix();
+                        glTranslated(7, 11, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+        }
 
-	//Players seeds and timer
+        stack<LSFappearance*> appearancesStack5;
+        appearancesStack5.push(defaultAppearance);
+        //Player2 seeds
+        if(game->getPlayer2()->getScore() < 10){
+                numbers = numberToText(game->getPlayer2()->getScore());
+                glPushMatrix();
+                        glTranslated(6, 2, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+        }
+        else{
+                int score = game->getPlayer2()->getScore();
+                numbers = numberToText(score/10);
+                glPushMatrix();
+                        glTranslated(5, 2, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+                numbers = numberToText(score%10);
+                glPushMatrix();
+                        glTranslated(7, 2, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+        }
 
-	string numbers;
-	stack<LSFappearance*> appearancesStack4;
-	appearancesStack4.push(defaultAppearance);
-	//Player1 seeds
-	if(game->getPlayer1()->getScore() < 10){
-		numbers = numberToText(game->getPlayer1()->getScore());
-		glPushMatrix();
-			glTranslated(6, 11, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
-	else{
-		int score = game->getPlayer1()->getScore();
-		numbers = numberToText(score/10);
-		glPushMatrix();
-			glTranslated(5, 11, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-		numbers = numberToText(score%10);
-		glPushMatrix();
-			glTranslated(7, 11, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
+        stack<LSFappearance*> appearancesStack6;
+        appearancesStack6.push(defaultAppearance);
+        //Timer
+        int timer = 45;
+        if(timer < 10){
+                numbers = numberToText(timer);
+                glPushMatrix();
+                        glTranslated(32, 4.5, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+        }
+        else{
+                numbers = numberToText(timer/10);
+                glPushMatrix();
+                        glTranslated(31, 4.5, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+                numbers = numberToText(timer%10);
+                glPushMatrix();
+                        glTranslated(33, 4.5, 0);
+                        LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
+                glPopMatrix();
+        }
 
-	stack<LSFappearance*> appearancesStack5;
-	appearancesStack5.push(defaultAppearance);
-	//Player2 seeds
-	if(game->getPlayer2()->getScore() < 10){
-		numbers = numberToText(game->getPlayer2()->getScore());
-		glPushMatrix();
-			glTranslated(6, 2, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
-	else{
-		int score = game->getPlayer2()->getScore();
-		numbers = numberToText(score/10);
-		glPushMatrix();
-			glTranslated(5, 2, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-		numbers = numberToText(score%10);
-		glPushMatrix();
-			glTranslated(7, 2, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
+        // ---- END Primitive drawing section
 
-	stack<LSFappearance*> appearancesStack6;
-	appearancesStack6.push(defaultAppearance);
-	//Timer
-	int timer = 45;
-	if(timer < 10){
-		numbers = numberToText(timer);
-		glPushMatrix();
-			glTranslated(32, 4.5, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
-	else{
-		numbers = numberToText(timer/10);
-		glPushMatrix();
-			glTranslated(31, 4.5, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-		numbers = numberToText(timer%10);
-		glPushMatrix();
-			glTranslated(33, 4.5, 0);
-			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
-
-	// ---- END Primitive drawing section
-
-	glutSwapBuffers();
+        glutSwapBuffers();	
 }
 
 string LSFscene::numberToText(int number){
