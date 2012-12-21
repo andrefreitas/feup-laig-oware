@@ -44,13 +44,85 @@
 	<!-- materials appearance -->
 	<appearances>
 		<!-- wall appearance -->
-		<appearance id="wwe">
+		<appearance id="zero">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="0.1" g="0.1" b="0.1" a="1" />
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
-			<specular r="0.3" g="0.3" b="0.3" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
 			<shininess value="0.3" />
-			<texture file="wweMagazine.jpg" length_s="10" length_t="10" />
+			<texture file="_zero.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="one">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_one.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="two">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_two.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="three">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_three.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="four">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_four.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="five">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_five.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="six">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_six.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="seven">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_seven.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="eight">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_eight.png" length_s="1.5" length_t="2.5" />
+		</appearance>
+		<appearance id="nine">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.53" g="0.53" b="0.53" a="1" />
+			<shininess value="0.3" />
+			<texture file="_nine.png" length_s="1.5" length_t="2.5" />
 		</appearance>
 
 
@@ -424,8 +496,116 @@
 				<rectangle x1="0" y1="0" x2="40" y2="20" />
 			</children>
 		</node>
-
-
+		
+		<node id="zero">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="zero" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="one">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="one" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="two">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="two" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="three">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="three" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="four">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="four" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="five">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="five" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="six">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="six" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="seven">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="seven" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="eight">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="eight" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
+		
+		<node id="nine">
+			<transforms>
+				<translate x="10" y="10" z="0.1" />
+			</transforms>
+			<appearanceref id="nine" />
+				 
+			<children>
+				<rectangle x1="0" y1="0" x2="1.5" y2="2.5" />
+			</children>
+		</node>
 
 		  <node id="SkyBox">
                         <transforms>

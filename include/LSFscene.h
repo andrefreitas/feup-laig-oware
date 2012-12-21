@@ -22,6 +22,8 @@
 #include "LSFparser.h"
 #include "LSFrender.h"
 #include "ObjModel.h"
+#include "Oware.h"
+
 /**
  * LSFscene defines the scene parsed from the LSF file.
  */
@@ -44,6 +46,12 @@ class LSFscene : public CGFscene
 	GLenum face;
 	GLenum mode;
 	static double timeSeconds;
+
+	Player *player1;
+	Player *player2;
+	Socket *s1;
+	Oware *game;
+
 public:
 	LSFscene();
 	LSFscene(char* argv[]);
@@ -62,6 +70,7 @@ public:
 	map<string, LSFlight*> * getLights();
 	map<string, LSFcamera*> * getCameras();
 	void update(long millis);
+	string numberToText(int number);
 	string scenario;
 };
 #endif

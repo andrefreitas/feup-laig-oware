@@ -1,7 +1,5 @@
 #include "Oware.h"
 
-#include <sstream>
-
 string itos(int i){
 	stringstream out;
 	out << i;
@@ -12,6 +10,9 @@ Oware::Oware(Player *player1, Player *player2){
 	board = new Board();
 	this->player1 = player1;
 	this->player2 = player2;
+
+	this->player1->setScore(0);
+	this->player2->setScore(0);
 }
 
 string Oware::getRoules(){
@@ -30,6 +31,18 @@ string Oware::getRoules(){
 			"   partir desse\n\n"
 			"5. Ganha o primeiro a obter 25 ou mais pontos\n\n";
 	return rules;
+}
+
+Player* Oware::getPlayer1(){
+	return player1;
+}
+
+Player* Oware::getPlayer2(){
+	return player2;
+}
+
+Board* Oware::getBoard(){
+	return board;
 }
 
 void Oware::startServer(Socket *s1){

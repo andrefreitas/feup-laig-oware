@@ -9,6 +9,10 @@
 #include "Player.h"
 #include "Board.h"
 
+#include <sstream>
+
+string itos(int i);
+
 class Oware{
 private:
 	Player *player1;
@@ -26,6 +30,9 @@ private:
 public:
 	Oware(Player *player1, Player *player2);
 	string getRoules();
+	Player* getPlayer1();
+	Player* getPlayer2();
+	Board* getBoard();
 	void startServer(Socket *s1);
 	bool startGame(Socket *s1, string player1, string player2);
 	bool startGame(Socket *s1, string player1, string player2, string playerTurn,

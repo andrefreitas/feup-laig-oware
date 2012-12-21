@@ -53,6 +53,20 @@ void LSFscene::init()
 
 	// Scenario
 	scenario="JungleScenario";
+
+	//Players and startGame
+	player1 = new Computer("ABC", "bot2");
+	player2 = new Human("Paulo", "human");
+	s1 = new Socket("127.0.0.1",6300);
+
+	game = new Oware(player1, player2);
+
+	cout << game->getRoules() << endl;
+
+	game->startServer(s1);
+	game->startGame(s1, player1->getType(), player2->getType());
+	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[1,2,3,4,5,6],[1,15,1,1,1,1]]", "0", "6");
+	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -161,11 +175,103 @@ void LSFscene::display()
 	LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);
 	glPopMatrix();
 
+	//Players seeds and timer
+
+	string numbers;
+	stack<LSFappearance*> appearancesStack4;
+	appearancesStack4.push(defaultAppearance);
+	//Player1 seeds
+	if(game->getPlayer1()->getScore() < 10){
+		numbers = numberToText(game->getPlayer1()->getScore());
+		glPushMatrix();
+			glTranslated(6, 11, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+	else{
+		int score = game->getPlayer1()->getScore();
+		numbers = numberToText(score/10);
+		glPushMatrix();
+			glTranslated(5, 11, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+		numbers = numberToText(score%10);
+		glPushMatrix();
+			glTranslated(7, 11, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+
+	stack<LSFappearance*> appearancesStack5;
+	appearancesStack5.push(defaultAppearance);
+	//Player2 seeds
+	if(game->getPlayer2()->getScore() < 10){
+		numbers = numberToText(game->getPlayer2()->getScore());
+		glPushMatrix();
+			glTranslated(6, 2, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+	else{
+		int score = game->getPlayer2()->getScore();
+		numbers = numberToText(score/10);
+		glPushMatrix();
+			glTranslated(5, 2, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+		numbers = numberToText(score%10);
+		glPushMatrix();
+			glTranslated(7, 2, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+
+	stack<LSFappearance*> appearancesStack6;
+	appearancesStack6.push(defaultAppearance);
+	//Timer
+	int timer = 45;
+	if(timer < 10){
+		numbers = numberToText(timer);
+		glPushMatrix();
+			glTranslated(32, 4.5, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+	else{
+		numbers = numberToText(timer/10);
+		glPushMatrix();
+			glTranslated(31, 4.5, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+		numbers = numberToText(timer%10);
+		glPushMatrix();
+			glTranslated(33, 4.5, 0);
+			LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+
 	// ---- END Primitive drawing section
 
 	glutSwapBuffers();
 }
 
+string LSFscene::numberToText(int number){
+	string str;
+	switch(number){
+	case 0: str = "zero"; break;
+	case 1: str = "one"; break;
+	case 2: str = "two"; break;
+	case 3: str = "three"; break;
+	case 4: str = "four"; break;
+	case 5: str = "five"; break;
+	case 6: str = "six"; break;
+	case 7: str = "seven"; break;
+	case 8: str = "eight"; break;
+	case 9: str = "nine"; break;
+	}
+
+	return str;
+}
 void LSFscene::setPolygonMode(unsigned int face, unsigned int mode){
 	this->face = face;
 	this->mode = mode;
