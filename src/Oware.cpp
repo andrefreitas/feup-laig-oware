@@ -268,7 +268,13 @@ void Oware::skipPlayer(Socket *s1){
 	vector<string> tempStatus;
 	string playerTurn;
 
-	tempStatus = statusStack.top();
+	tempStatus = vector<string>();
+	tempStatus.push_back(statusStack.top()[0]);
+	tempStatus.push_back(statusStack.top()[1]);
+	tempStatus.push_back(statusStack.top()[2]);
+	tempStatus.push_back(statusStack.top()[3]);
+
+	//tempStatus = statusStack.top();
 
 	statusStack.pop();
 
