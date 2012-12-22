@@ -128,7 +128,7 @@ bool Oware::startGame(Socket *s1,  string player1, string player2, string player
 }
 
 void Oware::endGame(Socket *s1){
-	s1->writes("[endGame].");
+	s1->writes("[endGame].\n");
 }
 
 int Oware::readStatus(Socket *s1){
