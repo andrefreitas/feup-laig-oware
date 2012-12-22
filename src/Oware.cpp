@@ -377,7 +377,7 @@ void Oware::swapPlayerTurn(){
 
 void Oware::play(int hole){
 	if(hole >= 0 && hole <= 5)
-		this->player1->play(s1, hole+1);
+		this->player1->play(s1, 6-hole);
 	else if(hole >= 6 && hole <= 11)
 		this->player2->play(s1, hole-5);
 }

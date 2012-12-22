@@ -59,7 +59,7 @@ void LSFinterface::processGUI(GLUI_Control *ctrl)
 	switch(ctrl->user_id){
 		case 10:this->scene->scenario="SandScenario";  break;
 		case 11:this->scene->scenario="JungleScenario"; break;
-		case 12:;this->scene->scenario="VillageScenario"; break;
+		case 12:this->scene->scenario="VillageScenario"; break;
 	}
 
 	map<string, LSFcamera*>::iterator itC;

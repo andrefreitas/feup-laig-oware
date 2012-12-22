@@ -335,5 +335,5 @@ void LSFscene::update(long millis){
 
 void LSFscene::boardHandler(int position){
 	// this function is called when a hole from the board is clicked
-	cout << "clicked board\n";
+	this->game->play(position);
 }
