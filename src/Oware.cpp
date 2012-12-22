@@ -281,20 +281,24 @@ void Oware::undo(){
 void Oware::skipPlayer(){
 	if(!statusStack.empty()){
 
+		vector<string> statusTemp = statusStack.top();
+
 		this->swapPlayerTurn();
 		endGame();
+
+		statusStack.pop();
 
 		//movie
 		vector<string> vec;
 		vec.push_back(this->playerTurn);
-		vec.push_back(statusStack.top().at(1));
-		vec.push_back(statusStack.top().at(2));
-		vec.push_back(statusStack.top().at(3));
+		vec.push_back(statusTemp.at(1));
+		vec.push_back(statusTemp.at(2));
+		vec.push_back(statusTemp.at(3));
 
 		movie.push(vec);
 
 		startGame(player1->getType(), player2->getType(), this->playerTurn,
-				  statusStack.top().at(1), statusStack.top().at(2), statusStack.top().at(3));
+				  statusTemp.at(1), statusTemp.at(2), statusTemp.at(3));
 	}
 }
 
