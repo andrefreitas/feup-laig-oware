@@ -145,7 +145,13 @@ void LSFscene::display()
 
     // Markers
     glPushMatrix();
-    string markers="Markers";
+    string markers;
+    if(game->getPlayerTurn() == "1")
+    	markers="MarkersP1";
+    else if(game->getPlayerTurn() == "2")
+    	markers="MarkersP2";
+    else
+    	markers="Markers";
     stack<LSFappearance*> appearancesStack3;
     appearancesStack3.push(defaultAppearance);
     LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);
@@ -159,6 +165,8 @@ void LSFscene::display()
     //Player1 seeds
     if(game->getPlayer1()->getScore() < 10){
         numbers = numberToText(game->getPlayer1()->getScore());
+        if(game->getPlayerTurn() == "1")
+        	numbers.append("Y");
             glPushMatrix();
                 glTranslated(6, 11, 0);
                     LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
@@ -167,11 +175,15 @@ void LSFscene::display()
         else{
             int score = game->getPlayer1()->getScore();
             numbers = numberToText(score/10);
+            if(game->getPlayerTurn() == "1")
+            	numbers.append("Y");
             glPushMatrix();
                         glTranslated(5, 11, 0);
                         LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
                 glPopMatrix();
                 numbers = numberToText(score%10);
+                if(game->getPlayerTurn() == "1")
+                	numbers.append("Y");
                 glPushMatrix();
                         glTranslated(7, 11, 0);
                         LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
@@ -183,6 +195,8 @@ void LSFscene::display()
         //Player2 seeds
         if(game->getPlayer2()->getScore() < 10){
                 numbers = numberToText(game->getPlayer2()->getScore());
+                if(game->getPlayerTurn() == "2")
+                	numbers.append("Y");
                 glPushMatrix();
                         glTranslated(6, 2, 0);
                         LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
@@ -191,11 +205,15 @@ void LSFscene::display()
         else{
                 int score = game->getPlayer2()->getScore();
                 numbers = numberToText(score/10);
+                if(game->getPlayerTurn() == "2")
+                	numbers.append("Y");
                 glPushMatrix();
                         glTranslated(5, 2, 0);
                         LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
                 glPopMatrix();
                 numbers = numberToText(score%10);
+                if(game->getPlayerTurn() == "2")
+                	numbers.append("Y");
                 glPushMatrix();
                         glTranslated(7, 2, 0);
                         LSFrender::render(nodes,numbers,appearances,appearancesStack5,animations,LSFscene::timeSeconds);
