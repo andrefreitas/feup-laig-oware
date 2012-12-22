@@ -21,7 +21,6 @@ private:
 	int finalPoints;
 	int maxTime;
 	Board *board;
-	//Scenario scenario;
 	string playerTurn;
 	string gameStatus;
 	int playerChoose;

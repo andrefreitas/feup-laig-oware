@@ -68,6 +68,10 @@ void LSFscene::init()
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[1,2,3,4,5,6],[1,15,1,1,1,1]]", "0", "6");
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
 
+	//código para modificar
+	game->readStatus(s1);
+	game->update();
+
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 }
 
@@ -227,6 +231,8 @@ void LSFscene::display()
 
         if(remainingTime <= 0){
         	game->skipPlayer(s1);
+        	game->readStatus(s1);
+        	game->update();
         	timer->stopCountDown();
         }
 
