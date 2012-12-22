@@ -17,6 +17,8 @@ class Oware{
 private:
 	Player *player1;
 	Player *player2;
+	Socket *s1;
+	bool serverCreated;
 	int winner;
 	int finalPoints;
 	int maxTime;
@@ -34,11 +36,10 @@ public:
 	Player* getPlayer1();
 	Player* getPlayer2();
 	Board* getBoard();
-	void startServer(Socket *s1);
-	bool startGame(Socket *s1, string player1, string player2);
-	bool startGame(Socket *s1, string player1, string player2, string playerTurn,
-                   string board, string scoreP1, string scoreP2);
-	void endGame(Socket *s1);
+	int startServer();
+	bool startGame(string player1, string player2);
+	bool startGame(string player1, string player2, string playerTurn, string board, string scoreP1, string scoreP2);
+	void endGame();
 
 	/*
 	 * return values:
@@ -46,14 +47,14 @@ public:
 	 *  0 no seeds
 	 *  1 endGame
 	 */
-	int readStatus(Socket *s1);
+	int readStatus();
 	void update();
 
 	void saveStatus(string playerTurn, string board, string player1Score, string player2Score);
 	int getStatusStackSize();
 	bool undoIsReadyToUse();
-	void undo(Socket *s1);
-	void skipPlayer(Socket *s1);
+	void undo();
+	void skipPlayer();
 	vector<string> topStatus();
 	string statusToPlayerTurn(vector<string> status);
 	string satusToBoard(vector<string> status);
@@ -70,6 +71,8 @@ public:
 	int getWinner();
 	int getFinalPoints();
 	int getMaxTime();
+	void swapPlayerTurn();
+	void play(int hole);
 };
 
 

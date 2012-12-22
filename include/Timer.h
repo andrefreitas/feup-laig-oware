@@ -5,6 +5,12 @@
 #include <cstdio>
 #include <ctime>
 
+#ifdef __linux__
+#include <unistd.h>
+#else
+#include <windows.h>
+#endif
+
 using namespace std;
 
 class Timer{
@@ -13,8 +19,6 @@ private:
 	time_t countTime;
 	time_t endTime;
 	time_t rawtime;
-	time_t seconds;
-	double dif;
 	struct tm * timeinfo;
 	bool started;
 
@@ -27,6 +31,7 @@ public:
 	int getMinute();
 	int getSecond();
 	bool isStarted();
+	void wait(int seconds);
 };
 
 

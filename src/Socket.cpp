@@ -64,7 +64,7 @@ int Socket::opens(){// Initialize Winsock.
     if (m_socket == INVALID_SOCKET) {
         printf("Client: socket() - Error at socket(): %d\n", WSAGetLastError());
         WSACleanup();
-        return false;
+        return -1;
     }
 	else
        printf("Client: socket() is OK.\n");
@@ -79,7 +79,7 @@ int Socket::opens(){// Initialize Winsock.
     if (connect(m_socket, (SOCKADDR*)&clientService, sizeof(clientService)) == SOCKET_ERROR) {
         printf("Client: connect() - Failed to connect.\n");
         WSACleanup();
-        return false;
+        return -1;
     }
     else {
        printf("Client: connect() is OK.\n");

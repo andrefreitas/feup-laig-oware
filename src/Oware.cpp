@@ -8,6 +8,12 @@ string itos(int i){
 
 Oware::Oware(Player *player1, Player *player2, int dificulty){
 	board = new Board();
+
+	if(!serverCreated){
+		s1 = new Socket("127.0.0.1",6300);
+		serverCreated = true;
+	}
+
 	this->player1 = player1;
 	this->player2 = player2;
 
@@ -23,6 +29,11 @@ Oware::Oware(Player *player1, Player *player2, int dificulty){
 
 Oware::Oware(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty){
 	board = new Board();
+
+	if(!serverCreated){
+		s1 = new Socket("127.0.0.1",6300);
+		serverCreated = true;
+	}
 
 	if(player1Type == "computer"){
 		if(dificulty == 1)
@@ -82,11 +93,13 @@ Board* Oware::getBoard(){
 	return board;
 }
 
-void Oware::startServer(Socket *s1){
-	s1->opens();
+int Oware::startServer(){
+	int success = s1->opens();
+
+	return success;
 }
 
-bool Oware::startGame(Socket *s1, string player1, string player2){
+bool Oware::startGame(string player1, string player2){
 	string msg;
 	string computer;
 	string str;
@@ -104,8 +117,7 @@ bool Oware::startGame(Socket *s1, string player1, string player2){
 	return strncmp(msg.c_str(), "ack.", strlen("ack.")-1) == 0;
 }
 
-bool Oware::startGame(Socket *s1,  string player1, string player2, string playerTurn,
-		              string board, string scoreP1, string scoreP2){
+bool Oware::startGame(string player1, string player2, string playerTurn, string board, string scoreP1, string scoreP2){
 	string msg;
 	string computer;
 	string str;
@@ -127,11 +139,11 @@ bool Oware::startGame(Socket *s1,  string player1, string player2, string player
 	return strncmp(msg.c_str(), "ack.", strlen("ack.")-1) == 0;
 }
 
-void Oware::endGame(Socket *s1){
+void Oware::endGame(){
 	s1->writes("[endGame].\n");
 }
 
-int Oware::readStatus(Socket *s1){
+int Oware::readStatus(){
 	string msg;
 	int num;
 
@@ -168,6 +180,8 @@ int Oware::readStatus(Socket *s1){
 			cout << msg;
 		}
 	}
+
+	this->update();
 
 	return num;
 }
@@ -232,7 +246,7 @@ bool Oware::undoIsReadyToUse(){
 	return false;
 }
 
-void Oware::undo(Socket *s1){
+void Oware::undo(){
 	if((player1->getType() != "human" || player2->getType() != "human") && statusStack.size() > 2){
 		statusStack.pop(); cout << statusStack.size() << endl;
 		statusStack.pop(); cout << statusStack.size() << endl;
@@ -243,12 +257,12 @@ void Oware::undo(Socket *s1){
 		statusStack.pop();
 	}
 
-	endGame(s1);
+	endGame();
 
 	if(!statusStack.empty()){
 		movie.push(statusStack.top());
 
-		startGame(s1, player1->getType(), player2->getType(), statusStack.top()[0],
+		startGame(player1->getType(), player2->getType(), statusStack.top()[0],
 				statusStack.top()[1], statusStack.top()[2], statusStack.top()[3]);
 	}
 	else{
@@ -260,35 +274,27 @@ void Oware::undo(Socket *s1){
 
 		movie.push(vec);
 
-		startGame(s1, player1->getType(), player2->getType());
+		startGame(player1->getType(), player2->getType());
 	}
 }
 
-void Oware::skipPlayer(Socket *s1){
-	vector<string> tempStatus;
-	string playerTurn;
-
+void Oware::skipPlayer(){
 	if(!statusStack.empty()){
-		tempStatus = statusStack.top();
 
-		statusStack.pop();
-
-		endGame(s1);
-		if(tempStatus.at(0) == "1")
-			playerTurn = "2";
-		else
-			playerTurn = "1";
+		this->swapPlayerTurn();
+		endGame();
 
 		//movie
 		vector<string> vec;
-		vec.push_back(playerTurn);
-		vec.push_back(tempStatus.at(1));
-		vec.push_back(tempStatus.at(2));
-		vec.push_back(tempStatus.at(3));
+		vec.push_back(this->playerTurn);
+		vec.push_back(statusStack.top().at(1));
+		vec.push_back(statusStack.top().at(2));
+		vec.push_back(statusStack.top().at(3));
 
 		movie.push(vec);
 
-		startGame(s1, player1->getType(), player2->getType(), playerTurn, tempStatus.at(1), tempStatus.at(2), tempStatus.at(3));
+		startGame(player1->getType(), player2->getType(), this->playerTurn,
+				  statusStack.top().at(1), statusStack.top().at(2), statusStack.top().at(3));
 	}
 }
 
@@ -362,3 +368,16 @@ int Oware::getMaxTime(){
 	return maxTime;
 }
 
+void Oware::swapPlayerTurn(){
+	if(this->getPlayerTurn() == "1")
+		this->setPlayerTurn("2");
+	else
+		this->setPlayerTurn("1");
+}
+
+void Oware::play(int hole){
+	if(hole >= 0 && hole <= 5)
+		this->player1->play(s1, hole+1);
+	else if(hole >= 6 && hole <= 11)
+		this->player2->play(s1, hole-5);
+}

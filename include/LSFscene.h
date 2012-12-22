@@ -48,7 +48,6 @@ class LSFscene : public CGFscene
 	GLenum mode;
 	static double timeSeconds;
 
-	Socket *s1;
 	Oware *game;
 	Timer *timer;
 

@@ -52,3 +52,11 @@ bool Timer::isStarted(){
 	return started;
 }
 
+void Timer::wait(int seconds){
+#ifdef __linux__
+	sleep(seconds);
+#else
+	Sleep(seconds*1000);
+#endif
+}
+
