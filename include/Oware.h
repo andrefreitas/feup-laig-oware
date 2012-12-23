@@ -25,9 +25,11 @@ private:
 	string playerTurn;
 	string gameStatus;
 	int playerChoose;
-	stack<vector<string> > statusStack;//playerTurn, boardStatus, player1Score, player2Score
-	queue<vector<string> > demoModeQueue;
+	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
+	queue<vector<string> > demoModeStatus;
 	queue<int> demoModeChooses;
+	queue<vector<int> > demoModePlayer1Seeds;
+	queue<vector<int> > demoModePlayer2Seeds;
 	queue<vector<string> > movie;
 
 public:
@@ -38,8 +40,6 @@ public:
 	Player* getPlayer1();
 	Player* getPlayer2();
 	Player* getPlayer(int playerTurn);
-	queue<vector<string> > getDemoModeQueue();
-	queue<int> getDemoModeChooses();
 	Board* getBoard();
 	int startServer();
 	bool startGame(string player1, string player2);
@@ -56,7 +56,10 @@ public:
 	void update();
 
 	void saveStatus(string playerTurn, string board, string player1Score, string player2Score);
-	int getStatusStackSize();
+	int getStatusSize();
+	stack<vector<string> > getStatus();
+	queue<vector<string> > getDemoModeStatus();
+	queue<int> getDemoModeChooses();
 	bool undoIsReadyToUse();
 	void undo();
 	void skipPlayer();

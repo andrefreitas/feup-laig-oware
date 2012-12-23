@@ -51,10 +51,11 @@ class LSFscene : public CGFscene
 	Oware *game;
 	Timer *timer;
 	Timer *demoTimer;
-	queue<vector<string> > demoModeQueue;
+	queue<vector<string> > demoModeStatus;
 	bool loadingMode;
 	bool gameStarted;
 	bool demoModeStarted;
+	bool demoModeEnd;
 
 public:
 	LSFscene();

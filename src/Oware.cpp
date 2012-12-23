@@ -87,10 +87,6 @@ Player* Oware::getPlayer(int playerTurn){
 		return player2;
 }
 
-queue<vector<string> > Oware::getDemoModeQueue(){
-	return demoModeQueue;
-}
-
 queue<int> Oware::getDemoModeChooses(){
 	return demoModeChooses;
 }
@@ -156,7 +152,6 @@ int Oware::readStatus(){
 	while(s1->reads(msg)){
 		if((signed)msg.find("endGame") != -1){
 			cout << msg;
-
 			int pos = msg.find("victory");
 			if(pos != -1){
 				winner = msg.at(pos + 8) - 48;
@@ -174,25 +169,12 @@ int Oware::readStatus(){
 		}
 		else if((signed)msg.find("noSeeds") != -1){
 			cout << msg;
-//			if(player1->getType() != "human" && player2->getType() != "human"){
-//				this->swapPlayerTurn();
-//				continue;
-//			}
-//			else{
 				num = 0; break;
-//			}
 		}
 		else if((signed)msg.find("gameStatus") != -1){
 			this->gameStatus = msg;
 			cout << msg;
-//			if(player1->getType() != "human" && player2->getType() != "human"){
-//				this->update();
-//				this->swapPlayerTurn();
-//				continue;
-//			}
-//			else{
 				num = -1; break;
-//			}
 		}
 		else if((signed)msg.find("Chooses") != -1){
 			this->playerChoose = msg.at(14) - 48;
@@ -239,7 +221,7 @@ void Oware::update(){
 	player2->setScore(atoi(strtok(NULL, " ")));
 
 	saveStatus(playerTurn, board, itos(player1->getScore()), itos(player2->getScore()));
-	movie.push(statusStack.top());
+	movie.push(status.top());
 }
 
 void Oware::saveStatus(string playerTurn, string board, string player1Score, string player2Score){
@@ -249,43 +231,46 @@ void Oware::saveStatus(string playerTurn, string board, string player1Score, str
 	vec.push_back(player1Score);
 	vec.push_back(player2Score);
 
-	if(player1->getType() != "human" && player2->getType() != "human")
-		demoModeQueue.push(vec);
+	if(player1->getType() != "human" && player2->getType() != "human"){
+		demoModeStatus.push(vec);
+		demoModePlayer1Seeds.push(player1->getSeeds());
+		demoModePlayer2Seeds.push(player2->getSeeds());
+	}
 
-	statusStack.push(vec);
+	status.push(vec);
 }
 
-int Oware::getStatusStackSize(){
-	return statusStack.size();
+int Oware::getStatusSize(){
+	return status.size();
 }
 
 bool Oware::undoIsReadyToUse(){
-	if((player1->getType() != "human" || player2->getType() != "human") && statusStack.size() > 2)
+	if((player1->getType() != "human" || player2->getType() != "human") && status.size() > 2)
 		return true;
-	else if((player1->getType() == "human" && player2->getType() == "human") && statusStack.size() > 1)
+	else if((player1->getType() == "human" && player2->getType() == "human") && status.size() > 1)
 		return true;
 
 	return false;
 }
 
 void Oware::undo(){
-	if((player1->getType() != "human" || player2->getType() != "human") && statusStack.size() > 2){
-		statusStack.pop(); cout << statusStack.size() << endl;
-		statusStack.pop(); cout << statusStack.size() << endl;
-		statusStack.pop(); cout << statusStack.size() << endl;
+	if((player1->getType() != "human" || player2->getType() != "human") && status.size() > 2){
+		status.pop(); cout << status.size() << endl;
+		status.pop(); cout << status.size() << endl;
+		status.pop(); cout << status.size() << endl;
 	}
-	else if((player1->getType() == "human" && player2->getType() == "human") && statusStack.size() > 1){
-		statusStack.pop();
-		statusStack.pop();
+	else if((player1->getType() == "human" && player2->getType() == "human") && status.size() > 1){
+		status.pop();
+		status.pop();
 	}
 
 	endGame();
 
-	if(!statusStack.empty()){
-		movie.push(statusStack.top());
+	if(!status.empty()){
+		movie.push(status.top());
 
-		startGame(player1->getType(), player2->getType(), statusStack.top()[0],
-				statusStack.top()[1], statusStack.top()[2], statusStack.top()[3]);
+		startGame(player1->getType(), player2->getType(), status.top()[0],
+				status.top()[1], status.top()[2], status.top()[3]);
 	}
 	else{
 		vector<string> vec;
@@ -301,14 +286,14 @@ void Oware::undo(){
 }
 
 void Oware::skipPlayer(){
-	if(!statusStack.empty()){
+	if(!status.empty()){
 
-		vector<string> statusTemp = statusStack.top();
+		vector<string> statusTemp = status.top();
 
 		this->swapPlayerTurn();
 		endGame();
 
-		statusStack.pop();
+		status.pop();
 
 		//movie
 		vector<string> vec;
@@ -323,13 +308,20 @@ void Oware::skipPlayer(){
 				  statusTemp.at(1), statusTemp.at(2), statusTemp.at(3));
 	}
 }
+stack<vector<string> > Oware::getStatus(){
+	return status;
+}
 
 vector<string> Oware::topStatus(){
-	if(!statusStack.empty())
-		return statusStack.top();
+	if(!status.empty())
+		return status.top();
 
 	vector<string> vec;
 	return vec;
+}
+
+queue<vector<string> > Oware::getDemoModeStatus(){
+	return demoModeStatus;
 }
 
 string Oware::statusToPlayerTurn(vector<string> status){

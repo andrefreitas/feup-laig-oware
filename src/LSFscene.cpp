@@ -283,6 +283,9 @@ void LSFscene::display()
     }
     }
 
+    if(demoModeEnd)
+    	stopDemoMode();
+
     // ---- END Primitive drawing section
 	}
     glutSwapBuffers();
@@ -366,12 +369,13 @@ void LSFscene::boardHandler(int position){
 void LSFscene::startDemoMode(){
 	this->gameStarted = true;
 	this->demoModeStarted = true;
+	this->demoModeEnd = false;
 	this->demoTimer->stopCountDown();
 
-	this->demoModeQueue = game->getDemoModeQueue();
+	this->demoModeStatus = game->getDemoModeStatus();
 
-	this->game->getPlayer1()->setScore(atoi(demoModeQueue.front().at(2).c_str()));
-	this->game->getPlayer2()->setScore(atoi(demoModeQueue.front().at(3).c_str()));
+	this->game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
+	this->game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
 }
 
 void LSFscene::stopDemoMode(){
@@ -381,26 +385,26 @@ void LSFscene::stopDemoMode(){
 }
 
 void LSFscene::demoMode(){
-	if(demoModeQueue.front().at(0) == "1"){
+	if(demoModeStatus.front().at(0) == "1"){
 		game->setPlayerTurn("1");
-		if(!demoModeQueue.empty())
-			game->getPlayer1()->setScore(atoi(demoModeQueue.front().at(2).c_str()));
+		if(!demoModeStatus.empty())
+			game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
 	}
-	else if(demoModeQueue.front().at(0) == "2"){
+	else if(demoModeStatus.front().at(0) == "2"){
 		game->setPlayerTurn("2");
-		if(!demoModeQueue.empty())
-			game->getPlayer2()->setScore(atoi(demoModeQueue.front().at(3).c_str()));
+		if(!demoModeStatus.empty())
+			game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
 	}
 	if(timer->getCountDown() < 7){
-		if(!demoModeQueue.empty())
-			demoModeQueue.pop();
+		if(!demoModeStatus.empty())
+			demoModeStatus.pop();
 		else{
 			if(game->getWinner() == 1)
 				game->getPlayer1()->setScore(game->getFinalPoints());
 			else
 				game->getPlayer2()->setScore(game->getFinalPoints());
 
-			stopDemoMode();
+			demoModeEnd = true;
 		}
 		timer->stopCountDown();
 	}

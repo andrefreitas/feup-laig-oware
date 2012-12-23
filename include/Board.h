@@ -3,15 +3,23 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class Board{
 private:
+	vector<string> board;
+	vector<int> player1Seeds;
+	vector<int> player2Seeds;
+	int startHole;
 
 public:
 	Board();
-	void draw(int startHole);
+	void loadBoard(vector<string> board);
+	void setStartHole(int startHole);
+	void update();
+	void draw();
 };
 
 
