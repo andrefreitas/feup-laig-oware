@@ -9,6 +9,11 @@ string itos(int i){
 Oware::Oware(){
 	board = new Board();
 	s1 = new Socket("127.0.0.1",6300);
+
+	winner = 1;
+	finalPoints = 1;
+	maxTime = 1;
+	playerChoose = 1;
 }
 
 void Oware::createGame(Player *player1, Player *player2, int dificulty){
@@ -156,10 +161,20 @@ int Oware::readStatus(){
 			if(pos != -1){
 				winner = msg.at(pos + 8) - 48;
 				finalPoints = (msg.at(pos + 10) - 48) * 10 + (msg.at(pos + 11) - 48);
+
+				if(player1->getType() != "human" && player2->getType() != "human"){
+					demoModeWinner = winner;
+					demoModeFinalPoints = finalPoints;
+				}
 			}
 			else{
 				winner = 0;
 				finalPoints = 24;
+
+				if(player1->getType() != "human" && player2->getType() != "human"){
+					demoModeWinner = winner;
+					demoModeFinalPoints = finalPoints;
+				}
 			}
 
 			cout << winner << endl;
@@ -200,19 +215,21 @@ void Oware::update(){
 
 	int n = 0;
 	board = "[[";
-	while(n++ < 6){
+	while(n < 6){
 		v1.push_back(atoi(strtok(NULL, "[,]")));
 		board.append(itos(v1.back()));
 		if(v1.size() < 6) board.append(",");
+		n++;
 	}
 	player1->setSeeds(v1);
 
 	n = 0;
 	board.append("],[");
-	while(n++ < 6){
+	while(n < 6){
 		v2.push_back(atoi(strtok(NULL, "[,]")));
 		board.append(itos(v2.back()));
 		if(v2.size() < 6) board.append(",");
+		n++;
 	}
 	board.append("]]");
 	player2->setSeeds(v2);
@@ -269,8 +286,8 @@ void Oware::undo(){
 	if(!status.empty()){
 		movie.push(status.top());
 
-		startGame(player1->getType(), player2->getType(), status.top()[0],
-				status.top()[1], status.top()[2], status.top()[3]);
+		startGame(player1->getType(), player2->getType(), status.top().at(0),
+				status.top().at(1), status.top().at(2), status.top().at(3));
 	}
 	else{
 		vector<string> vec;
@@ -287,7 +304,6 @@ void Oware::undo(){
 
 void Oware::skipPlayer(){
 	if(!status.empty()){
-
 		vector<string> statusTemp = status.top();
 
 		this->swapPlayerTurn();
@@ -325,19 +341,19 @@ queue<vector<string> > Oware::getDemoModeStatus(){
 }
 
 string Oware::statusToPlayerTurn(vector<string> status){
-	return status[0];
+	return status.at(0);
 }
 
 string Oware::satusToBoard(vector<string> status){
-	return status[1];
+	return status.at(1);
 }
 
 string Oware::statusToPlayer1Score(vector<string> status){
-	return status[2];
+	return status.at(2);
 }
 
 string Oware::statusToPlayer2Score(vector<string> status){
-	return status[3];
+	return status.at(3);
 }
 
 queue<vector<string> > Oware::getMovie(){
@@ -376,6 +392,14 @@ int Oware::getPlayerChoose(){
 
 int Oware::getWinner(){
 	return winner;
+}
+
+int Oware::getDemoModeWinner(){
+	return demoModeWinner;
+}
+
+int Oware::getDemoModeFinalPoints(){
+	return demoModeFinalPoints;
 }
 
 int Oware::getFinalPoints(){

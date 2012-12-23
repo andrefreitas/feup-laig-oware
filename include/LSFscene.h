@@ -52,7 +52,7 @@ class LSFscene : public CGFscene
 	Timer *timer;
 	Timer *demoTimer;
 	queue<vector<string> > demoModeStatus;
-	bool loadingMode;
+	bool loadingDemoMode;
 	bool gameStarted;
 	bool demoModeStarted;
 	bool demoModeEnd;
@@ -84,6 +84,7 @@ public:
 	void startDemoMode();
 	void stopDemoMode();
 	void demoMode();
+	bool createDemoMode();
 	void loadDemoMode();
 };
 #endif

@@ -384,7 +384,7 @@
 			<appearanceref id="woodBoard" />
 				 
 			<children>
-				<box x1="0" y1="0" z1="0.1" x2="40" y2="20" z2="1.1" />
+				<box x1="0" y1="0" z1="0" x2="40" y2="20" z2="1" />
 			</children>
 		</node>
 

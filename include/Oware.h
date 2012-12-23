@@ -26,61 +26,68 @@ private:
 	string gameStatus;
 	int playerChoose;
 	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
+	queue<vector<string> > movie;
+
+	//exclusive demoMode
+	int demoModeWinner;
+	int demoModeFinalPoints;
 	queue<vector<string> > demoModeStatus;
 	queue<int> demoModeChooses;
 	queue<vector<int> > demoModePlayer1Seeds;
 	queue<vector<int> > demoModePlayer2Seeds;
-	queue<vector<string> > movie;
 
 public:
 	Oware();
 	void createGame(Player *player1, Player *player2, int dificulty);
 	void createGame(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty);
-	string getRoules();
-	Player* getPlayer1();
-	Player* getPlayer2();
-	Player* getPlayer(int playerTurn);
-	Board* getBoard();
-	int startServer();
-	bool startGame(string player1, string player2);
-	bool startGame(string player1, string player2, string playerTurn, string board, string scoreP1, string scoreP2);
-	void endGame();
-
-	/*
-	 * return values:
-	 * -1 continue
-	 *  0 no seeds
-	 *  1 endGame
-	 */
-	int readStatus();
-	void update();
-
 	void saveStatus(string playerTurn, string board, string player1Score, string player2Score);
-	int getStatusSize();
-	stack<vector<string> > getStatus();
-	queue<vector<string> > getDemoModeStatus();
-	queue<int> getDemoModeChooses();
-	bool undoIsReadyToUse();
+	void setPlayerTurn(string playerTurn);
+	void setPlayerChoose(int playerChoose);
+	void play(int hole);
+	void endGame();
+	void update();
 	void undo();
 	void skipPlayer();
-	vector<string> topStatus();
-	string statusToPlayerTurn(vector<string> status);
-	string satusToBoard(vector<string> status);
-	string statusToPlayer1Score(vector<string> status);
-	string statusToPlayer2Score(vector<string> status);
+	void swapPlayerTurn();
 
-	queue<vector<string> > getMovie();
-	vector<string> getMovieFrame(unsigned int frame);
-
-	void setPlayerTurn(string playerTurn);
-	string getPlayerTurn();
-	void setPlayerChoose(int playerChoose);
+	int startServer();
+	int readStatus();
+	int getStatusSize();
 	int getPlayerChoose();
 	int getWinner();
 	int getFinalPoints();
 	int getMaxTime();
-	void swapPlayerTurn();
-	void play(int hole);
+
+	bool startGame(string player1, string player2);
+	bool startGame(string player1, string player2, string playerTurn, string board, string scoreP1, string scoreP2);
+	bool undoIsReadyToUse();
+
+	Player* getPlayer1();
+	Player* getPlayer2();
+	Player* getPlayer(int playerTurn);
+
+	Board* getBoard();
+
+	string getRoules();
+	string statusToPlayerTurn(vector<string> status);
+	string satusToBoard(vector<string> status);
+	string statusToPlayer1Score(vector<string> status);
+	string statusToPlayer2Score(vector<string> status);
+	string getPlayerTurn();
+
+	stack<vector<string> > getStatus();
+
+	vector<string> getMovieFrame(unsigned int frame);
+	vector<string> topStatus();
+
+	queue<vector<string> > getMovie();
+
+	//exclusive demoMode
+	queue<vector<string> > getDemoModeStatus();
+	queue<int> getDemoModeChooses();
+	int getDemoModeWinner();
+	int getDemoModeFinalPoints();
+
 };
 
 
