@@ -6,14 +6,12 @@ string itos(int i){
 	return out.str();
 }
 
-Oware::Oware(Player *player1, Player *player2, int dificulty){
+Oware::Oware(){
 	board = new Board();
+	s1 = new Socket("127.0.0.1",6300);
+}
 
-	if(!serverCreated){
-		s1 = new Socket("127.0.0.1",6300);
-		serverCreated = true;
-	}
-
+void Oware::createGame(Player *player1, Player *player2, int dificulty){
 	this->player1 = player1;
 	this->player2 = player2;
 
@@ -27,14 +25,7 @@ Oware::Oware(Player *player1, Player *player2, int dificulty){
 	this->player2->setScore(0);
 }
 
-Oware::Oware(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty){
-	board = new Board();
-
-	if(!serverCreated){
-		s1 = new Socket("127.0.0.1",6300);
-		serverCreated = true;
-	}
-
+void Oware::createGame(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty){
 	if(player1Type == "computer"){
 		if(dificulty == 1)
 			this->player1 = new Computer(player1Name, "bot1");
@@ -87,6 +78,21 @@ Player* Oware::getPlayer1(){
 
 Player* Oware::getPlayer2(){
 	return player2;
+}
+
+Player* Oware::getPlayer(int playerTurn){
+	if(playerTurn == 1)
+		return player1;
+	else
+		return player2;
+}
+
+queue<vector<string> > Oware::getDemoModeQueue(){
+	return demoModeQueue;
+}
+
+queue<int> Oware::getDemoModeChooses(){
+	return demoModeChooses;
 }
 
 Board* Oware::getBoard(){
@@ -168,20 +174,33 @@ int Oware::readStatus(){
 		}
 		else if((signed)msg.find("noSeeds") != -1){
 			cout << msg;
-			num = 0; break;
+//			if(player1->getType() != "human" && player2->getType() != "human"){
+//				this->swapPlayerTurn();
+//				continue;
+//			}
+//			else{
+				num = 0; break;
+//			}
 		}
 		else if((signed)msg.find("gameStatus") != -1){
 			this->gameStatus = msg;
 			cout << msg;
-			num = -1; break;
+//			if(player1->getType() != "human" && player2->getType() != "human"){
+//				this->update();
+//				this->swapPlayerTurn();
+//				continue;
+//			}
+//			else{
+				num = -1; break;
+//			}
 		}
 		else if((signed)msg.find("Chooses") != -1){
 			this->playerChoose = msg.at(14) - 48;
+			if(player1->getType() != "human" && player2->getType() != "human")
+				this->demoModeChooses.push(this->playerChoose);
 			cout << msg;
 		}
 	}
-
-	this->update();
 
 	return num;
 }
@@ -229,6 +248,9 @@ void Oware::saveStatus(string playerTurn, string board, string player1Score, str
 	vec.push_back(board);
 	vec.push_back(player1Score);
 	vec.push_back(player2Score);
+
+	if(player1->getType() != "human" && player2->getType() != "human")
+		demoModeQueue.push(vec);
 
 	statusStack.push(vec);
 }

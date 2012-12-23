@@ -50,6 +50,11 @@ class LSFscene : public CGFscene
 
 	Oware *game;
 	Timer *timer;
+	Timer *demoTimer;
+	queue<vector<string> > demoModeQueue;
+	bool loadingMode;
+	bool gameStarted;
+	bool demoModeStarted;
 
 public:
 	LSFscene();
@@ -71,8 +76,13 @@ public:
 	void update(long millis);
 	string numberToText(int number);
 	string scenario;
+	string loading;
 	LSFBox *selectionBox;
 	void selectionMode();
 	void boardHandler(int position);
+	void startDemoMode();
+	void stopDemoMode();
+	void demoMode();
+	void loadDemoMode();
 };
 #endif

@@ -86,8 +86,10 @@ void LSFinterface::processMouse(int button, int state, int x, int y)
 
 	// do picking on mouse press (GLUT_DOWN)
 	// this could be more elaborate, e.g. only performing picking when there is a click (DOWN followed by UP) on the same place
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
 		performPicking(x,y);
+		this->scene->stopDemoMode();
+	}
 }
 
 void LSFinterface::performPicking(int x, int y) 

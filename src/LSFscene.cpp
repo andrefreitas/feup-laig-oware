@@ -54,12 +54,9 @@ void LSFscene::init()
 	// Scenario
 	scenario="JungleScenario";
 
-	timer = new Timer();
-
 	//startGame
-	game = new Oware(new Computer("ABC", "bot2"), new Human("Paulo", "human"), 3);
-
-	cout << game->getRoules() << endl;
+	game = new Oware();
+	game->createGame(new Computer("ABC", "bot1"), new Human("123", "bot2"), 3);
 
 	while(game->startServer() != 0){
 		cout << "\nWAITING FOR SERVER - 5 seconds sleeping\n" << endl;
@@ -69,10 +66,14 @@ void LSFscene::init()
 	//game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType(), "1", "[[1,2,3,4,5,6],[1,1,1,1,1,1]]", "10", "11");
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
 
-	//código para modificar
-	game->readStatus();
+	gameStarted = false;
+
+	timer = new Timer();
+	demoTimer = new Timer();
 
 	selectionBox=new LSFBox(0,7,0,7,0,7);
+
+	loadingMode = true;
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -103,7 +104,6 @@ void LSFscene::initCameras()
 			(*it).second->setStartRotation();
 		}
 	}
-
 
 	it = cameras.begin();
 	activeCamera = (*it).second->id;
@@ -141,20 +141,46 @@ void LSFscene::display()
 	string board="Board";
 	LSFrender::render(nodes,board,appearances,appearancesStack2,animations,LSFscene::timeSeconds);
 
+	if(loadingMode)
+		loadDemoMode();
+	else{
+
+		string box = "Box";
+		stack<LSFappearance*> appearancesStack0;
+		appearancesStack0.push(defaultAppearance);
+		LSFrender::render(nodes,box,appearances,appearancesStack0,animations,LSFscene::timeSeconds);
+
+    if(demoTimer->getCountDown() <= 0 && !gameStarted){
+    	startDemoMode();
+    }
+
+	//Timer ini
+    if(!timer->isStarted() && gameStarted)
+    	timer->startCountDown(game->getMaxTime());
 
 	//Player1 is bot1 or bot2
-	if(game->getPlayer1()->getType() != "human" && game->getPlayerTurn() == "1"){
-		game->readStatus();
-		game->swapPlayerTurn();
-	}
+	if(demoModeStarted)
+		demoMode();
+//    else if(game->getPlayer1()->getType() != "human" && game->getPlayerTurn() == "1"){
+//		int num = game->readStatus();
+//		if(num == 2){
+//			timer->wait(3);
+//			game->readStatus();
+//		}
+//		game->update();
+//		game->swapPlayerTurn();
+//	}
+
 
     // Markers
     glPushMatrix();
     string markers;
-    if(game->getPlayerTurn() == "1")
-    	markers="MarkersP1";
-    else if(game->getPlayerTurn() == "2")
-    	markers="MarkersP2";
+    if(gameStarted){
+    	if(game->getPlayerTurn() == "1")
+    		markers="MarkersP1";
+    	else if(game->getPlayerTurn() == "2")
+    		markers="MarkersP2";
+    }
     else
     	markers="Markers";
     stack<LSFappearance*> appearancesStack3;
@@ -163,7 +189,7 @@ void LSFscene::display()
     glPopMatrix();
 
     //Players seeds and timer
-
+    if(gameStarted){
     string numbers;
     stack<LSFappearance*> appearancesStack4;
     appearancesStack4.push(defaultAppearance);
@@ -228,9 +254,6 @@ void LSFscene::display()
     stack<LSFappearance*> appearancesStack6;
     appearancesStack6.push(defaultAppearance);
     //Timer
-    if(!timer->isStarted())
-    	timer->startCountDown(game->getMaxTime());
-
     int remainingTime = timer->getCountDown();
     if(remainingTime < 10){
     	numbers = numberToText(remainingTime);
@@ -255,11 +278,13 @@ void LSFscene::display()
     if(remainingTime <= 0){
     	game->skipPlayer();
     	game->readStatus();
+    	game->update();
     	timer->stopCountDown();
+    }
     }
 
     // ---- END Primitive drawing section
-
+	}
     glutSwapBuffers();
 }
 
@@ -336,4 +361,66 @@ void LSFscene::update(long millis){
 void LSFscene::boardHandler(int position){
 	// this function is called when a hole from the board is clicked
 	this->game->play(position);
+}
+
+void LSFscene::startDemoMode(){
+	this->gameStarted = true;
+	this->demoModeStarted = true;
+	this->demoTimer->stopCountDown();
+
+	this->demoModeQueue = game->getDemoModeQueue();
+
+	this->game->getPlayer1()->setScore(atoi(demoModeQueue.front().at(2).c_str()));
+	this->game->getPlayer2()->setScore(atoi(demoModeQueue.front().at(3).c_str()));
+}
+
+void LSFscene::stopDemoMode(){
+	this->gameStarted = false;
+	this->demoModeStarted = false;
+	this->demoTimer->startCountDown(15);
+}
+
+void LSFscene::demoMode(){
+	if(demoModeQueue.front().at(0) == "1"){
+		game->setPlayerTurn("1");
+		if(!demoModeQueue.empty())
+			game->getPlayer1()->setScore(atoi(demoModeQueue.front().at(2).c_str()));
+	}
+	else if(demoModeQueue.front().at(0) == "2"){
+		game->setPlayerTurn("2");
+		if(!demoModeQueue.empty())
+			game->getPlayer2()->setScore(atoi(demoModeQueue.front().at(3).c_str()));
+	}
+	if(timer->getCountDown() < 7){
+		if(!demoModeQueue.empty())
+			demoModeQueue.pop();
+		else{
+			if(game->getWinner() == 1)
+				game->getPlayer1()->setScore(game->getFinalPoints());
+			else
+				game->getPlayer2()->setScore(game->getFinalPoints());
+
+			stopDemoMode();
+		}
+		timer->stopCountDown();
+	}
+}
+
+void LSFscene::loadDemoMode(){
+	int num = game->readStatus();
+	if(num == 1){
+		loadingMode = false;
+		demoTimer->startCountDown(15);
+	}
+	else if(num == 0){
+		game->swapPlayerTurn();
+	}
+	else if(num == -1){
+		game->update();
+		game->swapPlayerTurn();
+	}
+	loading = "LoadGame";
+	stack<LSFappearance*> appearancesStack0;
+	appearancesStack0.push(defaultAppearance);
+	LSFrender::render(nodes,loading,appearances,appearancesStack0,animations,LSFscene::timeSeconds);
 }

@@ -43,7 +43,23 @@
 	
 	<!-- materials appearance -->
 	<appearances>
-		<!-- wall appearance -->
+		<appearance id="loading">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.8" g="0.8" b="0.8" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.8" g="0.8" b="0.8" a="1" />
+			<shininess value="0.3" />
+			<texture file="loading.png" length_s="40" length_t="20" />
+		</appearance>
+		<appearance id="woodBoard">
+			<emissive r="0.4" g="0.4" b="0.4" a="1" />
+			<ambient r="0.8" g="0.8" b="0.8" a="1" />
+			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
+			<specular r="0.8" g="0.8" b="0.8" a="1" />
+			<shininess value="0.3" />
+			<texture file="wood.png" length_s="40" length_t="20" />
+		</appearance>
+
 		<appearance id="zero">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
 			<ambient r="0.1" g="0.1" b="0.1" a="1" />
@@ -350,7 +366,27 @@
 	<!-- graph information -->
 	<graph rootid="Scenario">
 
-		
+		<node id="LoadGame">
+			<transforms>
+				<translate x="10" y="10" z="0" />
+			</transforms>
+			<appearanceref id="loading" />
+				 
+			<children>
+				<box x1="0" y1="0" z1=" 0.1" x2="40" y2="20" z2="1.1" />
+			</children>
+		</node>
+
+		<node id="Box">
+			<transforms>
+				<translate x="10" y="10" z="0" />
+			</transforms>
+			<appearanceref id="woodBoard" />
+				 
+			<children>
+				<box x1="0" y1="0" z1="0.1" x2="40" y2="20" z2="1.1" />
+			</children>
+		</node>
 
 		<node id="Scenario" displaylist="0">
 			<transforms>

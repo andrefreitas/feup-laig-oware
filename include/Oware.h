@@ -18,7 +18,6 @@ private:
 	Player *player1;
 	Player *player2;
 	Socket *s1;
-	bool serverCreated;
 	int winner;
 	int finalPoints;
 	int maxTime;
@@ -27,14 +26,20 @@ private:
 	string gameStatus;
 	int playerChoose;
 	stack<vector<string> > statusStack;//playerTurn, boardStatus, player1Score, player2Score
+	queue<vector<string> > demoModeQueue;
+	queue<int> demoModeChooses;
 	queue<vector<string> > movie;
 
 public:
-	Oware(Player *player1, Player *player2, int dificulty);
-	Oware(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty);
+	Oware();
+	void createGame(Player *player1, Player *player2, int dificulty);
+	void createGame(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty);
 	string getRoules();
 	Player* getPlayer1();
 	Player* getPlayer2();
+	Player* getPlayer(int playerTurn);
+	queue<vector<string> > getDemoModeQueue();
+	queue<int> getDemoModeChooses();
 	Board* getBoard();
 	int startServer();
 	bool startGame(string player1, string player2);
