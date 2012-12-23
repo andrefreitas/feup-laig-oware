@@ -86,5 +86,10 @@ public:
 	void demoMode();
 	bool createDemoMode();
 	void loadDemoMode();
+	void drawScenario();
+	void drawMarkers();
+	void drawPlayerScore(Player *player, string playerTurn);
+	void drawRemainingTime();
+
 };
 #endif
