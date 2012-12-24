@@ -70,5 +70,6 @@ Computer::Computer(string name, string type){
 }
 
 int Computer::play(Socket *s1, int hole){
+	cout << "\nCOMPUTER\n";
 	return 0;
 }
