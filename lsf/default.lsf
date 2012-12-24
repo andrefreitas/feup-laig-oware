@@ -929,6 +929,16 @@
                         </children>
                 </node>
 
+    <node id="seed">
+        <transforms>
+ 
+        </transforms>
+        <appearanceref id="inherit" />
+        <children>
+        	<sphere radius="4" slices="12" stacks="2" />
+        </children>
+    </node>
+
 
 
 	</graph>

@@ -29,11 +29,19 @@ void LSFinterface::initGUI()
 	GLUI_Panel *polygonalModePanel = addPanel((char*)"Polygonal Mode", 1);
 	addColumn();
 
+	GLUI_Panel *gamePanel = addPanel((char*)"Game Moves", 1);
+	addColumn();
+
 	// Scenario
 	addButtonToPanel(lightsPanel,(char*)"Desert",10);
 	addButtonToPanel(lightsPanel,(char*)"Jungle",11);
 	addButtonToPanel(lightsPanel,(char*)"Village",12);
-	
+
+	// Game Panel
+	addButtonToPanel(gamePanel,(char*)"Undo",20);
+	addButtonToPanel(gamePanel,(char*)"Redo",21);
+	addButtonToPanel(gamePanel,(char*)"Replay",22);
+
 	int i;
 
 	GLUI_RadioGroup* polygonalRadioGroup = addRadioGroupToPanel(polygonalModePanel, &polygonalMode, lights->size()+1);

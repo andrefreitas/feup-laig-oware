@@ -7,6 +7,7 @@
 
 #ifdef __linux__
 #include <unistd.h>
+#include <stdlib.h>
 #else
 #include <windows.h>
 #endif

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include "Timer.h"
 #include "Socket.h"
 
 using namespace std;
