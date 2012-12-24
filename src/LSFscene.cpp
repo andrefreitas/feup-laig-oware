@@ -163,17 +163,15 @@ void LSFscene::display()
 
 		drawMarkers();
 
-
-		if(!game->getBoard()->isLoaded() && gameStarted && !timer->isStarted()){
-			game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
-					atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
-
-			animationTimer->startCountDown(1);
-		}
-
-
 		//Players seeds and timer
 		if(gameStarted){
+			if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
+				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+						atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+
+				animationTimer->startCountDown(1);
+			}
+
 			if(game->getBoard()->isLoaded() && animationTimer->getCountDown() <= 0){
 				if(game->getBoard()->update() == false){
 					if(!timer->isStarted()){
@@ -185,17 +183,12 @@ void LSFscene::display()
 					animationTimer->startCountDown(1);
 			}
 
-			drawSeeds();
+			if(!winnerFound)
+				drawSeeds();
 
-			if(timer->isStarted()){
-				player1Score = game->getPlayer1()->getScore();
-				player2Score = game->getPlayer2()->getScore();
-			}
+			drawPlayerScore(game->getPlayer1()->getScore(), "1");
 
-
-			drawPlayerScore(player1Score, "1");
-
-			drawPlayerScore(player2Score, "2");
+			drawPlayerScore(game->getPlayer2()->getScore(), "2");
 
 			if(timer->isStarted() && !demoModeStarted)
 				drawRemainingTime(timer->getCountDown());
@@ -409,9 +402,13 @@ bool LSFscene::createDemoMode(){
 	return game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType());
 	//game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType(), "1", "[[1,2,3,4,5,6],[1,1,1,1,1,1]]", "10", "11");
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
+//	return true;
 }
 
 void LSFscene::loadDemoMode(){
+//	game->loadDemoMode();
+//	loadingDemoMode = false;
+//	demoTimer->startCountDown(15);
 	int num = game->readStatus();
 	if(num == 1){
 		loadingDemoMode = false;
@@ -434,6 +431,7 @@ void LSFscene::startDemoMode(){
 	this->gameStarted = true;
 	this->demoModeStarted = true;
 	this->demoModeEnd = false;
+	this->winnerFound = false;
 	this->demoTimer->stopCountDown();
 
 	this->player1Score = 0;
@@ -443,6 +441,18 @@ void LSFscene::startDemoMode(){
 	this->demoModePlayer1Seeds = game->getdemoModePlayerSeeds(1);
 	this->demoModePlayer2Seeds = game->getdemoModePlayerSeeds(2);
 	this->demoModeChooses = game->getDemoModeChooses();
+
+	if(!demoModeStatus.empty()){
+		game->setPlayerTurn(demoModeStatus.front().at(0));
+		game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
+		game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
+		game->setPlayerChoose(demoModeChooses.front());
+	}
+
+	if(!demoModePlayer1Seeds.empty()){
+		game->getPlayer1()->setSeeds(demoModePlayer1Seeds.front());
+		game->getPlayer2()->setSeeds(demoModePlayer2Seeds.front());
+	}
 
 	if(this->demoModeStatus.size() != this->demoModePlayer1Seeds.size() ||
 	   this->demoModePlayer1Seeds.size() != this->demoModePlayer2Seeds.size() ||
@@ -464,18 +474,6 @@ void LSFscene::stopDemoMode(){
 
 void LSFscene::demoMode(){
 	if(!demoModeStatus.empty()){
-		if(!demoModeStatus.empty()){
-			game->setPlayerTurn(demoModeStatus.front().at(0));
-			game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
-			game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
-			game->setPlayerChoose(demoModeChooses.front());
-		}
-
-		if(!demoModePlayer1Seeds.empty()){
-			game->getPlayer1()->setSeeds(demoModePlayer1Seeds.front());
-			game->getPlayer2()->setSeeds(demoModePlayer2Seeds.front());
-		}
-
 		if(timer->isStarted())
 			if(timer->getCountDown() <= 9){
 				if(!demoModeStatus.empty()){
@@ -488,6 +486,18 @@ void LSFscene::demoMode(){
 				timer->stopCountDown();
 			}
 
+		if(!demoModeStatus.empty()){
+			game->setPlayerTurn(demoModeStatus.front().at(0));
+			game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
+			game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
+			game->setPlayerChoose(demoModeChooses.front());
+		}
+
+		if(!demoModePlayer1Seeds.empty()){
+			game->getPlayer1()->setSeeds(demoModePlayer1Seeds.front());
+			game->getPlayer2()->setSeeds(demoModePlayer2Seeds.front());
+		}
+
 		if(animationTimer->isStarted() && animationTimer->getCountDown() <= 0)
 			animationTimer->stopCountDown();
 	}
@@ -498,6 +508,7 @@ void LSFscene::demoMode(){
 		else
 			game->getPlayer2()->setScore(game->getDemoModeFinalPoints());
 
+		winnerFound = true;
 		demoModeEnd = true;
 	}
 }

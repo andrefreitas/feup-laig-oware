@@ -61,6 +61,7 @@ class LSFscene : public CGFscene
 	bool gameStarted;
 	bool demoModeStarted;
 	bool demoModeEnd;
+	bool winnerFound;
 	int player1Score;
 	int player2Score;
 
