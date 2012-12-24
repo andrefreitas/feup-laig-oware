@@ -406,6 +406,7 @@ bool LSFscene::createDemoMode(){
 }
 
 void LSFscene::loadDemoMode(){
+//	cout << "Loading DemoMode" << endl;
 //	game->loadDemoMode();
 //	loadingDemoMode = false;
 //	demoTimer->startCountDown(15);

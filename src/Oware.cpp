@@ -60,27 +60,36 @@ void Oware::createGame(string player1Name, string player1Type, string player2Nam
 }
 
 void Oware::loadDemoMode(){
-	string msg;
+	queue<string> msg;
+	FILE * file;
 	int num;
-	ifstream file("demoMode.txt");
 
-	if(file.is_open()){
-		while(!file.eof()){
-			getline(file, msg);
-			cout << msg;
-			num = decodeMSG(msg);
+	if((file = fopen("demoMode.txt", "r")) == NULL)
+		exit(EXIT_FAILURE);
 
-			if(num == 1)
-				break;
-			else if(num == 0)
-				swapPlayerTurn();
-			else if(num == -1){
-				update();
-				swapPlayerTurn();
-			}
+	char line[100];
+	char *read;
+	while(!feof(file)){
+		read = fgets(line, 100, file);
+		if(read)
+			msg.push((string)line);
+	}
+
+	fclose(file);
+
+	for(;!msg.empty(); msg.pop()){
+		cout << msg.front();
+		string tmp = msg.front();
+		num = decodeMSG(tmp);
+		if(num == 1)
+			break;
+		else if(num == 0)
+			swapPlayerTurn();
+		else if(num == -1){
+			update();
+			swapPlayerTurn();
 		}
 	}
-	file.close();
 }
 
 string Oware::getRoules(){
