@@ -70,6 +70,7 @@ void LSFscene::init()
 
 	timer = new Timer();
 	demoTimer = new Timer();
+	animationTimer = new Timer();
 
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
@@ -148,9 +149,6 @@ void LSFscene::display()
 		if(demoTimer->getCountDown() <= 0 && !gameStarted)
 			startDemoMode();
 
-		if(!timer->isStarted() && gameStarted)
-			timer->startCountDown(game->getMaxTime());
-
 		if(demoModeStarted)
 			demoMode();
 		//    else if(game->getPlayer1()->getType() != "human" && game->getPlayerTurn() == "1"){
@@ -165,13 +163,42 @@ void LSFscene::display()
 
 		drawMarkers();
 
+
+		if(!game->getBoard()->isLoaded() && gameStarted && !timer->isStarted()){
+			game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+					atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+
+			animationTimer->startCountDown(1);
+		}
+
+
 		//Players seeds and timer
 		if(gameStarted){
-			drawPlayerScore(game->getPlayer1(), "1");
+			if(game->getBoard()->isLoaded() && animationTimer->getCountDown() <= 0){
+				if(game->getBoard()->update() == false){
+					if(!timer->isStarted()){
+						timer->startCountDown(game->getMaxTime());
+						animationTimer->stopCountDown();
+					}
+				}
+				else
+					animationTimer->startCountDown(1);
+			}
 
-			drawPlayerScore(game->getPlayer2(), "2");
+			drawSeeds();
 
-			drawRemainingTime();
+			if(timer->isStarted()){
+				player1Score = game->getPlayer1()->getScore();
+				player2Score = game->getPlayer2()->getScore();
+			}
+
+
+			drawPlayerScore(player1Score, "1");
+
+			drawPlayerScore(player2Score, "2");
+
+			if(timer->isStarted() && !demoModeStarted)
+				drawRemainingTime(timer->getCountDown());
 		}
 
 		if(demoModeEnd && timer->getCountDown() < 5){
@@ -234,13 +261,13 @@ void LSFscene::drawMarkers(){
 	glPopMatrix();
 }
 
-void LSFscene::drawPlayerScore(Player *player, string playerTurn){
+void LSFscene::drawPlayerScore(int score, string playerTurn){
 	string numbers;
 	stack<LSFappearance*> appearancesStack4;
 	appearancesStack4.push(defaultAppearance);
 	//Player seeds
-	if(player->getScore() < 10){
-		numbers = numberToText(player->getScore());
+	if(score < 10){
+		numbers = numberToText(score);
 		if(game->getPlayerTurn() == playerTurn)
 			numbers.append("Y");
 		glPushMatrix();
@@ -252,7 +279,6 @@ void LSFscene::drawPlayerScore(Player *player, string playerTurn){
 		glPopMatrix();
 	}
 	else{
-		int score = player->getScore();
 		numbers = numberToText(score/10);
 		if(game->getPlayerTurn() == playerTurn)
 			numbers.append("Y");
@@ -276,31 +302,8 @@ void LSFscene::drawPlayerScore(Player *player, string playerTurn){
 	}
 }
 
-void LSFscene::drawRemainingTime(){
-	string numbers;
-	stack<LSFappearance*> appearancesStack6;
-	appearancesStack6.push(defaultAppearance);
-	//Timer
-	int remainingTime = timer->getCountDown();
-	if(remainingTime < 10){
-		numbers = numberToText(remainingTime);
-		glPushMatrix();
-		glTranslated(31.5, 4.5, 0);
-		LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
-	else{
-		numbers = numberToText(remainingTime/10);
-		glPushMatrix();
-		glTranslated(30.5, 4.5, 0);
-		LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-		numbers = numberToText(remainingTime%10);
-		glPushMatrix();
-		glTranslated(32.5, 4.5, 0);
-		LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-		glPopMatrix();
-	}
+void LSFscene::drawRemainingTime(int remainingTime){
+	drawNumber(remainingTime, 31.5, 4.5, 0, 1, 1, 1);
 
 	if(remainingTime <= 0){
 		game->skipPlayer();
@@ -308,6 +311,42 @@ void LSFscene::drawRemainingTime(){
 		game->update();
 		timer->stopCountDown();
 	}
+}
+
+void LSFscene::drawNumber(int number, int x, int y, int z, int sizeX, int sizeY, int sizeZ){
+	string numbers;
+	stack<LSFappearance*> appearancesStack;
+	appearancesStack.push(defaultAppearance);
+	if(number < 10){
+		numbers = numberToText(number);
+		glPushMatrix();
+		glScaled(sizeX, sizeY, sizeZ);
+		glTranslated(x, y, z);
+		LSFrender::render(nodes,numbers,appearances,appearancesStack,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+	else{
+		numbers = numberToText(number/10);
+		glPushMatrix();
+		glScaled(sizeX, sizeY, sizeZ);
+		glTranslated(x-sizeX, y, z);
+		LSFrender::render(nodes,numbers,appearances,appearancesStack,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+		numbers = numberToText(number%10);
+		glPushMatrix();
+		glScaled(sizeX, sizeY, sizeZ);
+		glTranslated(x+sizeX, y, z);
+		LSFrender::render(nodes,numbers,appearances,appearancesStack,animations,LSFscene::timeSeconds);
+		glPopMatrix();
+	}
+}
+
+void LSFscene::drawSeeds(){
+	for(int i = 1; i <= 6; i++)
+		drawNumber(game->getBoard()->getPlayerSeeds(1).at(i-1), 3.5+(i-1)*8, 4, 22, 1, 1, 1);
+
+	for(int i = 1; i <= 6; i++)
+		drawNumber(game->getBoard()->getPlayerSeeds(2).at(i-1), 3.5+(i-1)*8, 4, 30, 1, 1, 1);
 }
 
 string LSFscene::numberToText(int number){
@@ -327,6 +366,7 @@ string LSFscene::numberToText(int number){
 
 	return str;
 }
+
 void LSFscene::setPolygonMode(unsigned int face, unsigned int mode){
 	this->face = face;
 	this->mode = mode;
@@ -375,7 +415,7 @@ void LSFscene::loadDemoMode(){
 	int num = game->readStatus();
 	if(num == 1){
 		loadingDemoMode = false;
-		demoTimer->startCountDown(5);
+		demoTimer->startCountDown(15);
 	}
 	else if(num == 0){
 		game->swapPlayerTurn();
@@ -396,36 +436,62 @@ void LSFscene::startDemoMode(){
 	this->demoModeEnd = false;
 	this->demoTimer->stopCountDown();
 
-	this->demoModeStatus = game->getDemoModeStatus();
+	this->player1Score = 0;
+	this->player2Score = 0;
 
-	this->game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
-	this->game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
+	this->demoModeStatus = game->getDemoModeStatus();
+	this->demoModePlayer1Seeds = game->getdemoModePlayerSeeds(1);
+	this->demoModePlayer2Seeds = game->getdemoModePlayerSeeds(2);
+	this->demoModeChooses = game->getDemoModeChooses();
+
+	if(this->demoModeStatus.size() != this->demoModePlayer1Seeds.size() ||
+	   this->demoModePlayer1Seeds.size() != this->demoModePlayer2Seeds.size() ||
+	   this->demoModePlayer2Seeds.size() != this->demoModeChooses.size()){
+
+		this->gameStarted = false;
+		this->demoModeStarted = false;
+		this->demoModeEnd = true;
+		this->demoTimer->startCountDown(15);
+	}
+
 }
 
 void LSFscene::stopDemoMode(){
 	this->gameStarted = false;
 	this->demoModeStarted = false;
-	this->demoTimer->startCountDown(5);
+	this->demoTimer->startCountDown(15);
 }
 
 void LSFscene::demoMode(){
 	if(!demoModeStatus.empty()){
-		if(demoModeStatus.front().at(0) == "1")
-			game->setPlayerTurn("1");
-		else if(demoModeStatus.front().at(0) == "2")
-			game->setPlayerTurn("2");
-
-		game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
-		game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
-
-		if(timer->getCountDown() < 9){
-			if(!demoModeStatus.empty())
-				demoModeStatus.pop();
-
-			timer->stopCountDown();
+		if(!demoModeStatus.empty()){
+			game->setPlayerTurn(demoModeStatus.front().at(0));
+			game->getPlayer1()->setScore(atoi(demoModeStatus.front().at(2).c_str()));
+			game->getPlayer2()->setScore(atoi(demoModeStatus.front().at(3).c_str()));
+			game->setPlayerChoose(demoModeChooses.front());
 		}
+
+		if(!demoModePlayer1Seeds.empty()){
+			game->getPlayer1()->setSeeds(demoModePlayer1Seeds.front());
+			game->getPlayer2()->setSeeds(demoModePlayer2Seeds.front());
+		}
+
+		if(timer->isStarted())
+			if(timer->getCountDown() <= 9){
+				if(!demoModeStatus.empty()){
+					demoModeStatus.pop();
+					demoModeChooses.pop();
+					demoModePlayer1Seeds.pop();
+					demoModePlayer2Seeds.pop();
+				}
+
+				timer->stopCountDown();
+			}
+
+		if(animationTimer->isStarted() && animationTimer->getCountDown() <= 0)
+			animationTimer->stopCountDown();
 	}
-	else{
+	else if(demoModeStatus.empty()){
 		game->swapPlayerTurn();
 		if(game->getDemoModeWinner() == 1)
 			game->getPlayer1()->setScore(game->getDemoModeFinalPoints());

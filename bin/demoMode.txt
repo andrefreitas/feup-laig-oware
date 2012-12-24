@@ -1,0 +1,67 @@
+playerTurn 1.
+gameStatus [[4,4,4,4,4,4],[4,4,4,4,4,4]] 0 0.
+playerChooses 2.
+playerTurn 2.
+gameStatus [[5,0,4,4,4,4],[5,5,5,4,4,4]] 0 0.
+playerChooses 4.
+playerTurn 1.
+gameStatus [[5,0,4,4,5,5],[5,5,5,0,5,5]] 0 0.
+playerChooses 5.
+playerTurn 2.
+gameStatus [[6,1,5,5,0,5],[6,5,5,0,5,5]] 0 0.
+playerChooses 6.
+playerTurn 1.
+gameStatus [[6,0,6,6,1,6],[6,5,5,0,5,0]] 0 2.
+playerChooses 3.
+playerTurn 2.
+gameStatus [[7,1,0,6,1,6],[7,6,6,1,5,0]] 0 2.
+playerChooses 2.
+playerTurn 1.
+gameStatus [[7,1,0,6,0,7],[7,0,7,2,6,1]] 0 4.
+playerChooses 2.
+playerTurn 2.
+gameStatus [[8,0,0,6,0,7],[7,0,7,2,6,1]] 0 4.
+playerChooses 6.
+playerTurn 1.
+gameStatus [[8,0,0,6,0,8],[7,0,7,2,6,0]] 0 4.
+playerChooses 6.
+playerTurn 2.
+gameStatus [[9,1,1,7,1,0],[8,1,8,2,6,0]] 0 4.
+playerChooses 5.
+playerTurn 1.
+gameStatus [[9,0,0,8,2,1],[8,1,8,2,0,1]] 0 8.
+playerChooses 5.
+playerTurn 2.
+gameStatus [[9,0,1,9,0,1],[8,1,8,2,0,1]] 0 8.
+playerChooses 6.
+playerTurn 1.
+gameStatus [[9,0,1,9,0,0],[8,1,8,2,0,0]] 0 10.
+playerChooses 1.
+playerTurn 2.
+gameStatus [[0,0,1,10,1,1],[9,2,9,3,1,1]] 0 10.
+playerChooses 6.
+playerTurn 1.
+gameStatus [[0,0,1,10,1,0],[9,2,9,3,1,0]] 0 12.
+playerChooses 4.
+playerTurn 2.
+gameStatus [[1,1,2,0,1,1],[10,3,10,4,2,1]] 0 12.
+playerChooses 1.
+playerTurn 1.
+gameStatus [[1,0,0,1,2,2],[0,4,11,5,3,2]] 0 17.
+playerChooses 6.
+playerTurn 2.
+gameStatus [[1,0,0,2,3,0],[0,4,11,5,3,2]] 0 17.
+playerChooses 4.
+playerTurn 1.
+gameStatus [[1,0,0,0,4,1],[0,4,11,0,4,3]] 0 20.
+playerChooses 1.
+playerTurn 2.
+gameStatus [[0,0,0,0,4,1],[1,4,11,0,4,3]] 0 20.
+playerChooses 3.
+playerTurn 1.
+gameStatus [[1,1,1,1,5,2],[2,5,0,1,5,4]] 0 20.
+playerChooses 5.
+playerTurn 2.
+gameStatus [[2,2,2,2,0,2],[0,5,0,1,5,4]] 3 20.
+playerChooses 6.
+endGame victory 2 26.

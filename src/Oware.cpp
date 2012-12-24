@@ -59,6 +59,30 @@ void Oware::createGame(string player1Name, string player1Type, string player2Nam
 	this->player2->setScore(0);
 }
 
+void Oware::loadDemoMode(){
+	string msg;
+	int num;
+	ifstream file("demoMode.txt");
+
+	if(file.is_open()){
+		while(!file.eof()){
+			getline(file, msg);
+			cout << msg;
+			num = decodeMSG(msg);
+
+			if(num == 1)
+				break;
+			else if(num == 0)
+				swapPlayerTurn();
+			else if(num == -1){
+				update();
+				swapPlayerTurn();
+			}
+		}
+	}
+	file.close();
+}
+
 string Oware::getRoules(){
 	string rules;
 	rules = "\n"
@@ -155,51 +179,64 @@ int Oware::readStatus(){
 	int num;
 
 	while(s1->reads(msg)){
-		if((signed)msg.find("endGame") != -1){
-			cout << msg;
-			int pos = msg.find("victory");
-			if(pos != -1){
-				winner = msg.at(pos + 8) - 48;
-				finalPoints = (msg.at(pos + 10) - 48) * 10 + (msg.at(pos + 11) - 48);
-
-				if(player1->getType() != "human" && player2->getType() != "human"){
-					demoModeWinner = winner;
-					demoModeFinalPoints = finalPoints;
-				}
-			}
-			else{
-				winner = 0;
-				finalPoints = 24;
-
-				if(player1->getType() != "human" && player2->getType() != "human"){
-					demoModeWinner = winner;
-					demoModeFinalPoints = finalPoints;
-				}
-			}
-
-			cout << winner << endl;
-			cout << finalPoints << endl;
-
-			num = 1; break;
-		}
-		else if((signed)msg.find("noSeeds") != -1){
-			cout << msg;
-				num = 0; break;
-		}
-		else if((signed)msg.find("gameStatus") != -1){
-			this->gameStatus = msg;
-			cout << msg;
-				num = -1; break;
-		}
-		else if((signed)msg.find("Chooses") != -1){
-			this->playerChoose = msg.at(14) - 48;
-			if(player1->getType() != "human" && player2->getType() != "human")
-				this->demoModeChooses.push(this->playerChoose);
-			cout << msg;
-		}
+		num = decodeMSG(msg);
+		if(num != 2)
+			break;
 	}
 
 	return num;
+}
+
+int Oware::decodeMSG(string msg){
+	if((signed)msg.find("endGame") != -1){
+		if((signed)msg.find("Chooses") != -1){
+			this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
+			if(player1->getType() != "human" && player2->getType() != "human")
+				this->demoModeChooses.push(this->playerChoose);
+		}
+		cout << msg;
+		int pos = msg.find("victory");
+		if(pos != -1){
+			winner = msg.at(pos + 8) - 48;
+			finalPoints = (msg.at(pos + 10) - 48) * 10 + (msg.at(pos + 11) - 48);
+
+			if(player1->getType() != "human" && player2->getType() != "human"){
+				demoModeWinner = winner;
+				demoModeFinalPoints = finalPoints;
+			}
+		}
+		else{
+			winner = 0;
+			finalPoints = 24;
+
+			if(player1->getType() != "human" && player2->getType() != "human"){
+				demoModeWinner = winner;
+				demoModeFinalPoints = finalPoints;
+			}
+		}
+
+		cout << winner << endl;
+		cout << finalPoints << endl;
+
+		return 1;
+	}
+	else if((signed)msg.find("noSeeds") != -1){
+		cout << msg;
+		return 0;
+	}
+	else if((signed)msg.find("gameStatus") != -1){
+		this->gameStatus = msg;
+		cout << msg;
+		return -1;
+	}
+	else if((signed)msg.find("Chooses") != -1){
+		this->playerChoose = msg.at(14) - 48;
+		if(player1->getType() != "human" && player2->getType() != "human")
+			this->demoModeChooses.push(this->playerChoose);
+		cout << msg;
+	}
+
+	return 2;
 }
 
 void Oware::update(){
@@ -400,6 +437,13 @@ int Oware::getDemoModeWinner(){
 
 int Oware::getDemoModeFinalPoints(){
 	return demoModeFinalPoints;
+}
+
+queue<vector<int> > Oware::getdemoModePlayerSeeds(int playerNum){
+	if(playerNum == 1)
+		return demoModePlayer1Seeds;
+	else
+		return demoModePlayer2Seeds;
 }
 
 int Oware::getFinalPoints(){

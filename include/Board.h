@@ -9,17 +9,23 @@ using namespace std;
 
 class Board{
 private:
-	vector<string> board;
 	vector<int> player1Seeds;
 	vector<int> player2Seeds;
+	int playerTurn;
 	int startHole;
+	int currentHole;
+	int holeSeeds;
+	bool loaded;
+	bool startHoleCleared;
 
 public:
 	Board();
-	void loadBoard(vector<string> board);
-	void setStartHole(int startHole);
-	void update();
-	void draw();
+	void loadBoard(vector<int> player1Seeds, vector<int> player2Seeds, int playerTurn, int startHole);
+	bool update();
+	vector<int> getPlayerSeeds(int playerNum);
+	bool isLoaded();
+//	void draw();
+//	void draw_aux(vector<int> playerSeeds, int i, int z);
 };
 
 

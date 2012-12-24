@@ -10,6 +10,7 @@
 #include "Board.h"
 
 #include <sstream>
+#include <fstream>
 
 string itos(int i);
 
@@ -24,6 +25,7 @@ private:
 	Board *board;
 	string playerTurn;
 	string gameStatus;
+	bool readingFile;
 	int playerChoose;
 	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
 	queue<vector<string> > movie;
@@ -40,6 +42,7 @@ public:
 	Oware();
 	void createGame(Player *player1, Player *player2, int dificulty);
 	void createGame(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty);
+	void loadDemoMode();
 	void saveStatus(string playerTurn, string board, string player1Score, string player2Score);
 	void setPlayerTurn(string playerTurn);
 	void setPlayerChoose(int playerChoose);
@@ -50,6 +53,7 @@ public:
 	void skipPlayer();
 	void swapPlayerTurn();
 
+	int decodeMSG(string msg);
 	int startServer();
 	int readStatus();
 	int getStatusSize();
@@ -85,6 +89,7 @@ public:
 	//exclusive demoMode
 	queue<vector<string> > getDemoModeStatus();
 	queue<int> getDemoModeChooses();
+	queue<vector<int> > getdemoModePlayerSeeds(int playerNum);
 	int getDemoModeWinner();
 	int getDemoModeFinalPoints();
 

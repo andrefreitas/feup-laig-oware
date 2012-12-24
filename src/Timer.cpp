@@ -9,6 +9,8 @@ void Timer::startCountDown(int countTime){
 	time(&startTime);
 	time(&endTime);
 
+	srand ( time(NULL) );
+
 	started = true;
 }
 

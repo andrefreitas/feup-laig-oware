@@ -24,6 +24,7 @@
 #include "ObjModel.h"
 #include "Oware.h"
 #include "Timer.h"
+#include "Board.h"
 
 /**
  * LSFscene defines the scene parsed from the LSF file.
@@ -51,11 +52,17 @@ class LSFscene : public CGFscene
 	Oware *game;
 	Timer *timer;
 	Timer *demoTimer;
+	Timer *animationTimer;
 	queue<vector<string> > demoModeStatus;
+	queue<vector<int> > demoModePlayer1Seeds;
+	queue<vector<int> > demoModePlayer2Seeds;
+	queue<int> demoModeChooses;
 	bool loadingDemoMode;
 	bool gameStarted;
 	bool demoModeStarted;
 	bool demoModeEnd;
+	int player1Score;
+	int player2Score;
 
 public:
 	LSFscene();
@@ -88,8 +95,10 @@ public:
 	void loadDemoMode();
 	void drawScenario();
 	void drawMarkers();
-	void drawPlayerScore(Player *player, string playerTurn);
-	void drawRemainingTime();
+	void drawPlayerScore(int score, string playerTurn);
+	void drawRemainingTime(int remainingTime);
+	void drawNumber(int number, int x, int y, int z, int sizeX, int sizeY, int sizeZ);
+	void drawSeeds();
 
 };
 #endif
