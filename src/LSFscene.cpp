@@ -74,10 +74,13 @@ void LSFscene::init()
 
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
+/*
 	if(createDemoMode())
 		loadingDemoMode = true;
 	else
-		exit(1);
+		exit(1); 
+		*/
+		
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -136,6 +139,7 @@ void LSFscene::display()
 
 	drawScenario();
 
+	/*
 	if(loadingDemoMode){
 		loadDemoMode();
 	}
@@ -165,7 +169,7 @@ void LSFscene::display()
 		//		game->swapPlayerTurn();
 		//	}
 
-		drawMarkers();
+		//drawMarkers();
 
 		//Players seeds and timer
 		if(gameStarted){
@@ -204,6 +208,11 @@ void LSFscene::display()
 			demoModeEnd = false;
 		}
 	}
+ 	
+ 	 */
+	// Draw the current seeds
+	appearances["seed"]->appearance->apply();
+	game->drawSeeds();
     glutSwapBuffers();
 }
 
@@ -251,7 +260,7 @@ void LSFscene::drawMarkers(){
 			markers="MarkersP2";
 	}
 	else
-		markers="Markers";
+	markers="Markers";
 	stack<LSFappearance*> appearancesStack3;
 	appearancesStack3.push(defaultAppearance);
 	LSFrender::render(nodes,markers,appearances,appearancesStack3,animations,LSFscene::timeSeconds);

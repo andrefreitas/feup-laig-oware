@@ -11,7 +11,7 @@ CCC = g++
 # library paths
 LIBS = -Llib -L/usr/local/lib -L/usr/lib -lCGF -ltinyxml -lGLEW -lglui -lglut -lGLU -lGL
 # compile flags
-LDFLAGS = -g
+LDFLAGS = -g -Wall
 
 
 default: $(OUT)

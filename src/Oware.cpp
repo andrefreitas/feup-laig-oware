@@ -14,6 +14,8 @@ Oware::Oware(){
 	finalPoints = 1;
 	maxTime = 1;
 	playerChoose = 1;
+	seed=new LSFSphere(5.0,12,6);
+	seed->init(0);
 }
 
 void Oware::createGame(Player *player1, Player *player2, int dificulty){
@@ -475,4 +477,47 @@ void Oware::play(int hole){
 		this->player1->play(s1, 6-hole);
 	else if(hole >= 6 && hole <= 11)
 		this->player2->play(s1, hole-5);
+}
+
+void Oware::drawSeeds(){
+
+	glPushMatrix();
+	glTranslated(-10,6,27);
+	int numseeds=8;
+	int dx,dy,dz=0;
+
+	int displacement[6]={0,13,27,40,53,66};
+
+	// For each hole of line 1
+	for (int i=0; i<6; i++){
+		for(int j=0; j<numseeds; j++){
+			// Draw a Seed
+			glPushMatrix();
+				if(j>=3) glTranslated(displacement[i]+2.2*(j-3),0,4);
+				else glTranslated(displacement[i]+2.2*j,0,0);
+				glScalef(0.15, 0.15, 0.35);
+				seed->draw();
+			glPopMatrix();
+		}
+	}
+
+	// For each hole of line 2
+	glTranslated(0,0,14);
+
+
+	for (int i=0; i<6; i++){
+		for(int j=0; j<numseeds; j++){
+			// Draw a Seed
+			glPushMatrix();
+
+				if(j>=3) glTranslated(displacement[i]+2.2*(j-3),0,4);
+				else if (j<3) glTranslated(displacement[i]+2.2*j,0,0);
+				else if (j>=6) glTranslated(displacement[i]+2.2*(j-6),20,0);
+				glScalef(0.15, 0.15, 0.35);
+				seed->draw();
+			glPopMatrix();
+		}
+	}
+
+	glPopMatrix();
 }

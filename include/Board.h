@@ -25,7 +25,7 @@ public:
 	vector<int> getPlayerSeeds(int playerNum);
 	bool isLoaded();
 	int getCurrentHole();
-
+	void drawSeeds();
 };
 
 
