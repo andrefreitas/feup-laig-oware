@@ -609,7 +609,7 @@
 		<node id="Board" displaylist="0">
 			<transforms>
 				<translate x="30" y="3" z="4" />
-				<scale x="3" y="3" z="3" />
+				<scale x="5" y="5" z="5" />
 			</transforms>
 			<appearanceref id="wood" />
 				 

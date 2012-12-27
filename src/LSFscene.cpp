@@ -74,10 +74,13 @@ void LSFscene::init()
 
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
+/*
 	if(createDemoMode())
 		loadingDemoMode = true;
 	else
-		exit(1);
+		exit(1); 
+		*/
+		
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -200,6 +203,9 @@ void LSFscene::display()
 			demoModeEnd = false;
 		}
 	}
+ 	
+	// Draw the current seeds
+	game->drawSeeds();
     glutSwapBuffers();
 }
 

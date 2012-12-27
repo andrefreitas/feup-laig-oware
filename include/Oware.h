@@ -11,9 +11,9 @@
 
 #include <sstream>
 #include <fstream>
-
+#include "LSFprimitive.h"
 string itos(int i);
-
+using namespace std;
 class Oware{
 private:
 	Player *player1;
@@ -29,7 +29,7 @@ private:
 	int playerChoose;
 	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
 	queue<vector<string> > movie;
-
+	LSFSphere *seed;
 	//exclusive demoMode
 	int demoModeWinner;
 	int demoModeFinalPoints;
@@ -92,6 +92,7 @@ public:
 	queue<vector<int> > getdemoModePlayerSeeds(int playerNum);
 	int getDemoModeWinner();
 	int getDemoModeFinalPoints();
+	void drawSeeds();
 
 };
 

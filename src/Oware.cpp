@@ -14,6 +14,8 @@ Oware::Oware(){
 	finalPoints = 1;
 	maxTime = 1;
 	playerChoose = 1;
+	seed=new LSFSphere(5.0,12,6);
+	seed->init(0);
 }
 
 void Oware::createGame(Player *player1, Player *player2, int dificulty){
@@ -475,4 +477,10 @@ void Oware::play(int hole){
 		this->player1->play(s1, 6-hole);
 	else if(hole >= 6 && hole <= 11)
 		this->player2->play(s1, hole-5);
+}
+
+void Oware::drawSeeds(){
+
+	glScalef(0.3, 0.3, 0.7);
+	seed->draw();
 }
