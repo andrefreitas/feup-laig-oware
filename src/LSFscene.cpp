@@ -60,25 +60,27 @@ void LSFscene::init()
 
 	//startGame
 	game = new Oware();
-
+	/*
 	while(game->startServer() != 0){
 		cout << "\nWAITING FOR SERVER - 5 seconds sleeping\n" << endl;
 		timer->wait(5);
 	}
 
 	gameStarted = false;
-
+*/
 	timer = new Timer();
 	demoTimer = new Timer();
 	animationTimer = new Timer();
 
+	
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
-
+	/*
 	if(createDemoMode())
 		loadingDemoMode = true;
 	else
 		exit(1); 
+		*/
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -137,7 +139,7 @@ void LSFscene::display()
 
 	drawScenario();
 
-
+	/*
 	if(loadingDemoMode){
 		loadDemoMode();
 	}
@@ -201,8 +203,8 @@ void LSFscene::display()
 
 			drawPlayerScore(game->getPlayer2()->getScore(), "2");
 
-			if(timer->isStarted() /*&& !demoModeStarted*/)
-				drawRemainingTime(timer->getCountDown());
+			if(timer->isStarted() /*&& !demoModeStarted) */
+			/*	drawRemainingTime(timer->getCountDown());
 		}
 
 		if(demoModeEnd && timer->getCountDown() < 5){
@@ -212,10 +214,10 @@ void LSFscene::display()
 		}
 	}
  	
-
+	*/
 	// Draw the current seeds
-//	appearances["seed"]->appearance->apply();
-//	game->drawSeeds();
+	appearances["seed"]->appearance->apply();
+	game->drawSeeds();
     glutSwapBuffers();
 }
 

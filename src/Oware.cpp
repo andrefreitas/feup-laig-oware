@@ -509,45 +509,50 @@ void Oware::drawSeeds(vector<int> seeds, int x, int y, int z){
 	glPopMatrix();
 }
 
-//void Oware::drawSeeds(){
-//
-//	glPushMatrix();
-//	glTranslated(-10,6,27);
-//	int numseeds=8;
-//	int dx,dy,dz=0;
-//
-//	int displacement[6]={0,13,27,40,53,66};
-//
-//	// For each hole of line 1
-//	for (int i=0; i<6; i++){
-//		for(int j=0; j<numseeds; j++){
-//			// Draw a Seed
-//			glPushMatrix();
-//				if(j>=3) glTranslated(displacement[i]+2.2*(j-3),0,4);
-//				else glTranslated(displacement[i]+2.2*j,0,0);
-//				glScalef(0.15, 0.15, 0.35);
-//				seed->draw();
-//			glPopMatrix();
-//		}
-//	}
-//
-//	// For each hole of line 2
-//	glTranslated(0,0,14);
-//
-//
-//	for (int i=0; i<6; i++){
-//		for(int j=0; j<numseeds; j++){
-//			// Draw a Seed
-//			glPushMatrix();
-//
-//				if(j>=3) glTranslated(displacement[i]+2.2*(j-3),0,4);
-//				else if (j<3) glTranslated(displacement[i]+2.2*j,0,0);
-//				else if (j>=6) glTranslated(displacement[i]+2.2*(j-6),20,0);
-//				glScalef(0.15, 0.15, 0.35);
-//				seed->draw();
-//			glPopMatrix();
-//		}
-//	}
-//
-//	glPopMatrix();
-//}
+void Oware::drawSeeds(){
+	int numseeds=18;
+	int dx,dy,dz=0;
+	float kx=0;
+	float ky=0;
+	int displacement[6]={0,13,27,40,53,66};
+
+	glPushMatrix();
+	glTranslated(-10,6,27);
+
+	// For each hole of line 1
+	for (int i=0; i<6; i++){
+		for(int j=0; j<numseeds; j++){
+			// Draw a Seed
+			glPushMatrix();
+				if(j>=3) glTranslated(displacement[i]+2.2*(j-3),0,4);
+				else glTranslated(displacement[i]+2.2*j,0,0);
+				glScalef(0.15, 0.15, 0.35);
+				seed->draw();
+			glPopMatrix();
+		}
+	}
+
+	// For each hole of line 2
+	glTranslated(0,0,14);
+	for (int i=0; i<6; i++){
+		dz=0;
+		kx=0;
+		ky=0;
+		for(int j=0; j<numseeds; j++){
+			// Draw a Seed
+			glPushMatrix();
+
+				if((j%3)==0 && j>0) {
+					dz=!dz;
+					kx=j*2.2;
+				}
+
+				if((j%6)==0) ky++;
+			    glTranslated(displacement[i]+2.2*j-kx,ky,4.0*dz);
+				glScalef(0.15, 0.15, 0.35);
+				seed->draw();
+			glPopMatrix();
+		}
+	}
+	glPopMatrix();
+}
