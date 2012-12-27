@@ -1,7 +1,7 @@
 #include "Board.h"
 
 Board::Board(){
-	startHole = 1;
+	currentHole = startHole = 1;
 	loaded = false;
 }
 
@@ -75,40 +75,10 @@ bool Board::isLoaded(){
 	return loaded;
 }
 
-/*
-void Board::draw(){
-	for(int i = 1; i <= 6; i++)
-		draw_aux(player1Seeds, i, 22);
-
-	for(int i = 1; i <= 6; i++)
-		draw_aux( player2Seeds, i, 30);
+int Board::getCurrentHole(){
+	if(playerTurn == 1)
+		return 6 - currentHole;
+	else
+		return 5 + currentHole;
 }
 
-void Board::draw_aux(vector<int> playerSeeds, int i, int z){
-	LSFscene::drawNumber(playerSeeds.at(i-1), 3.5, 2, z, 0.5);
-//	string numbers;
-//	stack<LSFappearance*> appearancesStack6;
-//	appearancesStack6.push(app);
-//	//Timer
-//	if(playerSeeds.at(i-1) < 10){
-//		numbers = playerSeeds.at(i-1);
-//		glPushMatrix();
-//		glTranslated(3.5, 2, z);
-//		LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-//		glPopMatrix();
-//	}
-//	else{
-//		numbers = playerSeeds.at(i-1)/10;
-//		glPushMatrix();
-//		glTranslated(3, 2, z);
-//		LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-//		glPopMatrix();
-//		numbers = playerSeeds.at(i-1)%10;
-//		glPushMatrix();
-//		glTranslated(4, 2, z);
-//		LSFrender::render(nodes,numbers,appearances,appearancesStack6,animations,LSFscene::timeSeconds);
-//		glPopMatrix();
-//	}
-}
-
-*/

@@ -100,6 +100,7 @@ public:
 	void drawRemainingTime(int remainingTime);
 	void drawNumber(int number, int x, int y, int z, int sizeX, int sizeY, int sizeZ);
 	void drawSeeds();
+	void drawHand(bool active);
 
 };
 #endif

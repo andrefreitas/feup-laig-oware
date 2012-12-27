@@ -31,7 +31,7 @@ class LSFinterface: public CGFinterface{
 		~LSFinterface();
 		virtual void initGUI();
 		virtual void processGUI(GLUI_Control *ctrl);
-		virtual void processMouse(int button, int state, int x, int y);	
+		virtual void processMouse(int button, int state, int x, int y);
 		void performPicking(int x, int y);
 		void processHits(GLint hits, GLuint buffer[]); 
 
