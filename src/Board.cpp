@@ -71,8 +71,19 @@ vector<int> Board::getPlayerSeeds(int playerNum){
 		return player2Seeds;
 }
 
+int Board::getHoleseeds(){
+	return holeSeeds;
+}
+
 bool Board::isLoaded(){
 	return loaded;
+}
+
+int Board::getStartHole(){
+	if(playerTurn == 1)
+		return 6 - startHole;
+	else
+		return 5 + startHole;
 }
 
 int Board::getCurrentHole(){

@@ -92,6 +92,8 @@ public:
 	queue<vector<int> > getdemoModePlayerSeeds(int playerNum);
 	int getDemoModeWinner();
 	int getDemoModeFinalPoints();
+	void drawHoleSeeds(int seeds, int x, int y, int z);
+	void drawSeeds(vector<int> seeds, int x, int y, int z);
 	void drawSeeds();
 
 };

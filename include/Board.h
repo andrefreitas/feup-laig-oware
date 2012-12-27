@@ -24,7 +24,9 @@ public:
 	bool update();
 	vector<int> getPlayerSeeds(int playerNum);
 	bool isLoaded();
+	int getStartHole();
 	int getCurrentHole();
+	int getHoleseeds();
 	void drawSeeds();
 };
 

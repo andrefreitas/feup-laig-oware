@@ -74,13 +74,11 @@ void LSFscene::init()
 
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
-/*
+
 	if(createDemoMode())
 		loadingDemoMode = true;
 	else
 		exit(1); 
-		*/
-		
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -139,7 +137,7 @@ void LSFscene::display()
 
 	drawScenario();
 
-	/*
+
 	if(loadingDemoMode){
 		loadDemoMode();
 	}
@@ -153,7 +151,6 @@ void LSFscene::display()
 		if(demoTimer->getCountDown() <= 0 && !gameStarted)
 			startDemoMode();
 
-		drawHand(gameStarted);
 
 		if(demoModeStarted)
 			demoMode();
@@ -169,7 +166,7 @@ void LSFscene::display()
 		//		game->swapPlayerTurn();
 		//	}
 
-		//drawMarkers();
+		drawMarkers();
 
 		//Players seeds and timer
 		if(gameStarted){
@@ -191,14 +188,20 @@ void LSFscene::display()
 					animationTimer->startCountDown(1);
 			}
 
-			if(!winnerFound)
-				drawSeeds();
+			drawClosedHand(gameStarted);
+
+			if(!winnerFound){
+//				drawSeeds();
+				appearances["seed"]->appearance->apply();
+				game->drawSeeds(game->getBoard()->getPlayerSeeds(1), 0, 0, 0);
+				game->drawSeeds(game->getBoard()->getPlayerSeeds(2), 0, 0, 14);
+			}
 
 			drawPlayerScore(game->getPlayer1()->getScore(), "1");
 
 			drawPlayerScore(game->getPlayer2()->getScore(), "2");
 
-			if(timer->isStarted() && !demoModeStarted)
+			if(timer->isStarted() /*&& !demoModeStarted*/)
 				drawRemainingTime(timer->getCountDown());
 		}
 
@@ -209,10 +212,10 @@ void LSFscene::display()
 		}
 	}
  	
- 	 */
+
 	// Draw the current seeds
-	appearances["seed"]->appearance->apply();
-	game->drawSeeds();
+//	appearances["seed"]->appearance->apply();
+//	game->drawSeeds();
     glutSwapBuffers();
 }
 
@@ -277,10 +280,11 @@ void LSFscene::drawPlayerScore(int score, string playerTurn){
 		if(game->getPlayerTurn() == playerTurn)
 			numbers.append("Y");
 		glPushMatrix();
+		glScaled(1.5, 1.5, 1);
 		if(playerTurn == "1")
-			glTranslated(16, 21, 0.1);
+			glTranslated(6, 14, 0.1);
 		else
-			glTranslated(16, 12, 0.1);
+			glTranslated(6, 5, 0.1);
 		LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
 		glPopMatrix();
 	}
@@ -289,27 +293,32 @@ void LSFscene::drawPlayerScore(int score, string playerTurn){
 		if(game->getPlayerTurn() == playerTurn)
 			numbers.append("Y");
 		glPushMatrix();
+		glScaled(1.5, 1.5, 1);
 		if(playerTurn == "1")
-			glTranslated(15, 21, 0.1);
+			glTranslated(5, 14, 0.1);
 		else
-			glTranslated(15, 12, 0.1);
+			glTranslated(5, 5, 0.1);
 		LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
 		glPopMatrix();
 		numbers = numberToText(score%10);
 		if(game->getPlayerTurn() == playerTurn)
 			numbers.append("Y");
 		glPushMatrix();
+		glScaled(1.5, 1.5, 1);
 		if(playerTurn == "1")
-			glTranslated(17, 21, 0.1);
+			glTranslated(7, 14, 0.1);
 		else
-			glTranslated(17, 12, 0.1);
+			glTranslated(7, 5, 0.1);
 		LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
 		glPopMatrix();
 	}
 }
 
 void LSFscene::drawRemainingTime(int remainingTime){
-	drawNumber(remainingTime, 41.5, 14.5, 0.1, 1, 1, 1);
+	glPushMatrix();
+	glScaled(1.5, 1.5, 1);
+	drawNumber(remainingTime, 32, 8, 0.2, 1, 1, 1);
+	glPopMatrix();
 
 	if(remainingTime <= 0){
 		game->skipPlayer();
@@ -355,32 +364,35 @@ void LSFscene::drawSeeds(){
 		drawNumber(game->getBoard()->getPlayerSeeds(2).at(i-1), 7+(i-1)*8, 5, 29, 1, 1, 1);
 }
 
-void LSFscene::drawHand(bool active){
-	int x = 0, y = 0, z = 0;
-	string hand = "Hand1";
+void LSFscene::drawClosedHand(bool active){
+	int x = 0, y = 10, z = 0;
+	int currentHole = game->getBoard()->getCurrentHole();
+	string hand = "Hand10";
 	stack<LSFappearance*> appearancesStackH;
 	appearancesStackH.push(defaultAppearance);
 	if(active){
-		switch(game->getBoard()->getCurrentHole()){
-		case  0: x = 8.5+5*8; y = 7; z = 22; break;
-		case  1: x = 8.5+4*8; y = 7; z = 22; break;
-		case  2: x = 8.5+3*8; y = 7; z = 22; break;
-		case  3: x = 8.5+2*8; y = 7; z = 22; break;
-		case  4: x = 8.5+1*8; y = 7; z = 22; break;
-		case  5: x = 8.5+0*8; y = 7; z = 22; break;
-		case  6: x = 8.5+0*8; y = 7; z = 30; break;
-		case  7: x = 8.5+1*8; y = 7; z = 30; break;
-		case  8: x = 8.5+2*8; y = 7; z = 30; break;
-		case  9: x = 8.5+3*8; y = 7; z = 30; break;
-		case 10: x = 8.5+4*8; y = 7; z = 30; break;
-		case 11: x = 8.5+5*8; y = 7; z = 30; break;
+		switch(currentHole){
+		case  0: case 11: x = 64; break;
+		case  1: case 10: x = 50; break;
+		case  2: case  9: x = 36; break;
+		case  3: case  8: x = 22; break;
+		case  4: case  7: x =  7; break;
+		case  5: case  6: x = -8; break;
 		}
+
+		if(currentHole > 5)
+			z = 41;
+		else
+			z = 27;
 	}
 	else{
-		x = 27; y = 3; z = 40;
+		x = 25; y = 8; z = 50;
 	}
+
 	glPushMatrix();
 		glTranslated(x, y, z);
+		appearances["seed"]->appearance->apply();
+		game->drawHoleSeeds(game->getBoard()->getHoleseeds(), 0, 0, 0);
 		LSFrender::render(nodes,hand,appearances,appearancesStackH,animations,LSFscene::timeSeconds);
 	glPopMatrix();
 }
