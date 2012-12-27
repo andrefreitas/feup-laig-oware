@@ -60,14 +60,14 @@ void LSFscene::init()
 
 	//startGame
 	game = new Oware();
-	/*
+
 	while(game->startServer() != 0){
 		cout << "\nWAITING FOR SERVER - 5 seconds sleeping\n" << endl;
 		timer->wait(5);
 	}
 
 	gameStarted = false;
-*/
+
 	timer = new Timer();
 	demoTimer = new Timer();
 	animationTimer = new Timer();
@@ -75,12 +75,14 @@ void LSFscene::init()
 	
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
-	/*
+
 	if(createDemoMode())
 		loadingDemoMode = true;
 	else
-		exit(1); 
-		*/
+		exit(1);
+
+//	createGame();
+	humanModeStarted = false;
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -139,7 +141,7 @@ void LSFscene::display()
 
 	drawScenario();
 
-	/*
+
 	if(loadingDemoMode){
 		loadDemoMode();
 	}
@@ -153,22 +155,28 @@ void LSFscene::display()
 		if(demoTimer->getCountDown() <= 0 && !gameStarted)
 			startDemoMode();
 
+//		if(!humanModeStarted)
+//			startHumanMode();
+
+
+		drawMarkers();
 
 		if(demoModeStarted)
 			demoMode();
-	//	else
 
-		//    else if(game->getPlayer1()->getType() != "human" && game->getPlayerTurn() == "1"){
-		//		int num = game->readStatus();
-		//		if(num == 2){
-		//			timer->wait(3);
-		//			game->readStatus();
-		//		}
-		//		game->update();
-		//		game->swapPlayerTurn();
-		//	}
+		//			if(humanModeStarted){
+		//				if(game->getPlayer1()->getType() != "human" && game->getPlayerTurn() == "1" && !game->getBoard()->isLoaded()){
+		//					int num = game->readStatus();
+		//					if(num == 2){
+		//						timer->wait(3);
+		//						game->readStatus();
+		//					}
+		//					game->update();
+		//					//game->swapPlayerTurn();
+		//				}
+		//			}
 
-		drawMarkers();
+
 
 		//Players seeds and timer
 		if(gameStarted){
@@ -176,8 +184,11 @@ void LSFscene::display()
 				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
 						atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
 
+	//				if(humanModeStarted)
+	//					game->swapPlayerTurn();
 				animationTimer->startCountDown(1);
 			}
+
 
 			if(game->getBoard()->isLoaded() && animationTimer->getCountDown() <= 0){
 				if(game->getBoard()->update() == false){
@@ -190,21 +201,22 @@ void LSFscene::display()
 					animationTimer->startCountDown(1);
 			}
 
-			drawClosedHand(gameStarted);
-
 			if(!winnerFound){
+//				appearances["seed"]->appearance->apply();
+//				game->drawSeeds();
 //				drawSeeds();
+//				drawClosedHand(gameStarted);
 				appearances["seed"]->appearance->apply();
-				game->drawSeeds(game->getBoard()->getPlayerSeeds(1), 0, 0, 0);
-				game->drawSeeds(game->getBoard()->getPlayerSeeds(2), 0, 0, 14);
+				game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
+				game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
 			}
 
 			drawPlayerScore(game->getPlayer1()->getScore(), "1");
 
 			drawPlayerScore(game->getPlayer2()->getScore(), "2");
 
-			if(timer->isStarted() /*&& !demoModeStarted) */
-			/*	drawRemainingTime(timer->getCountDown());
+			if(timer->isStarted() && !demoModeStarted)
+				drawRemainingTime(timer->getCountDown());
 		}
 
 		if(demoModeEnd && timer->getCountDown() < 5){
@@ -214,20 +226,22 @@ void LSFscene::display()
 		}
 	}
  	
-	*/
+
 	// Draw the current seeds
-	appearances["seed"]->appearance->apply();
-	game->drawSeeds();
+//	appearances["seed"]->appearance->apply();
+//	game->drawSeeds();
     glutSwapBuffers();
 }
 
 
 void LSFscene::selectionMode(){
+	int displacement1[6]={56,42,29,16,2,-11};
+	int displacement2[6]={-11,2,16,29,42,56};
 	glPushName(-1);
 	for (int unsigned i=0; i<6; i++){
 		glLoadName(i);
 		glPushMatrix();
-			glTranslated(43.5-i*8,0,22);
+			glTranslated(displacement1[i],0,27);
 			selectionBox->draw();
 		glPopMatrix();
 	}
@@ -235,7 +249,7 @@ void LSFscene::selectionMode(){
 	for (int unsigned i=0; i<6; i++){
 		glLoadName(i+6);
 		glPushMatrix();
-			glTranslated(3.5+i*8,0,30);
+			glTranslated(displacement2[i],0,41);
 			selectionBox->draw();
 		glPopMatrix();
 	}
@@ -284,9 +298,9 @@ void LSFscene::drawPlayerScore(int score, string playerTurn){
 		glPushMatrix();
 		glScaled(1.5, 1.5, 1);
 		if(playerTurn == "1")
-			glTranslated(6, 14, 0.1);
+			glTranslated(6, 14, 0.2);
 		else
-			glTranslated(6, 5, 0.1);
+			glTranslated(6, 5, 0.2);
 		LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
 		glPopMatrix();
 	}
@@ -451,7 +465,10 @@ void LSFscene::update(long millis){
 
 void LSFscene::boardHandler(int position){
 	// this function is called when a hole from the board is clicked
-	this->game->play(position);
+	if(this->game->getPlayerTurn() == "2"){
+		this->game->play(position);
+		this->game->setPlayerChoose(position);
+	}
 }
 
 bool LSFscene::createDemoMode(){
@@ -460,6 +477,11 @@ bool LSFscene::createDemoMode(){
 	//game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType(), "1", "[[1,2,3,4,5,6],[1,1,1,1,1,1]]", "10", "11");
 	//game->startGame(s1, player1->getType(), player2->getType(), "1", "[[0,0,0,0,0,0],[0,0,0,0,0,0]]", "24", "24");
 //	return true;
+}
+
+bool LSFscene::createGame(){
+	game->createGame(new Computer("ABC", "bot2"), new Human("Paulo", "human"), 3);
+	return game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType());
 }
 
 void LSFscene::loadDemoMode(){
@@ -524,8 +546,19 @@ void LSFscene::startDemoMode(){
 
 }
 
+void LSFscene::startHumanMode(){
+	this->gameStarted = true;
+	this->humanModeStarted = true;
+	this->winnerFound = false;
+	this->demoTimer->stopCountDown();
+
+	this->player1Score = 0;
+	this->player2Score = 0;
+}
+
 void LSFscene::stopDemoMode(){
-	this->gameStarted = false;
+	if(demoModeStarted)
+		this->gameStarted = false;
 	this->demoModeStarted = false;
 	this->demoTimer->startCountDown(15);
 }

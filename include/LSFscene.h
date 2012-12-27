@@ -60,6 +60,7 @@ class LSFscene : public CGFscene
 	bool loadingDemoMode;
 	bool gameStarted;
 	bool demoModeStarted;
+	bool humanModeStarted;
 	bool demoModeEnd;
 	bool winnerFound;
 	int player1Score;
@@ -90,9 +91,11 @@ public:
 	void selectionMode();
 	void boardHandler(int position);
 	void startDemoMode();
+	void startHumanMode();
 	void stopDemoMode();
 	void demoMode();
 	bool createDemoMode();
+	bool createGame();
 	void loadDemoMode();
 	void drawScenario();
 	void drawMarkers();

@@ -93,8 +93,8 @@ public:
 	int getDemoModeWinner();
 	int getDemoModeFinalPoints();
 	void drawHoleSeeds(int seeds, int x, int y, int z);
-	void drawSeeds(vector<int> seeds, int x, int y, int z);
-	void drawSeeds();
+	void drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z);
+	//void drawSeeds();
 
 };
 

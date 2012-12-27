@@ -49,7 +49,7 @@
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.8" g="0.8" b="0.8" a="1" />
 			<shininess value="0.3" />
-			<texture file="loading.png" length_s="40" length_t="20" />
+			<texture file="loading.png" length_s="60" length_t="30" />
 		</appearance>
 		<appearance id="woodBoard">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
@@ -321,7 +321,7 @@
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
-			<texture file="marker.png" length_s="40" length_t="20" />
+			<texture file="marker.png" length_s="60" length_t="30" />
 		</appearance>
 		<appearance id="markerP1">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
@@ -329,7 +329,7 @@
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
-			<texture file="markerP1.png" length_s="40" length_t="20" />
+			<texture file="markerP1.png" length_s="60" length_t="30" />
 		</appearance>
 				<appearance id="markerP2">
 			<emissive r="0.4" g="0.4" b="0.4" a="1" />
@@ -337,7 +337,7 @@
 			<diffuse r="0.6" g="0.6" b="0.6" a="1" />
 			<specular r="0.3" g="0.3" b="0.3" a="1" />
 			<shininess value="0.3" />
-			<texture file="markerP2.png" length_s="40" length_t="20" />
+			<texture file="markerP2.png" length_s="60" length_t="30" />
 		</appearance>
 
 		<appearance id="bluesky">
@@ -385,23 +385,23 @@
 
 		<node id="LoadGame">
 			<transforms>
-				<translate x="10" y="10" z="0" />
+				<translate x="0" y="5" z="0" />
 			</transforms>
 			<appearanceref id="loading" />
 				 
 			<children>
-				<box x1="0" y1="0" z1=" 0.1" x2="40" y2="20" z2="1.1" />
+				<box x1="0" y1="0" z1=" 0.1" x2="60" y2="30" z2="1.1" />
 			</children>
 		</node>
 
 		<node id="Box">
 			<transforms>
-				<translate x="10" y="10" z="0" />
+				<translate x="0" y="5" z="0" />
 			</transforms>
 			<appearanceref id="woodBoard" />
 				 
 			<children>
-				<box x1="0" y1="0" z1="0" x2="40" y2="20" z2="1" />
+				<box x1="0" y1="0" z1="0" x2="60" y2="30" z2="1" />
 			</children>
 		</node>
 		
@@ -409,13 +409,130 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="-5" />
-				<scale x="0.03" y="0.03" z="0.03" />
+				<rotate axis="x" angle="-10" />
+				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
 				 
 			<children>
 				<model src="hand1.obj" />
+			</children>
+		</node>
+		<node id="Hand2">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="-8" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand2.obj" />
+			</children>
+		</node>
+		<node id="Hand3">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="-6" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand3.obj" />
+			</children>
+		</node>
+		<node id="Hand4">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="-4" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand4.obj" />
+			</children>
+		</node>
+		<node id="Hand5">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="-2" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand5.obj" />
+			</children>
+		</node>
+		<node id="Hand6">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="0" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand6.obj" />
+			</children>
+		</node>
+		<node id="Hand7">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="2" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand7.obj" />
+			</children>
+		</node>
+		<node id="Hand8">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="4" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand8.obj" />
+			</children>
+		</node>
+		<node id="Hand9">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="6" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand9.obj" />
+			</children>
+		</node>
+		<node id="Hand10">
+			<transforms>
+				<translate x="0" y="0" z="0" />
+				<rotate axis="y" angle="210" />
+				<rotate axis="x" angle="8" />
+				<scale x="0.05" y="0.05" z="0.05" />
+			</transforms>
+			<appearanceref id="hand" />
+				 
+			<children>
+				<model src="hand10.obj" />
 			</children>
 		</node>
 
@@ -435,7 +552,8 @@
 
 		<node id="VillageScenario" displaylist="0">
 			<transforms>
-				<translate x="0" y="0" z="0" />
+				<scale x="3" y="3" z="2" />
+				<translate x="-23" y="0" z="3" />
 			</transforms>
 			<appearanceref id="dirt" />
 				 
@@ -652,34 +770,34 @@
 
 		<node id="Markers">
 			<transforms>
-				<translate x="10" y="10" z="0" />
+				<translate x="0" y="5" z="0" />
 			</transforms>
 			<appearanceref id="marker" />
 				 
 			<children>
-				<rectangle x1="0" y1="0" x2="40" y2="20" />
+				<rectangle x1="0" y1="0" x2="60" y2="30" />
 			</children>
 		</node>
 		
 		<node id="MarkersP1">
 			<transforms>
-				<translate x="10" y="10" z="0" />
+				<translate x="0" y="5" z="0" />
 			</transforms>
 			<appearanceref id="markerP1" />
 				 
 			<children>
-				<rectangle x1="0" y1="0" x2="40" y2="20" />
+				<rectangle x1="0" y1="0" x2="60" y2="30" />
 			</children>
 		</node>
 		
 		<node id="MarkersP2">
 			<transforms>
-				<translate x="10" y="10" z="0" />
+				<translate x="0" y="5" z="0" />
 			</transforms>
 			<appearanceref id="markerP2" />
 				 
 			<children>
-				<rectangle x1="0" y1="0" x2="40" y2="20" />
+				<rectangle x1="0" y1="0" x2="60" y2="30" />
 			</children>
 		</node>
 		

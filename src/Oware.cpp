@@ -480,118 +480,57 @@ void Oware::play(int hole){
 }
 
 void Oware::drawHoleSeeds(int seeds, int x, int y, int z){
+	int dz = 0;
+	float kx = 0, ky = 0;
+
 	for(int j=0; j<seeds; j++){
 		// Draw a Seed
 		glPushMatrix();
-			if(j>=3) glTranslated(x+2.2*(j-3), y, z+4);
-			else glTranslated(x+2.2*j, y, z);
+			if((j%3) == 0 && j > 0) {
+				dz = !dz;
+				kx = j*2.2;
+			}
+			if((j%6) == 0) ky++;
+
+		    glTranslated(x+2.2*j-kx, ky, 4.0*dz);
 			glScalef(0.15, 0.15, 0.35);
 			seed->draw();
 		glPopMatrix();
 	}
 }
 
-void Oware::drawSeeds(vector<int> seeds, int x, int y, int z){
-
-	glPushMatrix();
-	glTranslated(-10,6,27);
-	int numseeds=8;
-	int dx,dy,dz=0;
-
-	int displacement[6]={0,13,27,40,53,66};
-
-	glTranslated(x, y, z);
-
-	// For each hole of line 1
-	for (int i=0; i<6; i++)
-		drawHoleSeeds(seeds[i], displacement[i], 0, 0);
-
-	glPopMatrix();
-}
-
-void Oware::drawSeeds(){
-
-	int numseeds=28;
-	int dx,dy,dz=0;
+void Oware::drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z){
+	int dx, dy;
 	float kx=0;
 	float ky=0;
 	float kz=0;
-	float zsignal=-1;
-	int displacement[6]={0,13,27,40,53,66};
 
-	// Get score and seeds
-	int p1score=player1->getScore();
-	int p2score=player2->getScore();
-	vector<int> line1=player1->getSeeds();
-	vector<int> line2=player2->getSeeds();
-
-	// Line 1
 	glPushMatrix();
 	glTranslated(-10,6,27);
-	for (int i=0; i<6; i++){
-		dz=0;
-		kx=0;
-		ky=0;
-		numseeds=line1[i];
-		for(int j=0; j<numseeds; j++){
-			// Draw a Seed
-			glPushMatrix();
 
-				if((j%3)==0 && j>0) {
-					dz=!dz;
-					kx=j*2.2;
-				}
+	int displacement[6]={0,13,27,40,53,66};
 
-				if((j%6)==0) ky++;
+	glTranslated(0, 0, z);
 
-			    glTranslated(displacement[i]+2.2*j-kx,ky,4.0*dz);
-				glScalef(0.15, 0.15, 0.35);
-				seed->draw();
-			glPopMatrix();
-		}
-	}
-	
-	// Line 2
-	glTranslated(0,0,14);
-	
-	for (int i=0; i<6; i++){
-		dz=0;
-		kx=0;
-		ky=0;
-		numseeds=line2[i];
-		for(int j=0; j<numseeds; j++){
-			// Draw a Seed
-			glPushMatrix();
+	// For each hole of line 1
+	for (int i = 0; i < 6; i++)
+		drawHoleSeeds(seeds[i], displacement[i], 0, 0);
 
-				if((j%3)==0 && j>0) {
-					dz=!dz;
-					kx=j*2.2;
-				}
 
-				if((j%6)==0) ky++;
-			    glTranslated(displacement[i]+2.2*j-kx,ky,4.0*dz);
-				glScalef(0.15, 0.15, 0.35);
-				seed->draw();
-			glPopMatrix();
-		}
-	}
-	
+	glTranslated(1, 0, 5);
 
-	//Draw players scores
+	glTranslated(x, 0, 0);
 
-	glTranslated(1,0,5);
-
-	// Player 2
-	dz=0; kx=0; ky=0; kz=0; zsignal=-1;
-	for(int i=0; i<p1score;i++){
-		if((i%3)==0 && i>0) {
-			kz+=4;
-			kx=i*2.2;
-		
+	// Player collected seeds
+	kx = 0; ky = 0; kz = 0;
+	for(int i = 0; i < playerScore; i++){
+		if((i%3) == 0 && i > 0) {
+			kz += 4;
+			kx = i*2.2;
 		}
 
 		if((i%18)==0 && i>0){
-			kz-=4*6;
+			kz -= 4*6;
 			ky++;
 		}
 
@@ -602,31 +541,128 @@ void Oware::drawSeeds(){
 		glPopMatrix();
 
 	}
-
-
-	glTranslated(94,0,0);
-	
-	// Player 1
-	dz=0; kx=0; ky=0; kz=0; zsignal=-1;
-	for(int i=0; i<p2score;i++){
-		if((i%3)==0 && i>0) {
-			kz+=4;
-			kx=i*2.2;
-		}
-
-		if((i%18)==0 && i>0){
-			kz-=4*6;
-			ky++;
-		}
-
-		glPushMatrix();
-		glTranslated(-14+2.2*i-kx,ky,-kz);
-		glScalef(0.15, 0.15, 0.35);
-		seed->draw();
-		glPopMatrix();
-
-	}
-
 
 	glPopMatrix();
 }
+
+//void Oware::drawSeeds(){
+//
+//	int numseeds=28;
+//	int dx,dy,dz=0;
+//	float kx=0;
+//	float ky=0;
+//	float kz=0;
+//	float zsignal=-1;
+//	int displacement[6]={0,13,27,40,53,66};
+//
+//	// Get score and seeds
+//	int p1score=player1->getScore();
+//	int p2score=player2->getScore();
+//	vector<int> line1=player1->getSeeds();
+//	vector<int> line2=player2->getSeeds();
+//
+//	// Line 1
+//	glPushMatrix();
+//	glTranslated(-10,6,27);
+//	for (int i=0; i<6; i++){
+//		dz=0;
+//		kx=0;
+//		ky=0;
+//		numseeds=line1[i];
+//		for(int j=0; j<numseeds; j++){
+//			// Draw a Seed
+//			glPushMatrix();
+//
+//				if((j%3)==0 && j>0) {
+//					dz=!dz;
+//					kx=j*2.2;
+//				}
+//
+//				if((j%6)==0) ky++;
+//
+//			    glTranslated(displacement[i]+2.2*j-kx,ky,4.0*dz);
+//				glScalef(0.15, 0.15, 0.35);
+//				seed->draw();
+//			glPopMatrix();
+//		}
+//	}
+//
+//	// Line 2
+//	glTranslated(0,0,14);
+//
+//	for (int i=0; i<6; i++){
+//		dz=0;
+//		kx=0;
+//		ky=0;
+//		numseeds=line2[i];
+//		for(int j=0; j<numseeds; j++){
+//			// Draw a Seed
+//			glPushMatrix();
+//
+//				if((j%3)==0 && j>0) {
+//					dz=!dz;
+//					kx=j*2.2;
+//				}
+//
+//				if((j%6)==0) ky++;
+//			    glTranslated(displacement[i]+2.2*j-kx,ky,4.0*dz);
+//				glScalef(0.15, 0.15, 0.35);
+//				seed->draw();
+//			glPopMatrix();
+//		}
+//	}
+//
+//
+//	//Draw players scores
+//
+//	glTranslated(1,0,5);
+//
+//	// Player 2
+//	dz=0; kx=0; ky=0; kz=0; zsignal=-1;
+//	for(int i=0; i<p1score;i++){
+//		if((i%3)==0 && i>0) {
+//			kz+=4;
+//			kx=i*2.2;
+//
+//		}
+//
+//		if((i%18)==0 && i>0){
+//			kz-=4*6;
+//			ky++;
+//		}
+//
+//		glPushMatrix();
+//		glTranslated(-14+2.2*i-kx,ky,-kz);
+//		glScalef(0.15, 0.15, 0.35);
+//		seed->draw();
+//		glPopMatrix();
+//
+//	}
+//
+//
+//	glTranslated(94,0,0);
+//
+//	// Player 1
+//	dz=0; kx=0; ky=0; kz=0; zsignal=-1;
+//	for(int i=0; i<p2score;i++){
+//		if((i%3)==0 && i>0) {
+//			kz+=4;
+//			kx=i*2.2;
+//		}
+//
+//		if((i%18)==0 && i>0){
+//			kz-=4*6;
+//			ky++;
+//		}
+//
+//		glPushMatrix();
+//		glTranslated(-14+2.2*i-kx,ky,-kz);
+//		glScalef(0.15, 0.15, 0.35);
+//		seed->draw();
+//		glPopMatrix();
+//
+//	}
+//
+//
+//	glPopMatrix();
+//}
