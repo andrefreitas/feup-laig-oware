@@ -189,11 +189,14 @@ int Oware::readStatus(){
 	string msg;
 	int num;
 
-	while(s1->reads(msg)){
-		num = decodeMSG(msg);
-		if(num != 2)
-			break;
-	}
+//	while(s1->reads(msg)){
+//		num = decodeMSG(msg);
+//		if(num != 2)
+//			break;
+//	}
+
+	s1->reads(msg);
+	num = decodeMSG(msg);
 
 	return num;
 }
@@ -229,25 +232,30 @@ int Oware::decodeMSG(string msg){
 		cout << winner << endl;
 		cout << finalPoints << endl;
 
-		return 1;
+		return 0;
 	}
 	else if((signed)msg.find("noSeeds") != -1){
 		cout << msg;
-		return 0;
+		return 1;
 	}
 	else if((signed)msg.find("gameStatus") != -1){
 		this->gameStatus = msg;
 		cout << msg;
-		return -1;
+		if((signed)msg.find("Chooses") != -1){
+				this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
+				cout << this->playerChoose << endl;
+			}
+		return 2;
 	}
 	else if((signed)msg.find("Chooses") != -1){
 		this->playerChoose = msg.at(14) - 48;
 		if(player1->getType() != "human" && player2->getType() != "human")
 			this->demoModeChooses.push(this->playerChoose);
 		cout << msg;
+		return 3;
 	}
 
-	return 2;
+	return -1;
 }
 
 void Oware::update(){
