@@ -64,6 +64,7 @@ class LSFscene : public CGFscene
 	bool humanVsComputerModeStarted;
 	bool demoModeEnd;
 	bool winnerFound;
+	bool noSeeds;
 	int player1Score;
 	int player2Score;
 
@@ -98,6 +99,7 @@ public:
 	void demoMode();
 	void humanVsHumanMode();
 	void humanVsComputerMode();
+	void skipPlayer();
 	bool createDemoMode();
 	bool createGame(Player *player1, Player *player2, int dificultyLevel);
 	void loadDemoMode();

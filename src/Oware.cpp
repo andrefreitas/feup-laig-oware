@@ -19,8 +19,15 @@ Oware::Oware(){
 }
 
 void Oware::createGame(Player *player1, Player *player2, int dificulty){
-	this->player1 = player1;
-	this->player2 = player2;
+	if(player1->getType() == "human")
+		this->player1 = new Human(player1->getName(), player1->getType());
+	else
+		this->player1 = new Computer(player1->getName(), player1->getType());
+
+	if(player2->getType() == "human")
+		this->player2 = new Human(player2->getName(), player2->getType());
+	else
+		this->player2 = new Computer(player2->getName(), player2->getType());
 
 	switch(dificulty){
 	case 1: maxTime = 30; break;
@@ -33,7 +40,7 @@ void Oware::createGame(Player *player1, Player *player2, int dificulty){
 }
 
 void Oware::createGame(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty){
-	if(player1Type == "computer"){
+	if(player1Type != "human"){
 		if(dificulty == 1)
 			this->player1 = new Computer(player1Name, "bot1");
 		else
@@ -42,7 +49,7 @@ void Oware::createGame(string player1Name, string player1Type, string player2Nam
 	else
 		this->player1 = new Human(player1Name, "human");
 
-	if(player2Type == "computer"){
+	if(player2Type != "human"){
 		if(dificulty == 1)
 			this->player2 = new Computer(player2Name, "bot1");
 		else
@@ -189,12 +196,6 @@ int Oware::readStatus(){
 	string msg;
 	int num;
 
-//	while(s1->reads(msg)){
-//		num = decodeMSG(msg);
-//		if(num != 2)
-//			break;
-//	}
-
 	s1->reads(msg);
 	num = decodeMSG(msg);
 
@@ -234,17 +235,17 @@ int Oware::decodeMSG(string msg){
 
 		return 0;
 	}
-	else if((signed)msg.find("noSeeds") != -1){
+	else if((signed)msg.find("noSeeds.") != -1){
 		cout << msg;
 		return 1;
 	}
 	else if((signed)msg.find("gameStatus") != -1){
-		this->gameStatus = msg;
 		cout << msg;
+		this->gameStatus = msg;
 		if((signed)msg.find("Chooses") != -1){
-				this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
-				cout << this->playerChoose << endl;
-			}
+			this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
+			cout << this->playerChoose << endl;
+		}
 		return 2;
 	}
 	else if((signed)msg.find("Chooses") != -1){
@@ -482,9 +483,9 @@ void Oware::swapPlayerTurn(){
 
 void Oware::play(int hole){
 	if(hole >= 0 && hole <= 5)
-		this->player1->play(s1, 6-hole);
+		player1->play(s1, 6-hole);
 	else if(hole >= 6 && hole <= 11)
-		this->player2->play(s1, hole-5);
+		player2->play(s1, hole-5);
 }
 
 void Oware::drawHoleSeeds(int seeds, int x, int y, int z){

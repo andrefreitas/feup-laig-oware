@@ -52,7 +52,7 @@ int Human::play(Socket *s1, int hole){
 	string num;
 
 	if(getHoleSeeds(hole) > 0){
-		msg = "[playerChooses, ";
+		msg = "[playerChooses,";
 		num = hole+48;
 		msg.append(num);
 		msg.append("].\n");

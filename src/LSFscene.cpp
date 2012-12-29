@@ -76,14 +76,14 @@ void LSFscene::init()
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
 	//create demoMode game
-	if(createGame(new Computer("ABC", "bot1"), new Human("123", "bot2"), 3))
-		loadingDemoMode = true;
-	else
-		exit(1);
+//	if(createGame(new Computer("ABC", "bot1"), new Human("123", "bot2"), 3))
+//		loadingDemoMode = true;
+//	else
+//		exit(1);
 
-//	loadingDemoMode = false;
-//	createGame(new Computer("ABC", "human"), new Human("Paulo", "human"), 3);
-//	startHumanVsHumanMode();
+	loadingDemoMode = false;
+	createGame(new Computer("ABC", "human"), new Human("Paulo", "human"), 3);
+	startHumanVsHumanMode();
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -160,51 +160,27 @@ void LSFscene::display()
 		else if(humanVsComputerModeStarted)
 			humanVsComputerMode();
 
-		//Players seeds and timer
+		//Players score and timer
 		if(gameStarted){
-
-			if(!winnerFound){
-//				drawClosedHand(gameStarted);
-				appearances["seed"]->appearance->apply();
-				game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
-				game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
-			}
-
 			drawPlayerScore(game->getPlayer1()->getScore(), "1");
 			drawPlayerScore(game->getPlayer2()->getScore(), "2");
 
-			if(timer->isStarted() && !demoModeStarted)
+			if(timer->isStarted() && game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human")
 				drawRemainingTime(timer->getCountDown());
 		}
 
-		if(demoModeEnd && timer->getCountDown() < 5){
+		if(winnerFound && timer->getCountDown() < 5){
 			timer->stopCountDown();
-			stopDemoMode();
-			demoModeEnd = false;
+			winnerFound = false;
+			demoModeStarted = false;
+			gameStarted = false;
+			humanVsHumanModeStarted = false;
+			humanVsComputerModeStarted = false;
+			demoTimer->startCountDown(15);
 		}
 	}
 
     glutSwapBuffers();
-}
-
-void LSFscene::boardHandler(int position){
-	if(!demoModeStarted){
-		if((game->getPlayerTurn() == "1" && position < 6) ||
-		   (game->getPlayerTurn() == "2" && position > 5)){
-			int hole[] = {6, 5, 4, 3, 2, 1, 1, 2, 3, 4, 5, 6};
-
-			cout << " playerTurn = " << game->getPlayerTurn() << endl;
-			cout << " hole = " << hole[position] << endl;
-			cout << " holeSeeds =  " << game->getPlayer2()->getHoleSeeds(hole[position]) << endl;
-
-			// this function is called when a hole from the board is clicked
-			if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getHoleSeeds(hole[position]) > 0){
-				this->game->play(position);
-				this->game->setPlayerChoose(hole[position]);
-				timer->stopCountDown();
-			}
-		}
-	}
 }
 
 void LSFscene::selectionMode(){
@@ -541,13 +517,10 @@ void LSFscene::demoMode(){
 	}
 	else if(demoModeStatus.empty()){
 		game->swapPlayerTurn();
-		if(game->getDemoModeWinner() == 1)
-			game->getPlayer1()->setScore(game->getDemoModeFinalPoints());
-		else
-			game->getPlayer2()->setScore(game->getDemoModeFinalPoints());
+		game->getPlayer(game->getDemoModeWinner() )->setScore(game->getDemoModeFinalPoints());
 
 		winnerFound = true;
-		demoModeEnd = true;
+		//demoModeEnd = true;
 	}
 
 	if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
@@ -566,6 +539,13 @@ void LSFscene::demoMode(){
 		}
 		else
 			animationTimer->startCountDown(1);
+	}
+
+	if(!winnerFound){
+//				drawClosedHand(gameStarted);
+		appearances["seed"]->appearance->apply();
+		game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
+		game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
 	}
 }
 
@@ -643,6 +623,8 @@ void LSFscene::humanVsComputerMode(){
 
 //human vs human mode
 void LSFscene::startHumanVsHumanMode(){
+	cout << "starting human vs human mode" << endl;
+
 	this->gameStarted = true;
 	this->humanVsHumanModeStarted = true;
 	this->demoModeStarted = false;
@@ -651,13 +633,173 @@ void LSFscene::startHumanVsHumanMode(){
 
 	this->player1Score = 0;
 	this->player2Score = 0;
+	this->game->setPlayerChoose(0);
+	this->noSeeds = false;
 
 	game->readStatus();
 	game->readStatus();
 	game->update();
-	timer->stopCountDown();
+
+	if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
+		game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+				                    game->getPlayer2()->getSeeds(), 1, 1);
+	}
+
+	timer->startCountDown(game->getMaxTime());
 }
 
 void LSFscene::humanVsHumanMode(){
+	if(timer->isStarted()){
+		if(timer->getCountDown() <= 0){
+			cout << "timeout" << endl;
+			game->skipPlayer();
 
+			this->game->setPlayerChoose(0);
+
+			if(noSeeds){
+				game->update();
+				noSeeds = false;
+			}
+			int num = game->readStatus();
+			if(num == 1){
+				cout << num << endl;
+				noSeeds = true;
+				game->readStatus();
+				game->swapPlayerTurn();
+				if(!game->getBoard()->isLoaded() &&  !timer->isStarted())
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+							game->getPlayer2()->getSeeds(), 1, 1);
+
+				this->game->setPlayerChoose(0);
+			}
+			else{
+				if(num != 2)
+					game->readStatus();
+				game->update();
+
+				if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+							game->getPlayer2()->getSeeds(), 1, 1);
+				}
+			}
+			timer->startCountDown(game->getMaxTime());
+		}
+	}
+
+	if(game->getPlayerChoose() != 0){
+		game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+				atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+
+		animationTimer->startCountDown(1);
+
+		this->game->setPlayerChoose(0);
+	}
+	else if(animationTimer->isStarted()){
+		if(game->getBoard()->isLoaded() && animationTimer->getCountDown() <= 0){
+			if(game->getBoard()->update() == false){
+				if(!timer->isStarted()){
+					timer->startCountDown(game->getMaxTime());
+					animationTimer->stopCountDown();
+				}
+				if(noSeeds){
+					game->update();
+					noSeeds = false;
+				}
+				int num = game->readStatus();
+				if(num == 1){
+					cout << num << endl;
+					noSeeds = true;
+					game->readStatus();
+					game->swapPlayerTurn();
+					if(!game->getBoard()->isLoaded() &&  !timer->isStarted())
+						game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+								game->getPlayer2()->getSeeds(), 1, 1);
+
+					this->game->setPlayerChoose(0);
+				}
+				else{
+					if(num == 0){
+						winnerFound = true;
+						game->getPlayer(game->getWinner())->setScore(game->getFinalPoints());
+					}
+					else{
+						cout << "reload" << endl;
+						game->swapPlayerTurn();
+						game->update();
+
+						game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+								game->getPlayer2()->getSeeds(),
+								atoi(game->getPlayerTurn().c_str()), 1);
+					}
+				}
+				timer->startCountDown(game->getMaxTime());
+			}
+			else
+				animationTimer->startCountDown(1);
+		}
+	}
+
+	if(!winnerFound){
+		appearances["seed"]->appearance->apply();
+		game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
+		game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
+	}
+	else
+		game->swapPlayerTurn();
+}
+
+void LSFscene::skipPlayer(){
+	cout << "skiping Player" << endl;
+	game->skipPlayer();
+
+	this->game->setPlayerChoose(0);
+
+	if(noSeeds){
+		game->update();
+		noSeeds = false;
+	}
+	int num = game->readStatus();
+	if(num == 1){
+		cout << num << endl;
+		noSeeds = true;
+		game->readStatus();
+		game->swapPlayerTurn();
+		if(!game->getBoard()->isLoaded() &&  !timer->isStarted())
+			game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+					game->getPlayer2()->getSeeds(), 1, 1);
+
+		this->game->setPlayerChoose(0);
+	}
+	else{
+		if(num != 2)
+			game->readStatus();
+		game->update();
+
+		if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
+			game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
+					game->getPlayer2()->getSeeds(), 1, 1);
+		}
+	}
+
+	timer->startCountDown(game->getMaxTime());
+}
+
+void LSFscene::boardHandler(int position){
+	if(!demoModeStarted && !animationTimer->isStarted() && timer->isStarted()){
+		if((game->getPlayerTurn() == "1" && position < 6) ||
+		   (game->getPlayerTurn() == "2" && position > 5)){
+			int hole[] = {6, 5, 4, 3, 2, 1, 1, 2, 3, 4, 5, 6};
+
+			cout << " playerTurn = " << game->getPlayerTurn() << endl;
+			cout << " hole = " << hole[position] << endl;
+			cout << " holeSeeds =  " << game->getPlayer2()->getHoleSeeds(hole[position]) << endl;
+
+			// this function is called when a hole from the board is clicked
+			if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getHoleSeeds(hole[position]) > 0){
+				timer->stopCountDown();
+				game->play(position);
+				game->setPlayerChoose(hole[position]);
+			}
+		}
+	}
 }
