@@ -237,11 +237,22 @@ int Oware::decodeMSG(string msg){
 	}
 	else if((signed)msg.find("noSeeds.") != -1){
 		cout << msg;
+		if(msg.size() > 20){
+			this->nextStatus = msg.substr(10);
+			this->nextStatusActive = true;
+			cout << "nextStatus: " << nextStatus << endl;
+		}
+
 		return 1;
 	}
 	else if((signed)msg.find("gameStatus") != -1){
 		cout << msg;
 		this->gameStatus = msg;
+		if(msg.size() > 99){
+			this->nextStatus = msg.substr(99);
+			this->nextStatusActive = true;
+			cout << "nextStatus: " << nextStatus << endl;
+		}
 		if((signed)msg.find("Chooses") != -1){
 			this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
 			cout << this->playerChoose << endl;
@@ -316,6 +327,26 @@ void Oware::saveStatus(string playerTurn, string board, string player1Score, str
 
 int Oware::getStatusSize(){
 	return status.size();
+}
+
+void Oware::setGameStatus(string status){
+	this->gameStatus = status;
+}
+
+bool Oware::isNextStatusActive(){
+	return this->nextStatusActive;
+}
+
+void Oware::clearNextStatus(){
+	this->nextStatusActive = false;
+}
+
+string Oware::getGameStatus(){
+	return this->gameStatus;
+}
+
+string Oware::getNextStatus(){
+	return this->nextStatus;
 }
 
 bool Oware::undoIsReadyToUse(){
@@ -529,7 +560,9 @@ void Oware::drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z){
 	glTranslated(1, 0, 5);
 
 	glTranslated(x, 0, 0);
-
+	int signal;
+	if(x == 0) signal = -1;
+	else signal = 1;
 	// Player collected seeds
 	kx = 0; ky = 0; kz = 0;
 	for(int i = 0; i < playerScore; i++){
@@ -544,7 +577,7 @@ void Oware::drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z){
 		}
 
 		glPushMatrix();
-		glTranslated(-14+2.2*i-kx,ky,-kz);
+		glTranslated(-14+2.2*i-kx,ky,-kz*signal+(signal == -1 ? -7 : 0));
 		glScalef(0.15, 0.15, 0.35);
 		seed->draw();
 		glPopMatrix();

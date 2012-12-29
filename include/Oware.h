@@ -25,7 +25,9 @@ private:
 	Board *board;
 	string playerTurn;
 	string gameStatus;
+	string nextStatus;
 	bool readingFile;
+	bool nextStatusActive;
 	int playerChoose;
 	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
 	queue<vector<string> > movie;
@@ -78,6 +80,12 @@ public:
 	string statusToPlayer1Score(vector<string> status);
 	string statusToPlayer2Score(vector<string> status);
 	string getPlayerTurn();
+
+	void setGameStatus(string status);
+	void clearNextStatus();
+	bool isNextStatusActive();
+	string getGameStatus();
+	string getNextStatus();
 
 	stack<vector<string> > getStatus();
 

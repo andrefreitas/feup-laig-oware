@@ -81,9 +81,13 @@ void LSFscene::init()
 //	else
 //		exit(1);
 
+//	loadingDemoMode = false;
+//	createGame(new Computer("ABC", "human"), new Human("Paulo", "human"), 3);
+//	startHumanVsHumanMode();
+
 	loadingDemoMode = false;
-	createGame(new Computer("ABC", "human"), new Human("Paulo", "human"), 3);
-	startHumanVsHumanMode();
+	createGame(new Computer("ABC", "bot2"), new Human("Paulo", "human"), 3);
+	startHumanVsComputerMode();
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -520,7 +524,6 @@ void LSFscene::demoMode(){
 		game->getPlayer(game->getDemoModeWinner() )->setScore(game->getDemoModeFinalPoints());
 
 		winnerFound = true;
-		//demoModeEnd = true;
 	}
 
 	if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
@@ -560,71 +563,145 @@ void LSFscene::startHumanVsComputerMode(){
 	this->player1Score = 0;
 	this->player2Score = 0;
 
-	if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() != "human"){
-		game->readStatus();
-		game->readStatus();
-		game->update();
-		timer->stopCountDown();
-	}
+	this->noSeeds = false;
+
+	this->game->setPlayerTurn("1");
+
+	game->readStatus();
+	game->readStatus();
 }
 
 void LSFscene::humanVsComputerMode(){
-	//		else if(humanModeStarted){
-	////			if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() != "human" && !game->getBoard()->isLoaded()){
-	////				cout << "reading" << endl;
-	////				int num = game->readStatus();
-	////				if(num == 0){
-	////					cout << "bot num = 0" << endl;
-	////					winnerFound = true;
-	////					game->update();
-	////				}
-	////				else if(num == 1){
-	////					cout << "bot num = 1" << endl;
-	////					game->swapPlayerTurn();
-	////					game->update();
-	////				}
-	////				else if(num == 2){
-	////					cout << "bot num = 2" << endl;
-	////					game->readStatus();
-	////					game->update();
-	////					timer->stopCountDown();
-	////				}
-	////				if(num == 3){
-	////					cout << "bot num = 3" << endl;
-	//////					timer->wait(3);
-	//////					game->readStatus();
-	////				}
-	////			}
-	//		}
+	if(humanVsComputerModeStarted){
+		if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() != "human" &&
+		   !game->getBoard()->isLoaded() && !winnerFound){
+			cout << "reading bot" << endl;
+			int num = game->readStatus();
+			if(num == 0){
+				cout << "bot num = 0" << endl;
+				winnerFound = true;
+				game->getPlayer(game->getWinner())->setScore(game->getFinalPoints());
+				game->swapPlayerTurn();
+				timer->startCountDown(game->getMaxTime());
+			}
+			else if(num == 1){
+				cout << "bot num = 1" << endl;
+				game->swapPlayerTurn();
+				game->update();
+			}
+			else {
+				cout << "bot num = 2 e 3" << endl;
+				game->update();
+				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+						atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
 
+				animationTimer->startCountDown(1);
+			}
+		}
+		else if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human" &&
+				!game->getBoard()->isLoaded() && !winnerFound){
+			cout << "reading human" << endl;
+			if(game->isNextStatusActive()){
+				game->setGameStatus(game->getNextStatus());
+				game->update();
+				game->clearNextStatus();
+				game->setPlayerChoose(0);
 
+				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+						atoi(game->getPlayerTurn().c_str()), 1);
 
+				timer->startCountDown(game->getMaxTime());
+			}
+			else{
+				int num = game->readStatus();
+				if(num == 0){
+					cout << "human num = 0" << endl;
+					winnerFound = true;
+					game->update();
+				}
+				else if(num == 1){
+					cout << "human num = 1" << endl;
+					game->swapPlayerTurn();
+					game->update();
+				}
+				else if(num == 2){
+					cout << "human num = 2" << endl;
+					game->update();
 
+					game->setPlayerChoose(0);
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+							atoi(game->getPlayerTurn().c_str()), 1);
 
+					timer->startCountDown(game->getMaxTime());
+				}
+			}
+		}
+	}
 
+	if(!winnerFound){
+		if(timer->isStarted()){
+			if(timer->getCountDown() <= 0){
+				if(game->isNextStatusActive()){
+					game->setGameStatus(game->getNextStatus());
+					game->update();
+					game->clearNextStatus();
+					game->setPlayerChoose(0);
 
-	//					cout << "update = false" << endl;
-	//					if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() != "human"){
-	//						game->readStatus();
-	//						game->update();
-	//					}
-	//					game->swapPlayerTurn();
-	//
-	//					cout << "playerTurn = " << game->getPlayerTurn() << endl;
-	//
-	//					if(!game->getBoard()->isLoaded() &&  !timer->isStarted() /*&& game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() != "human"*/){
-	//						cout << "load Board 2" << endl;
-	//						game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
-	//								atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
-	//
-	//						animationTimer->startCountDown(1);
-	//					}
+					cout << "nextStatus active" << endl;
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+							atoi(game->getPlayerTurn().c_str()), 1);
+
+					timer->startCountDown(game->getMaxTime());
+				}
+				else{
+					game->skipPlayer();
+					cout << game->readStatus() << endl;
+					cout << game->readStatus() << endl;
+					cout << game->readStatus() << endl;
+					game->update();
+
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+							atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+
+					animationTimer->startCountDown(1);
+				}
+			}
+		}
+
+		if(game->getPlayerChoose() != 0 &&
+				game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human"){
+			game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+					atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+
+			animationTimer->startCountDown(1);
+
+			this->game->setPlayerChoose(0);
+		}
+		else if(animationTimer->isStarted()){
+			if(game->getBoard()->isLoaded() && animationTimer->getCountDown() <= 0){
+				if(game->getBoard()->update() == false){
+					animationTimer->stopCountDown();
+					game->swapPlayerTurn();
+					if(!timer->isStarted() &&
+							game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human"){
+						timer->startCountDown(game->getMaxTime());
+					}
+				}
+				else
+					animationTimer->startCountDown(1);
+			}
+		}
+
+		appearances["seed"]->appearance->apply();
+		game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
+		game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
+	}
+	else
+		game->swapPlayerTurn();
 }
 
 //human vs human mode
 void LSFscene::startHumanVsHumanMode(){
-	cout << "starting human vs human mode" << endl;
-
 	this->gameStarted = true;
 	this->humanVsHumanModeStarted = true;
 	this->demoModeStarted = false;
@@ -749,7 +826,6 @@ void LSFscene::humanVsHumanMode(){
 }
 
 void LSFscene::skipPlayer(){
-	cout << "skiping Player" << endl;
 	game->skipPlayer();
 
 	this->game->setPlayerChoose(0);
@@ -760,7 +836,6 @@ void LSFscene::skipPlayer(){
 	}
 	int num = game->readStatus();
 	if(num == 1){
-		cout << num << endl;
 		noSeeds = true;
 		game->readStatus();
 		game->swapPlayerTurn();
