@@ -277,36 +277,38 @@ void Oware::update(){
 
 	str = &gameStatus[0];
 
-	vector<int> v1;
-	vector<int> v2;
-	strtok(str, "[,]");
+	if(str != NULL){
+		vector<int> v1;
+		vector<int> v2;
+		strtok(str, "[,]");
 
-	int n = 0;
-	board = "[[";
-	while(n < 6){
-		v1.push_back(atoi(strtok(NULL, "[,]")));
-		board.append(itos(v1.back()));
-		if(v1.size() < 6) board.append(",");
-		n++;
+		int n = 0;
+		board = "[[";
+		while(n < 6){
+			v1.push_back(atoi(strtok(NULL, "[,]")));
+			board.append(itos(v1.back()));
+			if(v1.size() < 6) board.append(",");
+			n++;
+		}
+		player1->setSeeds(v1);
+
+		n = 0;
+		board.append("],[");
+		while(n < 6){
+			v2.push_back(atoi(strtok(NULL, "[,]")));
+			board.append(itos(v2.back()));
+			if(v2.size() < 6) board.append(",");
+			n++;
+		}
+		board.append("]]");
+		player2->setSeeds(v2);
+
+		player1->setScore(atoi(strtok(NULL, "] ")));
+		player2->setScore(atoi(strtok(NULL, " ")));
+
+		saveStatus(playerTurn, board, itos(player1->getScore()), itos(player2->getScore()));
+		movie.push(status.top());
 	}
-	player1->setSeeds(v1);
-
-	n = 0;
-	board.append("],[");
-	while(n < 6){
-		v2.push_back(atoi(strtok(NULL, "[,]")));
-		board.append(itos(v2.back()));
-		if(v2.size() < 6) board.append(",");
-		n++;
-	}
-	board.append("]]");
-	player2->setSeeds(v2);
-
-	player1->setScore(atoi(strtok(NULL, "] ")));
-	player2->setScore(atoi(strtok(NULL, " ")));
-
-	saveStatus(playerTurn, board, itos(player1->getScore()), itos(player2->getScore()));
-	movie.push(status.top());
 }
 
 void Oware::saveStatus(string playerTurn, string board, string player1Score, string player2Score){
