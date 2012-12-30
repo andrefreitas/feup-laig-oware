@@ -333,11 +333,16 @@ void LSFscene::drawNumber(int number, int x, int y, int z, int sizeX, int sizeY,
 }
 
 void LSFscene::drawSeeds(){
+	appearances["seed"]->appearance->apply();
+	game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
+	game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
+
+	int displacement[6]={0,13,27,40,53,66};
 	for(int i = 1; i <= 6; i++)
-		drawNumber(game->getBoard()->getPlayerSeeds(1).at(i-1), 7+(i-1)*8, 5, 21, 1, 1, 1);
+		drawNumber(game->getBoard()->getPlayerSeeds(1).at(i-1),displacement[i-1]-9, 8, 23, 1, 1, 1);
 
 	for(int i = 1; i <= 6; i++)
-		drawNumber(game->getBoard()->getPlayerSeeds(2).at(i-1), 7+(i-1)*8, 5, 29, 1, 1, 1);
+		drawNumber(game->getBoard()->getPlayerSeeds(2).at(i-1), displacement[i-1]-9, 8, 49, 1, 1, 1);
 }
 
 void LSFscene::drawClosedHand(bool active){
@@ -546,9 +551,7 @@ void LSFscene::demoMode(){
 
 	if(!winnerFound){
 //				drawClosedHand(gameStarted);
-		appearances["seed"]->appearance->apply();
-		game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
-		game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
+		drawSeeds();
 	}
 }
 
@@ -586,8 +589,16 @@ void LSFscene::humanVsComputerMode(){
 			}
 			else if(num == 1){
 				cout << "bot num = 1" << endl;
+				game->readStatus();
 				game->swapPlayerTurn();
 				game->update();
+
+				game->setPlayerChoose(0);
+
+				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+						atoi(game->getPlayerTurn().c_str()), 1);
+
+				timer->startCountDown(game->getMaxTime());
 			}
 			else {
 				cout << "bot num = 2 e 3" << endl;
@@ -627,7 +638,7 @@ void LSFscene::humanVsComputerMode(){
 				else if(num == 2){
 					cout << "human num = 2" << endl;
 					game->update();
-
+					cout << "atualizou" << endl;
 					game->setPlayerChoose(0);
 					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
 							atoi(game->getPlayerTurn().c_str()), 1);
@@ -692,9 +703,7 @@ void LSFscene::humanVsComputerMode(){
 			}
 		}
 
-		appearances["seed"]->appearance->apply();
-		game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
-		game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
+		drawSeeds();
 	}
 	else
 		game->swapPlayerTurn();
@@ -817,9 +826,7 @@ void LSFscene::humanVsHumanMode(){
 	}
 
 	if(!winnerFound){
-		appearances["seed"]->appearance->apply();
-		game->drawSeeds(game->getBoard()->getPlayerSeeds(1), game->getPlayer1()->getScore(), 0, 0, 0);
-		game->drawSeeds(game->getBoard()->getPlayerSeeds(2), game->getPlayer2()->getScore(), 94, 0, 14);
+		drawSeeds();
 	}
 	else
 		game->swapPlayerTurn();

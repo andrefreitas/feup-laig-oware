@@ -242,20 +242,21 @@ int Oware::decodeMSG(string msg){
 			this->nextStatusActive = true;
 			cout << "nextStatus: " << nextStatus << endl;
 		}
-
 		return 1;
 	}
 	else if((signed)msg.find("gameStatus") != -1){
 		cout << msg;
 		this->gameStatus = msg;
 		if(msg.size() > 99){
-			this->nextStatus = msg.substr(99);
+			char tmp[200];
+			msg.copy(tmp, msg.size()-99, 99);
+			this->nextStatus = tmp;
 			this->nextStatusActive = true;
 			cout << "nextStatus: " << nextStatus << endl;
 		}
 		if((signed)msg.find("Chooses") != -1){
 			this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
-			cout << this->playerChoose << endl;
+			cout << "AAAAAAAAAA" << this->playerChoose << endl;
 		}
 		return 2;
 	}
@@ -264,6 +265,7 @@ int Oware::decodeMSG(string msg){
 		if(player1->getType() != "human" && player2->getType() != "human")
 			this->demoModeChooses.push(this->playerChoose);
 		cout << msg;
+		cout << "BBBBBBBBBBB" << this->playerChoose << endl;
 		return 3;
 	}
 
@@ -277,38 +279,36 @@ void Oware::update(){
 
 	str = &gameStatus[0];
 
-	if(str != NULL){
-		vector<int> v1;
-		vector<int> v2;
-		strtok(str, "[,]");
+	vector<int> v1;
+	vector<int> v2;
+	strtok(str, "[,]");
 
-		int n = 0;
-		board = "[[";
-		while(n < 6){
-			v1.push_back(atoi(strtok(NULL, "[,]")));
-			board.append(itos(v1.back()));
-			if(v1.size() < 6) board.append(",");
-			n++;
-		}
-		player1->setSeeds(v1);
-
-		n = 0;
-		board.append("],[");
-		while(n < 6){
-			v2.push_back(atoi(strtok(NULL, "[,]")));
-			board.append(itos(v2.back()));
-			if(v2.size() < 6) board.append(",");
-			n++;
-		}
-		board.append("]]");
-		player2->setSeeds(v2);
-
-		player1->setScore(atoi(strtok(NULL, "] ")));
-		player2->setScore(atoi(strtok(NULL, " ")));
-
-		saveStatus(playerTurn, board, itos(player1->getScore()), itos(player2->getScore()));
-		movie.push(status.top());
+	int n = 0;
+	board = "[[";
+	while(n < 6){
+		v1.push_back(atoi(strtok(NULL, "[,]")));
+		board.append(itos(v1.back()));
+		if(v1.size() < 6) board.append(",");
+		n++;
 	}
+	player1->setSeeds(v1);
+
+	n = 0;
+	board.append("],[");
+	while(n < 6){
+		v2.push_back(atoi(strtok(NULL, "[,]")));
+		board.append(itos(v2.back()));
+		if(v2.size() < 6) board.append(",");
+		n++;
+	}
+	board.append("]]");
+	player2->setSeeds(v2);
+
+	player1->setScore(atoi(strtok(NULL, "] ")));
+	player2->setScore(atoi(strtok(NULL, " ")));
+
+	saveStatus(playerTurn, board, itos(player1->getScore()), itos(player2->getScore()));
+	movie.push(status.top());
 }
 
 void Oware::saveStatus(string playerTurn, string board, string player1Score, string player2Score){
@@ -542,7 +542,6 @@ void Oware::drawHoleSeeds(int seeds, int x, int y, int z){
 }
 
 void Oware::drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z){
-	int dx, dy;
 	float kx=0;
 	float ky=0;
 	float kz=0;
