@@ -572,7 +572,8 @@ void LSFscene::startHumanVsComputerMode(){
 	this->game->setPlayerTurn("1");
 
 	game->readStatus();
-	game->readStatus();
+	if(game->getPlayer1()->getType() != "human")
+		game->readStatus();
 }
 
 void LSFscene::humanVsComputerMode(){
@@ -625,6 +626,7 @@ void LSFscene::humanVsComputerMode(){
 				timer->startCountDown(game->getMaxTime());
 			}
 			else{
+				cout << "TESTE" << endl;
 				int num = game->readStatus();
 				if(num == 0){
 					cout << "human num = 0" << endl;
