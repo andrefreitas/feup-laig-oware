@@ -57,6 +57,7 @@ void LSFscene::init(){
 
 	//startGame
 	game = new Oware();
+	running = true;
 
 	//wait for server
 	while(game->startServer() != 0){
@@ -73,18 +74,10 @@ void LSFscene::init(){
 	selectionBox=new LSFBox(0,7,0,7,0,7);
 
 	//create demoMode game
-//	if(createGame(new Computer("ABC", "bot1"), new Human("123", "bot2"), 3))
-//		loadingDemoMode = true;
-//	else
-//		exit(1);
-
-//	loadingDemoMode = false;
-//	createGame(new Computer("ABC", "human"), new Human("Paulo", "human"), 3);
-//	startHumanVsHumanMode();
-
-	loadingDemoMode = false;
-	createGame(new Computer("ABC", "human"), new Human("Paulo", "bot2"), 3);
-	startHumanVsComputerMode();
+	if(createGame(new Computer("ABC", "bot1"), new Human("123", "bot2"), 3))
+		loadingDemoMode = true;
+	else
+		exit(1);
 }
 
 map<string, LSFlight*> * LSFscene::getLights(){
@@ -154,35 +147,36 @@ void LSFscene::display(){
 			if(demoTimer->getCountDown() <= 0 && !gameStarted)
 				startDemoMode();
 
-		if(demoModeStarted)
-			demoMode();
-		else if(humanVsHumanModeStarted)
-			humanVsHumanMode();
-		else if(humanVsComputerModeStarted)
-			humanVsComputerMode();
+		if(running){
+			if(demoModeStarted)
+				demoMode();
+			else if(humanVsHumanModeStarted)
+				humanVsHumanMode();
+			else if(humanVsComputerModeStarted)
+				humanVsComputerMode();
 
-		//Players score and timer
-		if(gameStarted && !gameRulesActive){
-			drawPlayerScore(game->getPlayer1()->getScore(), "1");
-			drawPlayerScore(game->getPlayer2()->getScore(), "2");
+			//Players score and timer
+			if(gameStarted && !gameRulesActive){
+				drawPlayerScore(game->getPlayer1()->getScore(), "1");
+				drawPlayerScore(game->getPlayer2()->getScore(), "2");
 
-			if(timer->isStarted() &&
-			   game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human")
-				drawRemainingTime(timer->getCountDown());
-		}
+				if(timer->isStarted() &&
+						game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human")
+					drawRemainingTime(timer->getCountDown());
+			}
 
-		if(winnerFound && timer->getCountDown() < 5){
-			timer->stopCountDown();
-			winnerFound = false;
-			demoModeStarted = false;
-			gameStarted = false;
-			humanVsHumanModeStarted = false;
-			humanVsComputerModeStarted = false;
-			demoTimer->startCountDown(15);
+			if(winnerFound && timer->getCountDown() < 5){
+				timer->stopCountDown();
+				winnerFound = false;
+				demoModeStarted = false;
+				gameStarted = false;
+				humanVsHumanModeStarted = false;
+				humanVsComputerModeStarted = false;
+				demoTimer->startCountDown(15);
+			}
 		}
 	}
-
-    glutSwapBuffers();
+	glutSwapBuffers();
 }
 
 void LSFscene::setPolygonMode(unsigned int face, unsigned int mode){
@@ -438,9 +432,53 @@ string LSFscene::numberToText(int number){
 	return str[number];
 }
 
+void LSFscene::startGame(int dificulty){
+	stopDemoMode();
+	gameStarted = false;
+	demoModeStarted = false;
+	demoTimer->stopCountDown();
+
+	running = true;
+	game->endGame();
+
+	if(gameMode == "Human vs Human"){
+		game->createGame(new Computer("ABC", "human"), new Human("123", "human"), dificulty);
+		game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType());
+		startHumanVsHumanMode();
+	}
+	else if(gameMode == "Human vs Computer"){
+		game->createGame("ABC", "human", "123", "bot", dificulty);
+		game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType());
+		startHumanVsComputerMode();
+	}
+	else if(gameMode == "Computer vs Human"){
+		game->createGame("ABC", "bot", "123", "human", dificulty);
+		game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType());
+		startHumanVsComputerMode();
+	}
+}
+
 bool LSFscene::createGame(Player *player1, Player *player2, int dificultyLevel){
+	gameMode = "demoMode";
 	game->createGame(player1, player2, dificultyLevel);
 	return game->startGame(game->getPlayer1()->getType(), game->getPlayer2()->getType());
+}
+
+bool LSFscene::isActiveHumanVsComputerMode(){
+	return humanVsComputerModeStarted;
+}
+
+bool LSFscene::isGameStarted(){
+	return gameStarted;
+}
+
+void LSFscene::setGameMode(string mode){
+	endGame();
+	gameMode = mode;
+}
+
+string LSFscene::getGameMode(){
+	return gameMode;
 }
 
 //demoMode methods
@@ -459,13 +497,15 @@ void LSFscene::loadDemoMode(){
 		game->swapPlayerTurn();
 	}
 
-	loading = "LoadGame";
+	string loading = "LoadGame";
 	stack<LSFappearance*> appearancesStack0;
 	appearancesStack0.push(defaultAppearance);
 	LSFrender::render(nodes,loading,appearances,appearancesStack0,animations,LSFscene::timeSeconds);
 }
 
 void LSFscene::startDemoMode(){
+	gameMode = "demoMode";
+	running = true;
 	gameStarted = true;
 	demoModeStarted = true;
 	winnerFound = false;
@@ -590,6 +630,7 @@ void LSFscene::startHumanVsComputerMode(){
 	demoModeStarted = false;
 	winnerFound = false;
 	demoTimer->stopCountDown();
+	timer->stopCountDown();
 
 	player1Score = 0;
 	player2Score = 0;
@@ -745,6 +786,7 @@ void LSFscene::startHumanVsHumanMode(){
 	demoModeStarted = false;
 	winnerFound = false;
 	demoTimer->stopCountDown();
+	timer->stopCountDown();
 
 	player1Score = 0;
 	player2Score = 0;
@@ -908,4 +950,23 @@ void LSFscene::boardHandler(int position){
 			}
 		}
 	}
+}
+
+bool LSFscene::isLoading(){
+	return loadingDemoMode;
+}
+
+void LSFscene::endGame(){
+	stopDemoMode();
+	running = false;
+	gameStarted = false;
+	if(game->getBoard()->isLoaded())
+		while(game->getBoard()->update());
+
+	animationTimer->stopCountDown();
+	timer->stopCountDown();
+}
+
+void LSFscene::exitGame(){
+	exit(0);
 }

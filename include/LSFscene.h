@@ -41,6 +41,7 @@ class LSFscene : public CGFscene
 	map<string,LSFanimation*> animations;
 	LSFappearance* defaultAppearance;
 	string rootNode;
+	string gameMode;
 
 	bool lights_enabled, lights_local, lights_doublesided;
 	float ambient[4];
@@ -57,6 +58,7 @@ class LSFscene : public CGFscene
 	queue<vector<int> > demoModePlayer1Seeds;
 	queue<vector<int> > demoModePlayer2Seeds;
 	queue<int> demoModeChooses;
+	bool running;
 	bool loadingDemoMode;
 	bool gameRulesActive;
 	bool gameStarted;
@@ -90,8 +92,8 @@ public:
 	map<string, LSFcamera*> * getCameras();
 	void update(long millis);
 	string numberToText(int number);
+	string getGameMode();
 	string scenario;
-	string loading;
 	LSFBox *selectionBox;
 	void selectionMode();
 	void boardHandler(int position);
@@ -105,7 +107,14 @@ public:
 	void skipPlayer();
 	bool createDemoMode();
 	bool createGame(Player *player1, Player *player2, int dificultyLevel);
+	void endGame();
+	void exitGame();
+	void setGameMode(string mode);
+	void startGame(int dificulty);
+	bool isLoading();
 	bool isDemoModeStarted();
+	bool isGameStarted();
+	bool isActiveHumanVsComputerMode();
 	void loadDemoMode();
 	void setGameRules(bool active);
 	void drawScenario();

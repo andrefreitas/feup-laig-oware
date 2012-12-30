@@ -31,7 +31,6 @@ public:
 	int getStartHole();
 	int getCurrentHole();
 	int getHoleseeds();
-	void drawSeeds();
 	void setSeedsMoving(bool moving);
 };
 

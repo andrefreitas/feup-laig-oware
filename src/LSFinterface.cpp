@@ -22,11 +22,7 @@ void LSFinterface::initGUI()
 	lights = scene->getLights();
 	cameras = scene->getCameras();
 
-
-	GLUI_Panel *lightsPanel = addPanel((char*)"Scenario", 1);
-	addColumn();
-
-	GLUI_Panel *polygonalModePanel = addPanel((char*)"Polygonal Mode", 1);
+	GLUI_Panel *startGamePanel = addPanel((char*)"Start Game", 1);
 	addColumn();
 
 	GLUI_Panel *gamePanel = addPanel((char*)"Game Moves", 1);
@@ -35,20 +31,43 @@ void LSFinterface::initGUI()
 	GLUI_Panel *rulesPanel = addPanel((char*)"Rules / Markers", 1);
 	addColumn();
 
+	GLUI_Panel *lightsPanel = addPanel((char*)"Scenario", 1);
+	addColumn();
+
+	GLUI_Panel *exitGamePanel = addPanel((char*)"Exit Game", 1);
+	addColumn();
+
+	GLUI_Panel *polygonalModePanel = addPanel((char*)"Polygonal Mode", 1);
+	addColumn();
+
+
 	// Scenario
-	addButtonToPanel(lightsPanel,(char*)"Desert",10);
-	addButtonToPanel(lightsPanel,(char*)"Jungle",11);
+	addButtonToPanel(lightsPanel,(char*)"Desert ",10);
+	addButtonToPanel(lightsPanel,(char*)"Jungle ",11);
 	addButtonToPanel(lightsPanel,(char*)"Village",12);
 
 	// Game Panel
-	addButtonToPanel(gamePanel,(char*)"Undo",20);
-	addButtonToPanel(gamePanel,(char*)"Replay",21);
+	addButtonToPanel(gamePanel,(char*)" Undo  ",20);
+	addButtonToPanel(gamePanel,(char*)"Replay ",21);
+	addButtonToPanel(gamePanel,(char*)"EndGame",22);
 
 	//Game Rules
-	addButtonToPanel(rulesPanel,(char*)"Show Rules",22);
-	addButtonToPanel(rulesPanel,(char*)"Show Markers",23);
+	addButtonToPanel(rulesPanel,(char*)"Show Rules  ",23);
+	addButtonToPanel(rulesPanel,(char*)"Show Markers",24);
 
-	int i;
+	//Start Game
+	addButtonToPanel(startGamePanel,(char*)" Human vs Human  ",25);
+	addButtonToPanel(startGamePanel,(char*)"Human vs Computer",26);
+	addButtonToPanel(startGamePanel,(char*)"Computer vs Human",27);
+	addColumnToPanel(startGamePanel);
+	//Select dificulty level
+	addButtonToPanel(startGamePanel,(char*)"Easy  ",28);
+	addButtonToPanel(startGamePanel,(char*)"Medium",29);
+	addButtonToPanel(startGamePanel,(char*)"Hard  ",30);
+
+	//Exit Game
+	addButtonToPanel(exitGamePanel,(char*)"Exit Game",31);
+
 
 	GLUI_RadioGroup* polygonalRadioGroup = addRadioGroupToPanel(polygonalModePanel, &polygonalMode, lights->size()+1);
 	addRadioButtonToGroup(polygonalRadioGroup,(char*) "fill");
@@ -70,29 +89,49 @@ void LSFinterface::processGUI(GLUI_Control *ctrl)
 {
 	cout << "ctrl =" << ctrl->user_id << endl;
 
-	switch(ctrl->user_id){
+	if(!this->scene->isLoading()){
+		switch(ctrl->user_id){
 		case 10:this->scene->scenario="SandScenario";  break;
 		case 11:this->scene->scenario="JungleScenario"; break;
 		case 12:this->scene->scenario="VillageScenario"; break;
 
-		case 22:this->scene->setGameRules(true); break;
-		case 23:this->scene->setGameRules(false); break;
-	}
-
-	map<string, LSFcamera*>::iterator itC;
-	for(itC = cameras->begin(); itC != cameras->end(); itC++){
-		if((*itC).second->cameraNum == camerasGroup){
-			scene->activateCamera((*itC).first);
+		case 20: break;
+		case 21: break;
+		case 22: this->scene->endGame(); break;
+		case 23: this->scene->setGameRules(true); break;
+		case 24: this->scene->setGameRules(false); break;
+		case 25: if(!this->scene->isGameStarted())
+			 	     this->scene->setGameMode("Human vs Human"); break;
+		case 26: if(!this->scene->isGameStarted())
+					 this->scene->setGameMode("Human vs Computer"); break;
+		case 27: if(!this->scene->isGameStarted())
+					 this->scene->setGameMode("Computer vs Human"); break;
+		case 28: if(this->scene->getGameMode() != "demoMode" &&
+				    !this->scene->isGameStarted())
+					this->scene->startGame(1); break;
+		case 29: if(this->scene->getGameMode() != "demoMode" &&
+			        !this->scene->isGameStarted())
+			        this->scene->startGame(2);  break;
+		case 30: if(this->scene->getGameMode() != "demoMode" &&
+			        !this->scene->isGameStarted())
+			        this->scene->startGame(3);  break;
+		case 31: this->scene->exitGame(); break;
 		}
-	}
 
-	if((unsigned int)ctrl->user_id == lights->size()+1)
-		switch(polygonalMode){
-		case 0: scene->setPolygonMode(face, mode=GL_FILL); break;
-		case 1: scene->setPolygonMode(face, mode=GL_LINE); break;
-		case 2: scene->setPolygonMode(face, mode=GL_POINT); break;
+		map<string, LSFcamera*>::iterator itC;
+		for(itC = cameras->begin(); itC != cameras->end(); itC++){
+			if((*itC).second->cameraNum == camerasGroup){
+				scene->activateCamera((*itC).first);
+			}
 		}
 
+		if((unsigned int)ctrl->user_id == lights->size()+1)
+			switch(polygonalMode){
+			case 0: scene->setPolygonMode(face, mode=GL_FILL); break;
+			case 1: scene->setPolygonMode(face, mode=GL_LINE); break;
+			case 2: scene->setPolygonMode(face, mode=GL_POINT); break;
+			}
+	}
 }
 
 
@@ -106,7 +145,7 @@ void LSFinterface::processMouse(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
 		performPicking(x,y);
 		if(scene->isDemoModeStarted())
-			this->scene->stopDemoMode();
+			this->scene->endGame();
 	}
 }
 
