@@ -248,8 +248,7 @@ int Oware::decodeMSG(string msg){
 		cout << msg;
 		this->gameStatus = msg;
 		if(msg.size() > 99){
-			this->nextStatus.assign(msg, 100, msg.size()-100);
-			//this->nextStatus = msg.substr(99);
+			this->nextStatus = msg.substr(99, msg.size()-99);
 			this->nextStatusActive = true;
 			cout << "nextStatus: " << nextStatus << endl;
 		}

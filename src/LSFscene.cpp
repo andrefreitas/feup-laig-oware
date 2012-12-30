@@ -258,9 +258,9 @@ void LSFscene::drawPlayerScore(int score, string playerTurn){
 		glPushMatrix();
 		glScaled(1.5, 1.5, 1);
 		if(playerTurn == "1")
-			glTranslated(6, 14, 0.2);
+			glTranslated(6, 14, 0.1);
 		else
-			glTranslated(6, 5, 0.2);
+			glTranslated(6, 5, 0.1);
 		LSFrender::render(nodes,numbers,appearances,appearancesStack4,animations,LSFscene::timeSeconds);
 		glPopMatrix();
 	}
@@ -292,6 +292,7 @@ void LSFscene::drawPlayerScore(int score, string playerTurn){
 
 void LSFscene::drawRemainingTime(int remainingTime){
 	glPushMatrix();
+	glTranslated(0, 0, 0.1);
 	glScaled(1.5, 1.5, 1);
 	drawNumber(remainingTime, 32, 8, 0.2, 1, 1, 1);
 	glPopMatrix();
