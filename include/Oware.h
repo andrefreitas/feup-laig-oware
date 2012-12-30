@@ -24,8 +24,8 @@ private:
 	int maxTime;
 	Board *board;
 	string playerTurn;
-	string gameStatus;
-	string nextStatus;
+	string *gameStatus;
+	string *nextStatus;
 	bool readingFile;
 	bool nextStatusActive;
 	int playerChoose;
@@ -81,11 +81,11 @@ public:
 	string statusToPlayer2Score(vector<string> status);
 	string getPlayerTurn();
 
-	void setGameStatus(string status);
+	void setGameStatus(string *status);
 	void clearNextStatus();
 	bool isNextStatusActive();
-	string getGameStatus();
-	string getNextStatus();
+	string *getGameStatus();
+	string *getNextStatus();
 
 	stack<vector<string> > getStatus();
 
