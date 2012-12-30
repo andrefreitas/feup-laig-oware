@@ -58,6 +58,7 @@ class LSFscene : public CGFscene
 	queue<vector<int> > demoModePlayer2Seeds;
 	queue<int> demoModeChooses;
 	bool loadingDemoMode;
+	bool gameRulesActive;
 	bool gameStarted;
 	bool demoModeStarted;
 	bool humanVsHumanModeStarted;
@@ -106,7 +107,9 @@ public:
 	bool createGame(Player *player1, Player *player2, int dificultyLevel);
 	bool isDemoModeStarted();
 	void loadDemoMode();
+	void setGameRules(bool active);
 	void drawScenario();
+	void drawGameRules();
 	void drawMarkers();
 	void drawBox();
 	void drawPlayerScore(int score, string playerTurn);

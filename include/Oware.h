@@ -50,7 +50,6 @@ public:
 	Oware();
 	void createGame(Player *player1, Player *player2, int dificulty);
 	void createGame(string player1Name, string player1Type, string player2Name, string player2Type, int dificulty);
-	void loadDemoMode();
 	void saveStatus(string playerTurn, string board, string player1Score, string player2Score);
 	void setPlayerTurn(string playerTurn);
 	void setPlayerChoose(int playerChoose);

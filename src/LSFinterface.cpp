@@ -32,6 +32,9 @@ void LSFinterface::initGUI()
 	GLUI_Panel *gamePanel = addPanel((char*)"Game Moves", 1);
 	addColumn();
 
+	GLUI_Panel *rulesPanel = addPanel((char*)"Rules / Markers", 1);
+	addColumn();
+
 	// Scenario
 	addButtonToPanel(lightsPanel,(char*)"Desert",10);
 	addButtonToPanel(lightsPanel,(char*)"Jungle",11);
@@ -39,8 +42,11 @@ void LSFinterface::initGUI()
 
 	// Game Panel
 	addButtonToPanel(gamePanel,(char*)"Undo",20);
-	addButtonToPanel(gamePanel,(char*)"Redo",21);
-	addButtonToPanel(gamePanel,(char*)"Replay",22);
+	addButtonToPanel(gamePanel,(char*)"Replay",21);
+
+	//Game Rules
+	addButtonToPanel(rulesPanel,(char*)"Show Rules",22);
+	addButtonToPanel(rulesPanel,(char*)"Show Markers",23);
 
 	int i;
 
@@ -68,6 +74,9 @@ void LSFinterface::processGUI(GLUI_Control *ctrl)
 		case 10:this->scene->scenario="SandScenario";  break;
 		case 11:this->scene->scenario="JungleScenario"; break;
 		case 12:this->scene->scenario="VillageScenario"; break;
+
+		case 22:this->scene->setGameRules(true); break;
+		case 23:this->scene->setGameRules(false); break;
 	}
 
 	map<string, LSFcamera*>::iterator itC;

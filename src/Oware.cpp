@@ -68,39 +68,6 @@ void Oware::createGame(string player1Name, string player1Type, string player2Nam
 	this->player2->setScore(0);
 }
 
-void Oware::loadDemoMode(){
-	queue<string> msg;
-	FILE * file;
-	int num;
-
-	if((file = fopen("demoMode.txt", "r")) == NULL)
-		exit(EXIT_FAILURE);
-
-	char line[100];
-	char *read;
-	while(!feof(file)){
-		read = fgets(line, 100, file);
-		if(read)
-			msg.push((string)line);
-	}
-
-	fclose(file);
-
-	for(;!msg.empty(); msg.pop()){
-		cout << msg.front();
-		string tmp = msg.front();
-		num = decodeMSG(tmp);
-		if(num == 1)
-			break;
-		else if(num == 0)
-			swapPlayerTurn();
-		else if(num == -1){
-			update();
-			swapPlayerTurn();
-		}
-	}
-}
-
 string Oware::getRoules(){
 	string rules;
 	rules = "\n"
@@ -209,7 +176,6 @@ int Oware::decodeMSG(string msg){
 			if(player1->getType() != "human" && player2->getType() != "human")
 				this->demoModeChooses.push(this->playerChoose);
 		}
-		cout << msg;
 		int pos = msg.find("victory");
 		if(pos != -1){
 			winner = msg.at(pos + 8) - 48;
@@ -230,31 +196,23 @@ int Oware::decodeMSG(string msg){
 			}
 		}
 
-		cout << winner << endl;
-		cout << finalPoints << endl;
-
 		return 0;
 	}
 	else if((signed)msg.find("noSeeds.") != -1){
-		cout << msg;
 		if(msg.size() > 20){
 			this->nextStatus = new string(msg.substr(10));
 			this->nextStatusActive = true;
-			cout << "nextStatus: " << *nextStatus << endl;
 		}
 		return 1;
 	}
 	else if((signed)msg.find("gameStatus") != -1){
-		cout << msg;
 		this->gameStatus = new string(msg);
 		if(msg.size() > 99){
 			this->nextStatus = new string(msg.substr(99, msg.size()-99));
 			this->nextStatusActive = true;
-			cout << "nextStatus: " << *nextStatus << endl;
 		}
 		if((signed)msg.find("Chooses") != -1){
 			this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
-			cout <<  this->playerChoose << endl;
 		}
 		return 2;
 	}
@@ -262,8 +220,7 @@ int Oware::decodeMSG(string msg){
 		this->playerChoose = msg.at(14) - 48;
 		if(player1->getType() != "human" && player2->getType() != "human")
 			this->demoModeChooses.push(this->playerChoose);
-		cout << msg;
-		cout << this->playerChoose << endl;
+
 		return 3;
 	}
 
