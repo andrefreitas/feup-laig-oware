@@ -297,12 +297,12 @@ void LSFscene::drawRemainingTime(int remainingTime){
 	drawNumber(remainingTime, 32, 8, 0.2, 1, 1, 1);
 	glPopMatrix();
 
-	if(remainingTime <= 0){
-		game->skipPlayer();
-		game->readStatus();
-		game->update();
-		timer->stopCountDown();
-	}
+//	if(remainingTime <= 0){
+//		game->skipPlayer();
+//		game->readStatus();
+//		game->update();
+//		timer->stopCountDown();
+//	}
 }
 
 void LSFscene::drawNumber(int number, int x, int y, int z, int sizeX, int sizeY, int sizeZ){
@@ -498,7 +498,7 @@ void LSFscene::stopDemoMode(){
 void LSFscene::demoMode(){
 	if(!demoModeStatus.empty()){
 		if(timer->isStarted()){
-			if(timer->getCountDown() <= 9){
+			if(timer->getCountDown() <= rand()%5 + 2){
 				if(!demoModeStatus.empty()){
 					demoModeStatus.pop();
 					demoModeChooses.pop();

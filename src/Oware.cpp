@@ -238,23 +238,23 @@ int Oware::decodeMSG(string msg){
 	else if((signed)msg.find("noSeeds.") != -1){
 		cout << msg;
 		if(msg.size() > 20){
-			this->nextStatus = msg.substr(10);
+			this->nextStatus = new string(msg.substr(10));
 			this->nextStatusActive = true;
-			cout << "nextStatus: " << nextStatus << endl;
+			cout << "nextStatus: " << *nextStatus << endl;
 		}
 		return 1;
 	}
 	else if((signed)msg.find("gameStatus") != -1){
 		cout << msg;
-		this->gameStatus = msg;
+		this->gameStatus = new string(msg);
 		if(msg.size() > 99){
-			this->nextStatus = msg.substr(99, msg.size()-99);
+			this->nextStatus = new string(msg.substr(99, msg.size()-99));
 			this->nextStatusActive = true;
-			cout << "nextStatus: " << nextStatus << endl;
+			cout << "nextStatus: " << *nextStatus << endl;
 		}
 		if((signed)msg.find("Chooses") != -1){
 			this->playerChoose = msg.at(msg.find("Chooses") + 8) - 48;
-			cout << "AAAAAAAAAA" << this->playerChoose << endl;
+			cout <<  this->playerChoose << endl;
 		}
 		return 2;
 	}
@@ -263,7 +263,7 @@ int Oware::decodeMSG(string msg){
 		if(player1->getType() != "human" && player2->getType() != "human")
 			this->demoModeChooses.push(this->playerChoose);
 		cout << msg;
-		cout << "BBBBBBBBBBB" << this->playerChoose << endl;
+		cout << this->playerChoose << endl;
 		return 3;
 	}
 
@@ -275,7 +275,7 @@ void Oware::update(){
 	string board;
 	string num, p1, p2;
 
-	str = &gameStatus[0];
+	str = (char*)gameStatus->c_str();
 
 	vector<int> v1;
 	vector<int> v2;
@@ -329,7 +329,7 @@ int Oware::getStatusSize(){
 	return status.size();
 }
 
-void Oware::setGameStatus(string status){
+void Oware::setGameStatus(string *status){
 	this->gameStatus = status;
 }
 
@@ -341,11 +341,11 @@ void Oware::clearNextStatus(){
 	this->nextStatusActive = false;
 }
 
-string Oware::getGameStatus(){
+string *Oware::getGameStatus(){
 	return this->gameStatus;
 }
 
-string Oware::getNextStatus(){
+string *Oware::getNextStatus(){
 	return this->nextStatus;
 }
 
