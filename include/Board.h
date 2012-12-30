@@ -11,12 +11,15 @@ class Board{
 private:
 	vector<int> player1Seeds;
 	vector<int> player2Seeds;
+
 	int playerTurn;
 	int startHole;
 	int currentHole;
 	int holeSeeds;
+
 	bool loaded;
 	bool startHoleCleared;
+	bool seedsMoving;
 
 public:
 	Board();
@@ -24,10 +27,12 @@ public:
 	bool update();
 	vector<int> getPlayerSeeds(int playerNum);
 	bool isLoaded();
+	bool isStartHoleCleared();
 	int getStartHole();
 	int getCurrentHole();
 	int getHoleseeds();
 	void drawSeeds();
+	void setSeedsMoving(bool moving);
 };
 
 

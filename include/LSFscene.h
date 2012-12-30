@@ -68,6 +68,9 @@ class LSFscene : public CGFscene
 	int player1Score;
 	int player2Score;
 
+	int seedsStartPosition_y;
+	int seedsCurrentPosition_y;
+
 public:
 	LSFscene();
 	LSFscene(char* argv[]);
@@ -102,6 +105,7 @@ public:
 	void skipPlayer();
 	bool createDemoMode();
 	bool createGame(Player *player1, Player *player2, int dificultyLevel);
+	bool isDemoModeStarted();
 	void loadDemoMode();
 	void drawScenario();
 	void drawMarkers();
@@ -110,7 +114,9 @@ public:
 	void drawRemainingTime(int remainingTime);
 	void drawNumber(int number, int x, int y, int z, int sizeX, int sizeY, int sizeZ);
 	void drawSeeds();
-	void drawClosedHand(bool active);
+	void loadMovingSeeds();
+	void drawMovingSeeds();
+	void drawClosedHand();
 
 };
 #endif

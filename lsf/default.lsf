@@ -422,7 +422,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="-8" />
+				<rotate axis="x" angle="-9" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -435,7 +435,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="-6" />
+				<rotate axis="x" angle="-8" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -448,7 +448,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="-4" />
+				<rotate axis="x" angle="-7" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -461,7 +461,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="-2" />
+				<rotate axis="x" angle="-6" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -474,7 +474,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="0" />
+				<rotate axis="x" angle="-5" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -487,7 +487,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="2" />
+				<rotate axis="x" angle="-4" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -500,7 +500,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="4" />
+				<rotate axis="x" angle="-3" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -513,7 +513,7 @@
 			<transforms>
 				<translate x="0" y="0" z="0" />
 				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="6" />
+				<rotate axis="x" angle="-2" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />
@@ -525,8 +525,8 @@
 		<node id="Hand10">
 			<transforms>
 				<translate x="0" y="0" z="0" />
-				<rotate axis="y" angle="210" />
-				<rotate axis="x" angle="8" />
+				<rotate axis="y" angle="230" />
+				<rotate axis="x" angle="-1" />
 				<scale x="0.05" y="0.05" z="0.05" />
 			</transforms>
 			<appearanceref id="hand" />

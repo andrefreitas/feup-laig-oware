@@ -19,6 +19,7 @@ void Board::loadBoard(vector<int> player1Seeds, vector<int> player2Seeds, int pl
 	currentHole = startHole;
 	loaded = true;
 	startHoleCleared = false;
+	seedsMoving = false;
 }
 
 bool Board::update(){
@@ -32,30 +33,31 @@ bool Board::update(){
 		return true;
 	}
 	else if(holeSeeds > 0){
-		holeSeeds--;
+		if(!seedsMoving){
+			holeSeeds--;
 
-		if(playerTurn == 1){
-			currentHole--;
-			if(currentHole == 0){
-				playerTurn = 2;
-				currentHole = 1;
+			if(playerTurn == 1){
+				currentHole--;
+				if(currentHole == 0){
+					playerTurn = 2;
+					currentHole = 1;
+				}
+			}
+			else if(playerTurn == 2){
+				currentHole++;
+				if(currentHole == 7){
+					playerTurn = 1;
+					currentHole = 6;
+				}
+			}
+
+			if(playerTurn == 1){
+				player1Seeds.at(currentHole-1)++;
+			}
+			else if(playerTurn == 2){
+				player2Seeds.at(currentHole-1)++;
 			}
 		}
-		else if(playerTurn == 2){
-			currentHole++;
-			if(currentHole == 7){
-				playerTurn = 1;
-				currentHole = 6;
-			}
-		}
-
-		if(playerTurn == 1){
-			player1Seeds.at(currentHole-1)++;
-		}
-		else if(playerTurn == 2){
-			player2Seeds.at(currentHole-1)++;
-		}
-
 		return true;
 	}
 	else{
@@ -79,6 +81,10 @@ bool Board::isLoaded(){
 	return loaded;
 }
 
+bool Board::isStartHoleCleared(){
+	return startHoleCleared;
+}
+
 int Board::getStartHole(){
 	if(playerTurn == 1)
 		return 6 - startHole;
@@ -93,3 +99,6 @@ int Board::getCurrentHole(){
 		return 5 + currentHole;
 }
 
+void Board::setSeedsMoving(bool moving){
+	this->seedsMoving = moving;
+}

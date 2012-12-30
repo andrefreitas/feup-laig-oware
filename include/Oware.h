@@ -12,33 +12,39 @@
 #include <sstream>
 #include <fstream>
 #include "LSFprimitive.h"
+
 string itos(int i);
+
 using namespace std;
+
 class Oware{
 private:
 	Player *player1;
 	Player *player2;
 	Socket *s1;
+	Board *board;
+	LSFSphere *seed;
+
+	string *gameStatus;
+	string *nextStatus;
+	string playerTurn;
+
+	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
+	queue<vector<string> > movie;
+	queue<vector<string> > demoModeStatus;
+	queue<vector<int> > demoModePlayer1Seeds;
+	queue<vector<int> > demoModePlayer2Seeds;
+	queue<int> demoModeChooses;
+
 	int winner;
 	int finalPoints;
 	int maxTime;
-	Board *board;
-	string playerTurn;
-	string *gameStatus;
-	string *nextStatus;
-	bool readingFile;
-	bool nextStatusActive;
 	int playerChoose;
-	stack<vector<string> > status;//playerTurn, boardStatus, player1Score, player2Score
-	queue<vector<string> > movie;
-	LSFSphere *seed;
-	//exclusive demoMode
 	int demoModeWinner;
 	int demoModeFinalPoints;
-	queue<vector<string> > demoModeStatus;
-	queue<int> demoModeChooses;
-	queue<vector<int> > demoModePlayer1Seeds;
-	queue<vector<int> > demoModePlayer2Seeds;
+
+	bool readingFile;
+	bool nextStatusActive;
 
 public:
 	Oware();
@@ -54,6 +60,10 @@ public:
 	void undo();
 	void skipPlayer();
 	void swapPlayerTurn();
+	void setGameStatus(string *status);
+	void clearNextStatus();
+	void drawHoleSeeds(int seeds, int x, int y, int z);
+	void drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z);
 
 	int decodeMSG(string msg);
 	int startServer();
@@ -63,10 +73,13 @@ public:
 	int getWinner();
 	int getFinalPoints();
 	int getMaxTime();
+	int getDemoModeWinner();
+	int getDemoModeFinalPoints();
 
 	bool startGame(string player1, string player2);
 	bool startGame(string player1, string player2, string playerTurn, string board, string scoreP1, string scoreP2);
 	bool undoIsReadyToUse();
+	bool isNextStatusActive();
 
 	Player* getPlayer1();
 	Player* getPlayer2();
@@ -81,9 +94,6 @@ public:
 	string statusToPlayer2Score(vector<string> status);
 	string getPlayerTurn();
 
-	void setGameStatus(string *status);
-	void clearNextStatus();
-	bool isNextStatusActive();
 	string *getGameStatus();
 	string *getNextStatus();
 
@@ -93,16 +103,9 @@ public:
 	vector<string> topStatus();
 
 	queue<vector<string> > getMovie();
-
-	//exclusive demoMode
 	queue<vector<string> > getDemoModeStatus();
 	queue<int> getDemoModeChooses();
 	queue<vector<int> > getdemoModePlayerSeeds(int playerNum);
-	int getDemoModeWinner();
-	int getDemoModeFinalPoints();
-	void drawHoleSeeds(int seeds, int x, int y, int z);
-	void drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z);
-	//void drawSeeds();
 
 };
 
