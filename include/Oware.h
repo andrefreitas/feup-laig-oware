@@ -35,9 +35,12 @@ private:
 	queue<vector<int> > demoModePlayer1Seeds;
 	queue<vector<int> > demoModePlayer2Seeds;
 	queue<int> demoModeChooses;
+	queue<int> movieChooses;
 
 	int winner;
+	int movieWinner;
 	int finalPoints;
+	int movieFinalPoints;
 	int maxTime;
 	int playerChoose;
 	int demoModeWinner;
@@ -63,6 +66,9 @@ public:
 	void clearNextStatus();
 	void drawHoleSeeds(int seeds, int x, int y, int z);
 	void drawSeeds(vector<int> seeds, int playerScore, int x, int y, int z);
+	void setMovieFinalWinner(int winner);
+	void setMovieFinalPoints(int points);
+	void eraseStatus();
 
 	int decodeMSG(string msg);
 	int startServer();
@@ -71,6 +77,8 @@ public:
 	int getPlayerChoose();
 	int getWinner();
 	int getFinalPoints();
+	int getMovieWinner();
+	int getMovieFinalPoints();
 	int getMaxTime();
 	int getDemoModeWinner();
 	int getDemoModeFinalPoints();
@@ -98,13 +106,17 @@ public:
 
 	stack<vector<string> > getStatus();
 
-	vector<string> getMovieFrame(unsigned int frame);
+//	vector<string> getMovieFrame(unsigned int frame);
 	vector<string> topStatus();
 
-	queue<vector<string> > getMovie();
+//	queue<vector<string> > getMovie();
 	queue<vector<string> > getDemoModeStatus();
 	queue<int> getDemoModeChooses();
+//	queue<int> getMovieChooses();
 	queue<vector<int> > getdemoModePlayerSeeds(int playerNum);
+//	queue<vector<int> > getMoviePlayerSeeds(int playerNum);
+
+//	vector<int> statusToPlayerSeeds(vector<string> status, int player);
 
 };
 

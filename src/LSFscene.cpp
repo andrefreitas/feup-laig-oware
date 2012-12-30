@@ -438,7 +438,7 @@ void LSFscene::startGame(int dificulty){
 	demoModeStarted = false;
 	demoTimer->stopCountDown();
 
-	running = true;
+	game->eraseStatus();
 	game->endGame();
 
 	if(gameMode == "Human vs Human"){
@@ -542,7 +542,6 @@ void LSFscene::startDemoMode(){
 
 		gameStarted = false;
 		demoModeStarted = false;
-		demoTimer->startCountDown(15);
 	}
 }
 
@@ -643,25 +642,31 @@ void LSFscene::startHumanVsComputerMode(){
 
 	if(game->getPlayer1()->getType() != "human")
 		game->readStatus();
+	else
+		timer->startCountDown(game->getMaxTime());
+
+	vector<int> vec;
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	game->getBoard()->loadBoard(vec, vec, 1, 1);
+	game->getBoard()->unload();
+
+	running = true;
+	humanVsComputerMode();
 }
 
 void LSFscene::humanVsComputerMode(){
 	if(humanVsComputerModeStarted){
 		if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() != "human" &&
 		   !game->getBoard()->isLoaded() && !winnerFound){
-
-			int num = game->readStatus();
-
-			if(num == 0){
-				winnerFound = true;
-				game->getPlayer(game->getWinner())->setScore(game->getFinalPoints());
-				timer->startCountDown(game->getMaxTime());
-			}
-			else if(num == 1){
-				game->readStatus();
-				game->swapPlayerTurn();
+			if(game->isNextStatusActive()){
+				game->setGameStatus(game->getNextStatus());
 				game->update();
-
+				game->clearNextStatus();
 				game->setPlayerChoose(0);
 
 				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
@@ -669,13 +674,34 @@ void LSFscene::humanVsComputerMode(){
 
 				timer->startCountDown(game->getMaxTime());
 			}
-			else {
-				game->update();
-				game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
-						atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+			else{
+				int num = game->readStatus();
 
-				animationTimer->startCountDown(1);
-				loadMovingSeeds();
+				if(num == 0){
+					winnerFound = true;
+					game->getPlayer(game->getWinner())->setScore(game->getFinalPoints());
+					timer->startCountDown(game->getMaxTime());
+				}
+				else if(num == 1){
+					game->readStatus();
+					game->swapPlayerTurn();
+					game->update();
+
+					game->setPlayerChoose(0);
+
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+							atoi(game->getPlayerTurn().c_str()), 1);
+
+					timer->startCountDown(game->getMaxTime());
+				}
+				else {
+					game->update();
+					game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(), game->getPlayer2()->getSeeds(),
+							atoi(game->getPlayerTurn().c_str()), game->getPlayerChoose());
+
+					animationTimer->startCountDown(1);
+					loadMovingSeeds();
+				}
 			}
 		}
 		else if(game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human" &&
@@ -797,12 +823,20 @@ void LSFscene::startHumanVsHumanMode(){
 	game->readStatus();
 	game->update();
 
-	if(!game->getBoard()->isLoaded() &&  !timer->isStarted()){
-		game->getBoard()->loadBoard(game->getPlayer1()->getSeeds(),
-				                    game->getPlayer2()->getSeeds(), 1, 1);
-	}
+	vector<int> vec;
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	vec.push_back(4);
+	game->getBoard()->loadBoard(vec, vec, 1, 1);
+	game->getBoard()->unload();
 
 	timer->startCountDown(game->getMaxTime());
+
+	running = true;
+	humanVsHumanMode();
 }
 
 void LSFscene::humanVsHumanMode(){
@@ -957,16 +991,22 @@ bool LSFscene::isLoading(){
 }
 
 void LSFscene::endGame(){
-	stopDemoMode();
-	running = false;
-	gameStarted = false;
-	if(game->getBoard()->isLoaded())
-		while(game->getBoard()->update());
-
 	animationTimer->stopCountDown();
 	timer->stopCountDown();
+	stopDemoMode();
+	demoTimer->startCountDown(15);
+	running = false;
+	gameStarted = false;
 }
 
 void LSFscene::exitGame(){
 	exit(0);
+}
+
+void LSFscene::undo(){
+	if(game->undoIsReadyToUse() && timer->isStarted() &&
+	    game->getPlayer(atoi(game->getPlayerTurn().c_str()))->getType() == "human"){
+		game->undo();
+		startHumanVsComputerMode();
+	}
 }

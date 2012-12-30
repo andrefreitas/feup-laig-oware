@@ -32,6 +32,7 @@ public:
 	int getCurrentHole();
 	int getHoleseeds();
 	void setSeedsMoving(bool moving);
+	void unload();
 };
 
 

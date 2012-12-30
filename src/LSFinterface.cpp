@@ -48,7 +48,7 @@ void LSFinterface::initGUI()
 
 	// Game Panel
 	addButtonToPanel(gamePanel,(char*)" Undo  ",20);
-	addButtonToPanel(gamePanel,(char*)"Replay ",21);
+	addButtonToPanel(gamePanel,(char*)"       ",21);
 	addButtonToPanel(gamePanel,(char*)"EndGame",22);
 
 	//Game Rules
@@ -57,7 +57,7 @@ void LSFinterface::initGUI()
 
 	//Start Game
 	addButtonToPanel(startGamePanel,(char*)" Human vs Human  ",25);
-	addButtonToPanel(startGamePanel,(char*)"Human vs Computer",26);
+	addButtonToPanel(startGamePanel,(char*)"                 ",26);
 	addButtonToPanel(startGamePanel,(char*)"Computer vs Human",27);
 	addColumnToPanel(startGamePanel);
 	//Select dificulty level
@@ -95,15 +95,15 @@ void LSFinterface::processGUI(GLUI_Control *ctrl)
 		case 11:this->scene->scenario="JungleScenario"; break;
 		case 12:this->scene->scenario="VillageScenario"; break;
 
-		case 20: break;
-		case 21: break;
+		case 20: this->scene->undo(); break;
+//		case 21: break;
 		case 22: this->scene->endGame(); break;
 		case 23: this->scene->setGameRules(true); break;
 		case 24: this->scene->setGameRules(false); break;
 		case 25: if(!this->scene->isGameStarted())
 			 	     this->scene->setGameMode("Human vs Human"); break;
-		case 26: if(!this->scene->isGameStarted())
-					 this->scene->setGameMode("Human vs Computer"); break;
+//		case 26: if(!this->scene->isGameStarted())
+//					 this->scene->setGameMode("Human vs Computer"); break;
 		case 27: if(!this->scene->isGameStarted())
 					 this->scene->setGameMode("Computer vs Human"); break;
 		case 28: if(this->scene->getGameMode() != "demoMode" &&
@@ -144,8 +144,6 @@ void LSFinterface::processMouse(int button, int state, int x, int y)
 	// this could be more elaborate, e.g. only performing picking when there is a click (DOWN followed by UP) on the same place
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
 		performPicking(x,y);
-		if(scene->isDemoModeStarted())
-			this->scene->endGame();
 	}
 }
 

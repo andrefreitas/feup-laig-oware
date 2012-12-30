@@ -307,44 +307,29 @@ string *Oware::getNextStatus(){
 }
 
 bool Oware::undoIsReadyToUse(){
-	if((player1->getType() != "human" || player2->getType() != "human") && status.size() > 2)
-		return true;
-	else if((player1->getType() == "human" && player2->getType() == "human") && status.size() > 1)
+	if(player1->getType() != "human" && player2->getType() != "human")
+		return false;
+	else if(player1->getType() == "human" && player2->getType() == "human")
+		return false;
+	else if((player1->getType() != "human" || player2->getType() != "human") && status.size() > 5)
 		return true;
 
 	return false;
 }
 
 void Oware::undo(){
-	if((player1->getType() != "human" || player2->getType() != "human") && status.size() > 2){
+	if((player1->getType() != "human" || player2->getType() != "human") && status.size() > 4){
 		status.pop(); cout << status.size() << endl;
 		status.pop(); cout << status.size() << endl;
 		status.pop(); cout << status.size() << endl;
-	}
-	else if((player1->getType() == "human" && player2->getType() == "human") && status.size() > 1){
-		status.pop();
-		status.pop();
+		status.pop(); cout << status.size() << endl;
+		status.pop(); cout << status.size() << endl;
 	}
 
 	endGame();
 
-	if(!status.empty()){
-		movie.push(status.top());
-
-		startGame(player1->getType(), player2->getType(), status.top().at(0),
-				status.top().at(1), status.top().at(2), status.top().at(3));
-	}
-	else{
-		vector<string> vec;
-		vec.push_back("0");
-		vec.push_back("[[0,0,0,0,0,0],[0,0,0,0,0,0]]");
-		vec.push_back("0");
-		vec.push_back("0");
-
-		movie.push(vec);
-
-		startGame(player1->getType(), player2->getType());
-	}
+	startGame(player1->getType(), player2->getType(), status.top().at(0),
+			status.top().at(1), status.top().at(2), status.top().at(3));
 }
 
 void Oware::skipPlayer(){
@@ -381,6 +366,11 @@ vector<string> Oware::topStatus(){
 	return vec;
 }
 
+void Oware::eraseStatus(){
+	while(!status.empty())
+		status.pop();
+}
+
 queue<vector<string> > Oware::getDemoModeStatus(){
 	return demoModeStatus;
 }
@@ -393,6 +383,32 @@ string Oware::satusToBoard(vector<string> status){
 	return status.at(1);
 }
 
+//vector<int> Oware::statusToPlayerSeeds(vector<string> status, int player){
+//	char *str;
+//	vector<int> v1;
+//	vector<int> v2;
+//
+//	str = (char*)status.at(1).c_str();
+//	strtok(str, "[,]");
+//
+//	int n = 0;
+//	while(n < 6){
+//		v1.push_back(atoi(strtok(NULL, "[,]")));
+//		n++;
+//	}
+//
+//	n = 0;
+//	while(n < 6){
+//		v2.push_back(atoi(strtok(NULL, "[,]")));
+//		n++;
+//	}
+//
+//	if(player == 1)
+//		return v1;
+//	else
+//		return v2;
+//}
+
 string Oware::statusToPlayer1Score(vector<string> status){
 	return status.at(2);
 }
@@ -401,23 +417,23 @@ string Oware::statusToPlayer2Score(vector<string> status){
 	return status.at(3);
 }
 
-queue<vector<string> > Oware::getMovie(){
-	return movie;
-}
-
-vector<string> Oware::getMovieFrame(unsigned int frame){
-	queue<vector<string> > tempMovie(movie);
-
-	if(frame <= 1)
-		return tempMovie.front();
-	else if(frame >= tempMovie.size())
-		return tempMovie.back();
-
-	for(unsigned int i = 1; i < frame; i++)
-		tempMovie.pop();
-
-	return tempMovie.front();
-}
+//queue<vector<string> > Oware::getMovie(){
+//	return movie;
+//}
+//
+//vector<string> Oware::getMovieFrame(unsigned int frame){
+//	queue<vector<string> > tempMovie(movie);
+//
+//	if(frame <= 1)
+//		return tempMovie.front();
+//	else if(frame >= tempMovie.size())
+//		return tempMovie.back();
+//
+//	for(unsigned int i = 1; i < frame; i++)
+//		tempMovie.pop();
+//
+//	return tempMovie.front();
+//}
 
 void Oware::setPlayerTurn(string playerTurn){
 	this->playerTurn = playerTurn;
@@ -439,6 +455,22 @@ int Oware::getWinner(){
 	return winner;
 }
 
+//void Oware::setMovieFinalPoints(int points){
+//	movieFinalPoints = points;
+//}
+
+//void Oware::setMovieFinalWinner(int winner){
+//	movieWinner = winner;
+//}
+
+//int Oware::getMovieWinner(){
+//	return movieWinner;
+//}
+
+//int Oware::getMovieFinalPoints(){
+//	return movieFinalPoints;
+//}
+
 int Oware::getDemoModeWinner(){
 	return demoModeWinner;
 }
@@ -453,6 +485,10 @@ queue<vector<int> > Oware::getdemoModePlayerSeeds(int playerNum){
 	else
 		return demoModePlayer2Seeds;
 }
+
+//queue<int> Oware::getMovieChooses(){
+//	return movieChooses;
+//}
 
 int Oware::getFinalPoints(){
 	return finalPoints;

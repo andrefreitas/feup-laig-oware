@@ -128,6 +128,7 @@ public:
 	void loadMovingSeeds();
 	void drawMovingSeeds();
 	void drawClosedHand();
+	void undo();
 
 };
 #endif

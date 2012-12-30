@@ -102,3 +102,7 @@ int Board::getCurrentHole(){
 void Board::setSeedsMoving(bool moving){
 	this->seedsMoving = moving;
 }
+
+void Board::unload(){
+	loaded = false;
+}
